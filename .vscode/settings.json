@@ -1,0 +1,12 @@
+{
+    "makefile.extensionOutputFolder": "./.vscode",
+    "cSpell.words": [
+        "LUAOS"
+    ],
+    "files.associations": {
+        "*.txt": "hoi4",
+        "*.asm": "asm",
+        "ports.h": "c",
+        "types.h": "c"
+    }
+}
