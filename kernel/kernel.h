@@ -7,4 +7,11 @@
 
 #include "types.h"
 #include "drivers/drivers.h"
+
+/**
+ * @brief Entrypoint for the LuaOS Kernel
+ * 
+ */
+void kernel_start();
+
 #endif //LUAOS_KERNEL

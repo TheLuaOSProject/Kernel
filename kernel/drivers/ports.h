@@ -9,7 +9,7 @@
  * @param port Port to get from
  * @return u8_t - Byte returned from the port
  */
-u8_t port_in(u16_t port);
+u8char_t port_in(u16short_t port);
 
 /**
  * @brief Sends a byte to a port
@@ -17,7 +17,7 @@ u8_t port_in(u16_t port);
  * @param port Port to send data to
  * @param data Data to send
  */
-void port_out(u16_t port, u8_t data);
+void port_out(u16short_t port, u8char_t data);
 
 /**
  * @brief Gets a word from the specified port
@@ -25,14 +25,14 @@ void port_out(u16_t port, u8_t data);
  * @param port Port to get from
  * @return u16_t - Word returned from the port
  */
-u16_t wport_in(u16_t port);
+u16short_t wport_in(u16short_t port);
 
 /**
- * @brief Writes a word to the specified port
+ * @brief Sends a word to the specified port
  * 
  * @param port Port to send data to
  * @param data Data to send
  */
-void wport_out(u16_t port, u16_t data);
+void wport_out(u16short_t port, u16short_t data);
 
 #endif //LUAOS_PORTS

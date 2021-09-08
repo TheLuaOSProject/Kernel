@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
  
 
-# Make data base, printed on Mon Sep  6 18:10:31 2021
+# Make data base, printed on Wed Sep  8 11:17:09 2021
 
 # Variables
 
@@ -18,6 +18,8 @@ make: *** No rule to make target `all'.  Stop.
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
+# makefile (from `Makefile', line 15)
+OBJ = ${KERNEL_C:.c=.o}
 # environment
 VSCODE_LOG_NATIVE = false
 # automatic
@@ -39,12 +41,12 @@ MAKEFILE_LIST :=  Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/88/f07nnvk967s_pckv6tp26w9r0000gn/T/vscode-ipc-8bd188ce-3674-4998-a2c9-d89e5271a601.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/88/f07nnvk967s_pckv6tp26w9r0000gn/T/vscode-ipc-24693709-fba3-42ed-b07b-dbf11c8801d8.sock
 # environment
 VSCODE_CWD = /
 # environment
 PATH = /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/Frityet/.cargo/bin:/Users/Frityet/.new_local/bin
-# makefile (from `Makefile', line 2)
+# makefile (from `Makefile', line 4)
 LD = /usr/local/i386elfgcc/bin/i386-elf-ld
 # environment
 VSCODE_LOG_STACK = false
@@ -60,7 +62,7 @@ SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.3jZhulxFNt/Listeners
 VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /Users/Frityet/Documents/LuaOS
-# makefile (from `Makefile', line 3)
+# makefile (from `Makefile', line 5)
 GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = undefined
@@ -80,8 +82,6 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
-# makefile (from `Makefile', line 5)
-OUTPUT_DIR = build
 # environment
 XPC_FLAGS = 0x0
 # default
@@ -92,19 +92,23 @@ MAKECMDGOALS := all
 SHLVL = 1
 # makefile (from `Makefile', line 1)
 CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
+# makefile (from `Makefile', line 7)
+BUILD_DIR = build
 # default
 MAKE_VERSION := 3.81
 # environment
 USER = amritbhogal
 # makefile
-.DEFAULT_GOAL := make_dirs
+.DEFAULT_GOAL := build
+# makefile (from `Makefile', line 2)
+CCFLAGS = -g
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
-# makefile (from `Makefile', line 7)
+# makefile (from `Makefile', line 9)
 KERNEL_OFFSET = 0x1000
 # default
 MAKE_COMMAND := /Library/Developer/CommandLineTools/usr/bin/make
-# makefile (from `Makefile', line 9)
+# makefile (from `Makefile', line 11)
 OS_IMAGE = luaos.bin
 # default
 .VARIABLES := 
@@ -134,6 +138,12 @@ MAKEFILES :=
 <F = $(notdir $<)
 # environment
 LC_ALL = C
+# makefile (from `Makefile', line 13)
+KERNEL_C = $(wildcard kernel/*/*.c kernel/*.c)
+# makefile (from `Makefile', line 14)
+KERNEL_H = $(wildcard kernel/*/*.h kernel/*.h)
+# makefile (from `Makefile', line 17)
+BOOTLOADER = "boot/boot.asm"
 # automatic
 ^F = $(notdir $^)
 # default
@@ -145,9 +155,9 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 9218
+VSCODE_PID = 20360
 # variable set hash-table stats:
-# Load=66/1024=6%, Rehash=0, Collisions=1/90=1%
+# Load=71/1024=7%, Rehash=0, Collisions=5/123=4%
 
 # Pattern-specific Variable Values
 
@@ -155,15 +165,34 @@ VSCODE_PID = 9218
 
 # Directories
 
-# . (device 16777225, inode 4472000): 10 files, no impossibilities.
+# kernel (device 16777225, inode 4537950): 10 files, no impossibilities.
+# . (device 16777225, inode 4472000): 12 files, no impossibilities.
+# kernel/kernel.c (device 16777225, inode 4537953): could not be opened.
+# kernel/string.h (device 16777225, inode 5149061): could not be opened.
+# kernel/types.h (device 16777225, inode 5088991): could not be opened.
+# kernel/drivers (device 16777225, inode 5088147): 5 files, no impossibilities.
+# kernel/kernel.h (device 16777225, inode 5093276): could not be opened.
+# kernel/kernel_start.asm (device 16777225, inode 4534340): could not be opened.
+# kernel/string.c (device 16777225, inode 5149059): could not be opened.
 
-# 10 files, no impossibilities in 1 directories.
+# 27 files, no impossibilities in 9 directories.
 
 # Implicit Rules
 
 # No implicit rules.
 
 # Files
+
+remote: 1234" -ex "symbol-file build/bin/kernel.elf"
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kernel/drivers/drivers.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 all:
@@ -175,6 +204,32 @@ all:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
+kernel/string.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+build/bin/luaos.bin: build/bin/boot.bin build/bin/kernel.bin
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 37):
+	cat $^ > ${BUILD_DIR}/bin/${OS_IMAGE}
+	
+
+# Not a target:
+build/bin/kernel.elf":
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kernel/kernel_start.asm:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 .SUFFIXES:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -183,18 +238,76 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-09-06 18:09:55
+#  Last modified 2021-09-08 08:26:00
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
+"target: 1234" -ex "symbol-file build/bin/kernel.elf"
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+debug: build/bin/luaos.bin build/bin/kernel.elf
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 32):
+	qemu-system-i386 -s -fda ${BUILD_DIR}/bin/${OS_IMAGE} &
+	
+
+build: clean make_dirs build/bin/luaos.bin
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+build/kernel/drivers/ports.o: kernel/drivers/drivers.h kernel/drivers/ports.h kernel/kernel.h kernel/string.h kernel/types.h kernel/drivers/ports.c kernel/kernel.c kernel/string.c
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 46):
+	${CC} ${CCFLAGS} -ffreestanding -c $< -o $@
+	
+
 make_dirs:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 14):
-	mkdir ${OUTPUT_DIR}	
+#  commands to execute (from `Makefile', line 22):
+	echo ${OBJ}
+	mkdir -p ${BUILD_DIR}/bin
+	mkdir -p ${BUILD_DIR}/boot
+	mkdir -p ${BUILD_DIR}/kernel/drivers
+	
+
+# Not a target:
+kernel/drivers/ports.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+kernel/kernel.o: kernel/drivers/drivers.h kernel/drivers/ports.h kernel/kernel.h kernel/string.h kernel/types.h kernel/drivers/ports.c kernel/kernel.c kernel/string.c
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 46):
+ 
+	${CC} ${CCFLAGS} -ffreestanding -c $< -o $@
+	
+
+# Not a target:
+"symbol-file:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+build/bin/kernel.elf: build/kernel/kernel_start.o build/kernel/drivers/ports.o kernel/kernel.o kernel/string.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 43):
+	${LD} -o $@ -Ttext ${KERNEL_OFFSET} $^
 	
 
 # Not a target:
@@ -203,8 +316,113 @@ make_dirs:
 #  Modification time never checked.
 #  File has not been updated.
 
+# Not a target:
+kernel/drivers/ports.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+boot/boot.asm:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+1234":
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+build/kernel/kernel_start.o: kernel/kernel_start.asm
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 49):
+	nasm $< -f elf -o $@
+	
+
+build/bin/boot.bin: boot/boot.asm
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 52):
+	nasm $< -f bin -o $@
+	
+
+kernel/string.o: kernel/drivers/drivers.h kernel/drivers/ports.h kernel/kernel.h kernel/string.h kernel/types.h kernel/drivers/ports.c kernel/kernel.c kernel/string.c
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 46):
+	${CC} ${CCFLAGS} -ffreestanding -c $< -o $@
+	
+
+run: build
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 29):
+	qemu-system-i386 -fda ${BUILD_DIR}/bin/${OS_IMAGE}
+	
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 55):
+	rm -rf ${BUILD_DIR}
+	
+
+-ex: 1234" -ex "symbol-file build/bin/kernel.elf"
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kernel/kernel.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+localhost: 1234" -ex "symbol-file build/bin/kernel.elf"
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+/usr/local/i386elfgcc/bin/i386-elf-gdb: 1234" -ex "symbol-file build/bin/kernel.elf"
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+build/bin/kernel.bin: build/kernel/kernel_start.o build/kernel/drivers/ports.o kernel/kernel.o kernel/string.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 40):
+	${LD} -o $@ -Ttext ${KERNEL_OFFSET} $^ --oformat binary
+	
+
+# Not a target:
+kernel/types.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kernel/kernel.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+kernel/string.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 # files hash-table stats:
-# Load=5/1024=0%, Rehash=0, Collisions=0/17=0%
+# Load=35/1024=3%, Rehash=0, Collisions=2/109=2%
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -216,6 +434,6 @@ make_dirs:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Mon Sep  6 18:10:31 2021
+# Finished Make data base on Wed Sep  8 11:17:09 2021
 
  
