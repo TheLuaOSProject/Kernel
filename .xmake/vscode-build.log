@@ -1,1 +1,7 @@
-define macro(.) ok!
+checking for Xcode directory ... %s
+checking for Codesign Identity of Xcode ... no
+checking for SDK version of Xcode for macosx (x86_64) ... nil
+checking for Minimal target version of Xcode for macosx (x86_64) ... nil
+[ 14%]: compiling.debug kernel/kernel_start.asm
+error: kernel/kernel_start.asm:7: error: binary output format does not support external references
+

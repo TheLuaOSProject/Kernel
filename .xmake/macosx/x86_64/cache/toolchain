@@ -1,45 +1,35 @@
 {
-    ["tool_target_LuaOS-Kernel_macosx_x86_64_cc"] = {
-        program = "/usr/local/i386elfgcc/bin/i386-elf-gcc",
+    tool_target_LuaOS_macosx_x86_64_cc = {
         toolname = "gcc",
+        program = "/usr/local/i386elfgcc/bin/i386-elf-gcc",
         toolchain_info = {
             name = "cross-toolchain",
-            arch = "x86_64",
+            plat = "macosx",
             cachekey = "cross-toolchain_arch_x86_64_plat_macosx",
-            plat = "macosx"
+            arch = "x86_64"
         }
     },
     xcode_arch_x86_64_plat_macosx = {
-        arch = "x86_64",
         plat = "macosx",
-        __global = true
-    },
-    ["tool_target_LuaOS-Boot_macosx_x86_64_as"] = {
-        program = "/usr/local/bin/nasm",
-        toolname = "nasm",
-        toolchain_info = {
-            name = "cross-toolchain",
-            arch = "x86_64",
-            cachekey = "cross-toolchain_arch_x86_64_plat_macosx",
-            plat = "macosx"
-        }
-    },
-    ["tool_target_LuaOS-Kernel_macosx_x86_64_as"] = {
-        program = "/usr/local/bin/nasm",
-        toolname = "nasm",
-        toolchain_info = {
-            name = "cross-toolchain",
-            arch = "x86_64",
-            cachekey = "cross-toolchain_arch_x86_64_plat_macosx",
-            plat = "macosx"
-        }
+        __global = true,
+        arch = "x86_64"
     },
     ["cross-toolchain_arch_x86_64_plat_macosx"] = {
-        bindir = "/usr/local/i386elfgcc/bin",
-        arch = "x86_64",
-        cross = "i386-elf-",
-        sdkdir = "/usr/local/i386elfgcc/",
         __global = true,
-        plat = "macosx"
+        arch = "x86_64",
+        plat = "macosx",
+        cross = "i386-elf-",
+        bindir = "/usr/local/i386elfgcc/bin",
+        sdkdir = "/usr/local/i386elfgcc/"
+    },
+    tool_target_LuaOS_macosx_x86_64_as = {
+        toolname = "nasm",
+        program = "/usr/local/bin/nasm",
+        toolchain_info = {
+            name = "cross-toolchain",
+            plat = "macosx",
+            cachekey = "cross-toolchain_arch_x86_64_plat_macosx",
+            arch = "x86_64"
+        }
     }
 }

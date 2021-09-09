@@ -1,19 +1,19 @@
 {
+    find_program = {
+        ["/usr/local/i386elfgcc/bin/i386-elf-gcc"] = "/usr/local/i386elfgcc/bin/i386-elf-gcc",
+        dmd = false,
+        ccache = false,
+        ldc2 = false,
+        gdc = "/usr/local/bin/gdc",
+        zig = false
+    },
     ["detect.sdks.find_xcode"] = {
         xcode = { }
-    },
-    ["find_program_cross-toolchain_arch_x86_64_plat_macosx_checktoolas"] = {
-        nasm = "/usr/local/bin/nasm"
     },
     ["find_program_cross-toolchain_arch_x86_64_plat_macosx_checktoolcc"] = {
         ["i386-elf-gcc"] = "/usr/local/i386elfgcc/bin/i386-elf-gcc"
     },
-    find_program = {
-        dmd = false,
-        ldc2 = false,
-        gdc = "/usr/local/bin/gdc",
-        ccache = false,
-        zig = false,
-        ["/usr/local/i386elfgcc/bin/i386-elf-gcc"] = "/usr/local/i386elfgcc/bin/i386-elf-gcc"
+    ["find_program_cross-toolchain_arch_x86_64_plat_macosx_checktoolas"] = {
+        nasm = "/usr/local/bin/nasm"
     }
 }
