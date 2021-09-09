@@ -1,0 +1,45 @@
+{
+    ["tool_target_LuaOS-Kernel_macosx_x86_64_cc"] = {
+        program = "/usr/local/i386elfgcc/bin/i386-elf-gcc",
+        toolname = "gcc",
+        toolchain_info = {
+            name = "cross-toolchain",
+            arch = "x86_64",
+            cachekey = "cross-toolchain_arch_x86_64_plat_macosx",
+            plat = "macosx"
+        }
+    },
+    xcode_arch_x86_64_plat_macosx = {
+        arch = "x86_64",
+        plat = "macosx",
+        __global = true
+    },
+    ["tool_target_LuaOS-Boot_macosx_x86_64_as"] = {
+        program = "/usr/local/bin/nasm",
+        toolname = "nasm",
+        toolchain_info = {
+            name = "cross-toolchain",
+            arch = "x86_64",
+            cachekey = "cross-toolchain_arch_x86_64_plat_macosx",
+            plat = "macosx"
+        }
+    },
+    ["tool_target_LuaOS-Kernel_macosx_x86_64_as"] = {
+        program = "/usr/local/bin/nasm",
+        toolname = "nasm",
+        toolchain_info = {
+            name = "cross-toolchain",
+            arch = "x86_64",
+            cachekey = "cross-toolchain_arch_x86_64_plat_macosx",
+            plat = "macosx"
+        }
+    },
+    ["cross-toolchain_arch_x86_64_plat_macosx"] = {
+        bindir = "/usr/local/i386elfgcc/bin",
+        arch = "x86_64",
+        cross = "i386-elf-",
+        sdkdir = "/usr/local/i386elfgcc/",
+        __global = true,
+        plat = "macosx"
+    }
+}

@@ -1,0 +1,7 @@
+{
+    cmdlines = {
+        "__macro_begin__",
+        "xmake m -e",
+        "__macro_end__"
+    }
+}

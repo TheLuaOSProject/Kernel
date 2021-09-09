@@ -1,0 +1,26 @@
+[
+{
+  "directory": "/Users/Frityet/Documents/LuaOS",
+  "arguments": ["/usr/local/bin/nasm", "-I", "kernel", "-I", ".", "-o", "build/.objs/LuaOS-Kernel/macosx/x86_64/debug/kernel/kernel_start.asm.o", "kernel/kernel_start.asm"],
+  "file": "kernel/kernel_start.asm"
+},
+{
+  "directory": "/Users/Frityet/Documents/LuaOS",
+  "arguments": ["/usr/local/i386elfgcc/bin/i386-elf-gcc", "-c", "-Ikernel", "-I.", "-ffreestanding", "-o", "build/.objs/LuaOS-Kernel/macosx/x86_64/debug/kernel/drivers/ports.c.o", "kernel/drivers/ports.c"],
+  "file": "kernel/drivers/ports.c"
+},
+{
+  "directory": "/Users/Frityet/Documents/LuaOS",
+  "arguments": ["/usr/local/i386elfgcc/bin/i386-elf-gcc", "-c", "-Ikernel", "-I.", "-ffreestanding", "-o", "build/.objs/LuaOS-Kernel/macosx/x86_64/debug/kernel/kernel.c.o", "kernel/kernel.c"],
+  "file": "kernel/kernel.c"
+},
+{
+  "directory": "/Users/Frityet/Documents/LuaOS",
+  "arguments": ["/usr/local/i386elfgcc/bin/i386-elf-gcc", "-c", "-Ikernel", "-I.", "-ffreestanding", "-o", "build/.objs/LuaOS-Kernel/macosx/x86_64/debug/kernel/string.c.o", "kernel/string.c"],
+  "file": "kernel/string.c"
+},
+{
+  "directory": "/Users/Frityet/Documents/LuaOS",
+  "arguments": ["/usr/local/bin/nasm", "-f", "bin", "-o", "build/.objs/LuaOS-Boot/macosx/x86_64/debug/boot/boot.asm.o", "boot/boot.asm"],
+  "file": "boot/boot.asm"
+}]

@@ -6,11 +6,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
- 
-make: *** No rule to make target `all'.  Stop.
- 
 
-# Make data base, printed on Wed Sep  8 11:17:09 2021
+# Make data base, printed on Thu Sep  9 15:04:59 2021
 
 # Variables
 
@@ -41,7 +38,7 @@ MAKEFILE_LIST :=  Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/88/f07nnvk967s_pckv6tp26w9r0000gn/T/vscode-ipc-24693709-fba3-42ed-b07b-dbf11c8801d8.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/88/f07nnvk967s_pckv6tp26w9r0000gn/T/vscode-ipc-8b23c8db-b044-4abf-ab40-b1627659cb9e.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -155,7 +152,7 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 20360
+VSCODE_PID = 27225
 # variable set hash-table stats:
 # Load=71/1024=7%, Rehash=0, Collisions=5/123=4%
 
@@ -165,8 +162,8 @@ VSCODE_PID = 20360
 
 # Directories
 
-# kernel (device 16777225, inode 4537950): 10 files, no impossibilities.
-# . (device 16777225, inode 4472000): 12 files, no impossibilities.
+# kernel (device 16777225, inode 4537950): 9 files, no impossibilities.
+# . (device 16777225, inode 4472000): 11 files, no impossibilities.
 # kernel/kernel.c (device 16777225, inode 4537953): could not be opened.
 # kernel/string.h (device 16777225, inode 5149061): could not be opened.
 # kernel/types.h (device 16777225, inode 5088991): could not be opened.
@@ -175,7 +172,7 @@ VSCODE_PID = 20360
 # kernel/kernel_start.asm (device 16777225, inode 4534340): could not be opened.
 # kernel/string.c (device 16777225, inode 5149059): could not be opened.
 
-# 27 files, no impossibilities in 9 directories.
+# 25 files, no impossibilities in 9 directories.
 
 # Implicit Rules
 
@@ -287,12 +284,12 @@ kernel/drivers/ports.c:
 #  Modification time never checked.
 #  File has not been updated.
 
+ 
 kernel/kernel.o: kernel/drivers/drivers.h kernel/drivers/ports.h kernel/kernel.h kernel/string.h kernel/types.h kernel/drivers/ports.c kernel/kernel.c kernel/string.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 46):
- 
 	${CC} ${CCFLAGS} -ffreestanding -c $< -o $@
 	
 
@@ -434,6 +431,8 @@ kernel/string.c:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Wed Sep  8 11:17:09 2021
+# Finished Make data base on Thu Sep  9 15:04:59 2021
 
+ 
+make: *** No rule to make target `all'.  Stop.
  
