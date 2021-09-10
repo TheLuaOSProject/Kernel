@@ -1,6 +1,6 @@
 add_rules("mode.debug", "mode.release");
 
-
+set_config("plat", "cross")
 
 toolchain("cross-toolchain");
     set_kind("standalone");
@@ -10,12 +10,9 @@ toolchain("cross-toolchain");
     set_toolset("c", "i386-elf-gcc");
     set_toolset("ld", "i386-elf-ld");
     set_toolset("as", "nasm");
-
-    
 toolchain_end();
 
 target("LuaOS-Boot");
-    set_plat("cross");
     set_kind("binary");
     set_toolchains("cross-toolchain");
 
@@ -36,7 +33,6 @@ target("LuaOS-Boot");
 target_end();
 
 target("LuaOS-kernel");
-    set_plat("cross");
     set_kind("binary");
     set_toolchains("cross-toolchain");
 
