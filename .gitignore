@@ -1,1 +1,4 @@
 *.DS_STORE
+
+build/
+.xmake/
