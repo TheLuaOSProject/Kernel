@@ -8,6 +8,7 @@
         "*.asm": "asm",
         "ports.h": "c",
         "types.h": "c",
-        "kernel.h": "c"
+        "kernel.h": "c",
+        "drivers.h": "c"
     }
 }

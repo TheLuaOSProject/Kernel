@@ -5,7 +5,7 @@
 #include "string.h"
 
 struct string
-str(const cstring_t str)
+str(const cstr_t str)
 {
     string_t string;
     
@@ -17,7 +17,7 @@ str(const cstring_t str)
     return string;
 }
 
-size_t strlen(const cstring_t str)
+size_t strlen(const cstr_t str)
 {
     size_t size = 0;
     char ch = str[0];

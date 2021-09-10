@@ -1,8 +1,8 @@
 #include "ports.h"
 
-u8char_t port_in(u16short_t port)
+uchar8_t port_in(ushort16_t port)
 {
-    u8char_t res;
+    uchar8_t res;
     
     __asm__(
         "in %%dx, %%al" 
@@ -13,7 +13,7 @@ u8char_t port_in(u16short_t port)
     return res;
 }
 
-void port_out(u16short_t port, u8char_t data)
+void port_out(ushort16_t port, uchar8_t data)
 {
     __asm__(
         "out %%al, %%dx" :: 
@@ -22,9 +22,9 @@ void port_out(u16short_t port, u8char_t data)
     );
 }
 
-u16short_t wport_in(u16short_t port)
+ushort16_t wport_in(ushort16_t port)
 {
-    u16short_t res;
+    ushort16_t res;
     __asm__(
         "in %%dx, %%al" 
         : "=a" (res) 
@@ -34,7 +34,7 @@ u16short_t wport_in(u16short_t port)
 }
 
 
-void wport_out(u16short_t port, u16short_t data)
+void wport_out(ushort16_t port, ushort16_t data)
 {
     __asm__(
         "out %%al, %%dx" ::

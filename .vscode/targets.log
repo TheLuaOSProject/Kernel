@@ -7,7 +7,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
 
-# Make data base, printed on Thu Sep  9 15:04:59 2021
+# Make data base, printed on Thu Sep  9 20:00:28 2021
 
 # Variables
 
@@ -38,7 +38,7 @@ MAKEFILE_LIST :=  Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/88/f07nnvk967s_pckv6tp26w9r0000gn/T/vscode-ipc-8b23c8db-b044-4abf-ab40-b1627659cb9e.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/88/f07nnvk967s_pckv6tp26w9r0000gn/T/vscode-ipc-478e8efd-09be-4a2e-8d84-b384da346075.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -152,7 +152,7 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 27225
+VSCODE_PID = 35179
 # variable set hash-table stats:
 # Load=71/1024=7%, Rehash=0, Collisions=5/123=4%
 
@@ -162,17 +162,14 @@ VSCODE_PID = 27225
 
 # Directories
 
-# kernel (device 16777225, inode 4537950): 9 files, no impossibilities.
-# . (device 16777225, inode 4472000): 11 files, no impossibilities.
+# kernel (device 16777225, inode 4537950): 6 files, no impossibilities.
+# . (device 16777225, inode 4472000): 12 files, no impossibilities.
 # kernel/kernel.c (device 16777225, inode 4537953): could not be opened.
-# kernel/string.h (device 16777225, inode 5149061): could not be opened.
-# kernel/types.h (device 16777225, inode 5088991): could not be opened.
+# kernel/lib (device 16777225, inode 5225285): 5 files, no impossibilities.
 # kernel/drivers (device 16777225, inode 5088147): 5 files, no impossibilities.
-# kernel/kernel.h (device 16777225, inode 5093276): could not be opened.
 # kernel/kernel_start.asm (device 16777225, inode 4534340): could not be opened.
-# kernel/string.c (device 16777225, inode 5149059): could not be opened.
 
-# 25 files, no impossibilities in 9 directories.
+# 28 files, no impossibilities in 6 directories.
 
 # Implicit Rules
 
@@ -184,6 +181,14 @@ remote: 1234" -ex "symbol-file build/bin/kernel.elf"
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+
+kernel/lib/string.o: kernel/drivers/drivers.h kernel/drivers/ports.h kernel/lib/string.h kernel/lib/types.h kernel/drivers/ports.c kernel/lib/string.c kernel/kernel.c
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 46):
+	${CC} ${CCFLAGS} -ffreestanding -c $< -o $@
+	
 
 # Not a target:
 kernel/drivers/drivers.h:
@@ -199,12 +204,6 @@ all:
 #  File has not been updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
-
-# Not a target:
-kernel/string.h:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
 
 build/bin/luaos.bin: build/bin/boot.bin build/bin/kernel.bin
 #  Implicit rule search has not been done.
@@ -254,12 +253,18 @@ debug: build/bin/luaos.bin build/bin/kernel.elf
 	qemu-system-i386 -s -fda ${BUILD_DIR}/bin/${OS_IMAGE} &
 	
 
+# Not a target:
+kernel/lib/types.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 build: clean make_dirs build/bin/luaos.bin
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
-build/kernel/drivers/ports.o: kernel/drivers/drivers.h kernel/drivers/ports.h kernel/kernel.h kernel/string.h kernel/types.h kernel/drivers/ports.c kernel/kernel.c kernel/string.c
+build/kernel/drivers/ports.o: kernel/drivers/drivers.h kernel/drivers/ports.h kernel/lib/string.h kernel/lib/types.h kernel/drivers/ports.c kernel/lib/string.c kernel/kernel.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -267,11 +272,20 @@ build/kernel/drivers/ports.o: kernel/drivers/drivers.h kernel/drivers/ports.h ke
 	${CC} ${CCFLAGS} -ffreestanding -c $< -o $@
 	
 
+# Not a target:
+kernel/lib/string.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 make_dirs:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 22):
+ 
+make: *** No rule to make target `all'.  Stop.
+ 
 	echo ${OBJ}
 	mkdir -p ${BUILD_DIR}/bin
 	mkdir -p ${BUILD_DIR}/boot
@@ -284,8 +298,7 @@ kernel/drivers/ports.c:
 #  Modification time never checked.
 #  File has not been updated.
 
- 
-kernel/kernel.o: kernel/drivers/drivers.h kernel/drivers/ports.h kernel/kernel.h kernel/string.h kernel/types.h kernel/drivers/ports.c kernel/kernel.c kernel/string.c
+kernel/kernel.o: kernel/drivers/drivers.h kernel/drivers/ports.h kernel/lib/string.h kernel/lib/types.h kernel/drivers/ports.c kernel/lib/string.c kernel/kernel.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -299,7 +312,13 @@ kernel/kernel.o: kernel/drivers/drivers.h kernel/drivers/ports.h kernel/kernel.h
 #  Modification time never checked.
 #  File has not been updated.
 
-build/bin/kernel.elf: build/kernel/kernel_start.o build/kernel/drivers/ports.o kernel/kernel.o kernel/string.o
+# Not a target:
+kernel/lib/string.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+build/bin/kernel.elf: build/kernel/kernel_start.o build/kernel/drivers/ports.o kernel/lib/string.o kernel/kernel.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -347,14 +366,6 @@ build/bin/boot.bin: boot/boot.asm
 	nasm $< -f bin -o $@
 	
 
-kernel/string.o: kernel/drivers/drivers.h kernel/drivers/ports.h kernel/kernel.h kernel/string.h kernel/types.h kernel/drivers/ports.c kernel/kernel.c kernel/string.c
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  commands to execute (from `Makefile', line 46):
-	${CC} ${CCFLAGS} -ffreestanding -c $< -o $@
-	
-
 run: build
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -392,7 +403,7 @@ localhost: 1234" -ex "symbol-file build/bin/kernel.elf"
 #  Modification time never checked.
 #  File has not been updated.
 
-build/bin/kernel.bin: build/kernel/kernel_start.o build/kernel/drivers/ports.o kernel/kernel.o kernel/string.o
+build/bin/kernel.bin: build/kernel/kernel_start.o build/kernel/drivers/ports.o kernel/lib/string.o kernel/kernel.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -400,26 +411,8 @@ build/bin/kernel.bin: build/kernel/kernel_start.o build/kernel/drivers/ports.o k
 	${LD} -o $@ -Ttext ${KERNEL_OFFSET} $^ --oformat binary
 	
 
-# Not a target:
-kernel/types.h:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-# Not a target:
-kernel/kernel.h:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-# Not a target:
-kernel/string.c:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
 # files hash-table stats:
-# Load=35/1024=3%, Rehash=0, Collisions=2/109=2%
+# Load=34/1024=3%, Rehash=0, Collisions=2/105=2%
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -431,8 +424,6 @@ kernel/string.c:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Thu Sep  9 15:04:59 2021
+# Finished Make data base on Thu Sep  9 20:00:28 2021
 
- 
-make: *** No rule to make target `all'.  Stop.
  

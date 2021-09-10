@@ -1,20 +1,6 @@
 {
     cmdlines = {
         "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/config.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/config.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/update_intellisense.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/update_intellisense.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/config.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/config.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/update_intellisense.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/config.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/update_intellisense.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/update_intellisense.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/config.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/update_intellisense.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/update_intellisense.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/config.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/update_intellisense.lua",
-        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/config.lua"
+        "xmake l /Users/Frityet/.vscode/extensions/tboox.xmake-vscode-1.4.4/assets/update_intellisense.lua"
     }
 }

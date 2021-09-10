@@ -8,14 +8,14 @@
 #include "types.h"
 
 typedef struct string {
-    cstring_t buffer;
+    cstr_t buffer;
     size_t  length;
     char    first_char;
     char    last_char;
 } string_t;
 
-struct string str(const cstring_t str);
+struct string str(const cstr_t str);
 
-size_t strlen(const cstring_t str);
+size_t strlen(const cstr_t str);
 
 #endif //LUAOS_STRING

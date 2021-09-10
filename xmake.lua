@@ -10,19 +10,19 @@ toolchain("cross-toolchain");
     set_toolset("as", "nasm");
 toolchain_end();
 
---[[
 target("LuaOS-Boot");
     set_kind("binary");
-    set_targetdir("build/boot");
     set_toolchains("cross-toolchain");
 
     add_files("boot/boot.asm");
 
     add_asflags("-f bin", { force = true });
-target_end();
---]]
 
-target("LuaOS");
+    set_objectdir("build/boot/");
+    set_targetdir("build/boot/bin");
+target_end();
+
+target("LuaOS-kernel");
     set_kind("binary");
     set_toolchains("cross-toolchain");
 
@@ -30,9 +30,9 @@ target("LuaOS");
     add_headerfiles("kernel/**.h");
     add_includedirs("kernel/", "./");
 
+    add_asflags("-f elf32", { force = true });
     add_cflags("-ffreestanding", { force = true });
     add_ldflags("-Ttext 0x1000", "--oformat binary");
-
-    set_objectdir("build/kernel/obj");
+    set_objectdir("build/kernel/");
     set_targetdir("build/kernel/bin");
 target_end();

@@ -1,19 +1,64 @@
 {
-    find_program = {
-        ["/usr/local/i386elfgcc/bin/i386-elf-gcc"] = "/usr/local/i386elfgcc/bin/i386-elf-gcc",
-        dmd = false,
-        ccache = false,
-        ldc2 = false,
-        gdc = "/usr/local/bin/gdc",
-        zig = false
+    ["lib.detect.has_flags"] = {
+        ["macosx_x86_64_/usr/local/i386elfgcc/bin/i386-elf-gcc_11.2.0_cc___-O0"] = true
+    },
+    ["find_program_cross-toolchain_arch_x86_64_plat_macosx_checktoolld"] = {
+        ["i386-elf-ld"] = "/usr/local/i386elfgcc/bin/i386-elf-ld"
+    },
+    ["find_program_cross-toolchain_arch_x86_64_plat_macosx_checktoolas"] = {
+        nasm = "/usr/local/bin/nasm"
     },
     ["detect.sdks.find_xcode"] = {
         xcode = { }
     },
+    find_programver = {
+        ["/usr/local/i386elfgcc/bin/i386-elf-gcc"] = "11.2.0"
+    },
+    ["detect.tools.gcc.has_flags"] = {
+        ["/usr/local/i386elfgcc/bin/i386-elf-gcc_11.2.0"] = {
+            ["-no-canonical-prefixes"] = true,
+            ["-time"] = true,
+            ["-B"] = true,
+            ["--help"] = true,
+            ["-pipe"] = true,
+            ["--param"] = true,
+            ["-Xlinker"] = true,
+            ["-pie"] = true,
+            ["-print-sysroot-headers-suffix"] = true,
+            ["-E"] = true,
+            ["-print-multi-os-directory"] = true,
+            ["-dumpversion"] = true,
+            ["-print-multi-directory"] = true,
+            ["-x"] = true,
+            ["-print-search-dirs"] = true,
+            ["-print-libgcc-file-name"] = true,
+            ["-pass-exit-codes"] = true,
+            ["--target-help"] = true,
+            ["-dumpspecs"] = true,
+            ["-o"] = true,
+            ["-dumpmachine"] = true,
+            ["-v"] = true,
+            ["-print-multiarch"] = true,
+            ["-S"] = true,
+            ["-print-multi-lib"] = true,
+            ["--version"] = true,
+            ["-print-sysroot"] = true,
+            ["-shared"] = true,
+            ["-Xassembler"] = true,
+            ["-Xpreprocessor"] = true,
+            ["-c"] = true,
+            ["-save-temps"] = true
+        }
+    },
     ["find_program_cross-toolchain_arch_x86_64_plat_macosx_checktoolcc"] = {
         ["i386-elf-gcc"] = "/usr/local/i386elfgcc/bin/i386-elf-gcc"
     },
-    ["find_program_cross-toolchain_arch_x86_64_plat_macosx_checktoolas"] = {
-        nasm = "/usr/local/bin/nasm"
+    find_program = {
+        gdc = "/usr/local/bin/gdc",
+        zig = false,
+        dmd = false,
+        ldc2 = false,
+        ["/usr/local/i386elfgcc/bin/i386-elf-gcc"] = "/usr/local/i386elfgcc/bin/i386-elf-gcc",
+        ccache = false
     }
 }
