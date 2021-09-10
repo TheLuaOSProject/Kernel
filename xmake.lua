@@ -48,6 +48,20 @@ target("LuaOS-kernel");
 
     after_link(function (target) 
         os.mkdir("build/bin");
-        os.execv("cat", {"build/boot/bin/boot.bin", target:targetdir() .. "/LuaOS-kernel"}, {stdout = "build/bin/luaos.bin"});
+
+        local export = "build/bin/luaos.bin";
+        local kernel = target:targetdir() .. "/LuaOS-kernel";
+
+        os.execv("cat", { "build/boot/bin/boot.bin", kernel }, { stdout = export  });
+
+        if is_mode("debug") then
+            os.mkdir("build/debug");
+            local qemu = process.open("qemu-system-i386 -s -fda " .. export, { stderr = "build/debug/err.log" });
+            os.run("sleep 1");
+            local gdb = process.openv("i386-elf-gdb", { "-ex", "target remote localhost:1234", "-ex", "symbol-file " .. kernel });
+
+            qemu:wait();
+            gdb:wait();
+        end
     end);
 target_end();
