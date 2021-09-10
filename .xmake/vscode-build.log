@@ -1,4 +1,0 @@
-[ 18%]: compiling.debug boot/boot.asm
-[ 18%]: compiling.debug kernel/kernel_start.asm
-error: boot/boot.asm:1: error: unrecognized directive [org]
-
