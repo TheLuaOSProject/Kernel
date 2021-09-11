@@ -4,8 +4,8 @@
 %define DATA_SEGMENT 0x0010
 
 IDT:
-    .length       dw 0
-    .base         dd 0    
+    .length:       dw 0
+    .base:         dd 0    
 
 lm_switch:
     push    di
