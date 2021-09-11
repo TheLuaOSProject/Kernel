@@ -4,8 +4,7 @@
 
 #include "string.h"
 
-struct string
-str(cstr_t str)
+struct string str(cstr_t str)
 {
     string_t string;
     

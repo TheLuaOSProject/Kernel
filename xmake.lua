@@ -12,27 +12,7 @@ toolchain("cross-toolchain");
     set_toolset("as", "nasm");
 toolchain_end();
 
-target("LuaOS-Boot");
-    set_kind("binary");
-    set_toolchains("cross-toolchain");
-
-    add_files("boot/boot.asm");
-
-    add_asflags("-f bin", { force = true });
-
-    set_objectdir("build/boot/");
-    set_targetdir("build/boot/bin");
-
-    set_strip("none");
-
-    on_link(function (target) end);
-    after_link(function (target) 
-        os.rm(target:targetdir() .. "/boot.bin");
-        os.cp(target:objectdir() .. "/boot/boot.asm.o", target:targetdir() .. "/boot.bin", {rootdir = "build", symlink = false});
-    end);
-target_end();
-
-target("LuaOS-kernel");
+target("LuaOS");
     set_kind("binary");
     set_toolchains("cross-toolchain");
 
@@ -41,27 +21,14 @@ target("LuaOS-kernel");
     add_includedirs("kernel/", "kernel/lib/");
 
     add_asflags("-f elf64", { force = true });
-    add_cflags("-ffreestanding", { force = true });
-    add_ldflags("-Ttext 0x1000", { force = true });
-    set_objectdir("build/kernel/");
-    set_targetdir("build/kernel/bin");
+    add_cflags("-ffreestanding -I. -std=gnu11 -fno-stack-protector -fpie -mno-80387 -mno-mmx -mno-3dnow -mno-sse -mno-sse2 -mno-red-zone", { force = true });
+                
+    add_ldflags("-Tkernel/linker.ld -nostdlib -zmax-page-size=0x1000 -static -pie --no-dynamic-linker -ztext", { force = true });
+    
+    set_objectdir("build/");
+    set_targetdir("build/bin");
 
     after_link(function (target) 
-        os.mkdir("build/bin");
-
-        local export = "build/bin/luaos.bin";
-        local kernel = target:targetdir() .. "/LuaOS-kernel";
-
-        os.execv("cat", { "build/boot/bin/boot.bin", kernel }, { stdout = export  });
-
-        if is_mode("debug") then
-            os.mkdir("build/debug");
-            local qemu = process.open("qemu-system-x86_64 -s -fda " .. export, { stderr = "build/debug/err.log" });
-            os.run("sleep 1");
-            local gdb = process.openv("x86_64-elf-gdb", { "-ex", "target remote localhost:1234", "-ex", "symbol-file " .. kernel });
-
-            qemu:wait();
-            gdb:wait();
-        end
+    
     end);
 target_end();
