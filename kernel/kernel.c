@@ -3,6 +3,5 @@
 
 void kernel_start()
 {
-    cstr_t string = "Hello!";
-
+    string_t string = str("Hello!");
 }

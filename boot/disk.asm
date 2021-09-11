@@ -22,21 +22,10 @@ load_disk:
     ret
 
 disk_err:
-    mov         bx, DISK_ERROR
-    call        println
-    mov         dh, ah
-    call        hexprintln
     jmp         disk_loop
 
 sect_err:
-    mov         bx, SECT_ERROR
-    call        println
-
     jmp         disk_loop
 
 disk_loop:
     jmp         $
-
-
-DISK_ERROR      db "DISK ERROR", 0
-SECT_ERROR      db "SECTOR ERROR", 0

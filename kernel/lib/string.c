@@ -5,11 +5,11 @@
 #include "string.h"
 
 struct string
-str(const cstr_t str)
+str(cstr_t str)
 {
     string_t string;
     
-    string.buffer = str;
+    string.cstring = str;
     string.length = strlen(str);
     string.first_char = str[0];
     string.last_char = str[string.length];
@@ -17,7 +17,7 @@ str(const cstr_t str)
     return string;
 }
 
-size_t strlen(const cstr_t str)
+size_t strlen(cstr_t str)
 {
     size_t size = 0;
     char ch = str[0];

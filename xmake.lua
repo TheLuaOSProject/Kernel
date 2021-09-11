@@ -38,7 +38,7 @@ target("LuaOS-kernel");
 
     add_files("kernel/**.c", "kernel/**.asm");
     add_headerfiles("kernel/**.h");
-    add_includedirs("kernel/", "./");
+    add_includedirs("kernel/", "kernel/lib/");
 
     add_asflags("-f elf32", { force = true });
     add_cflags("-ffreestanding", { force = true });
