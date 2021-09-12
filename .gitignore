@@ -1,5 +1,7 @@
 *.DS_STORE
 
-build/
-.xmake/
+build
+.xmake
+
 Cmakelists.txt
+cmake-build-debug
