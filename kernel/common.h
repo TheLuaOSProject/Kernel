@@ -7,6 +7,9 @@
 
 #include <lib/string.h>
 
+/**
+ * Halts the computer
+ */
 #define HANG() for (;;) asm("hlt");
 
 /* va_args_count. https://github.com/donmccaughey/va_args_count
@@ -29,8 +32,9 @@
  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-/* BEGIN */
-
+/**
+ * Gets argument count from a varadict macro
+ */
 #define VA_ARGS_COUNT(...) \
     VA_ARGS_SHIFT_COUNT_VALUES(__VA_ARGS__, VA_ARGS_COUNT_VALUES)
 

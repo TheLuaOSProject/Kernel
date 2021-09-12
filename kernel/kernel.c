@@ -1,6 +1,9 @@
 #include "drivers/drivers.h"
 
-// The following will be our kernel's entry point.
+/**
+ * LuaOS Kernel Entry point
+ * @param bootloader Stivale2 utilities
+ */
 void kstart(struct stivale2_struct *bootloader)
 {
     struct kernel_console kconsole = setup_console(bootloader);
