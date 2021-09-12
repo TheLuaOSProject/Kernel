@@ -2,6 +2,19 @@ add_rules("mode.debug", "mode.release");
 
 set_config("plat", "cross")
 
+local function tablelen(table)
+    local len = 0;
+    for k, v in pairs(table) do
+        len = len + 1;
+    end
+    return len;
+end
+
+local function strcat(base, ext)
+    base = base .. ext;
+    return base;
+end
+
 toolchain("cross-toolchain");
     set_kind("standalone");
     set_sdkdir("/usr/local/x86_64-elf-gcc/");
@@ -28,7 +41,56 @@ target("LuaOS");
     set_objectdir("build/");
     set_targetdir("build/bin");
 
-    after_link(function (target) 
+    after_link(function (target)
+        local liminepath = target:objectdir() .. "/limine/";
+        local kernelimg = target:targetdir() .. "/LuaOS";
+
+        if os.isdir(liminepath) then
+            os.rm(liminepath);
+        end
+
+        local gitcmd = "git clone https://github.com/limine-bootloader/limine.git " .. liminepath .. " --branch=v2.0-branch-binary --depth=1";
+        os.run(gitcmd);
+
+        os.run("make -C " .. liminepath);
+
+        local liminefiles = { 
+            cfg     = "kernel/limine.cfg",
+            sys     = liminepath .. "limine.sys",
+            cdbin   = liminepath .. "limine-cd.bin",
+            efibin  = liminepath .. "limine-eltorito-efi.bin"
+        };
+        
+        for k, v in pairs(liminefiles) do
+            os.cp(v, target:targetdir());
+        end
+        
+        local xorrisofiles = {
+            cfg     = "limine.cfg",
+            sys     = "limine-cd.bin",
+            cdbin   = "limine-cd.bin",
+            efibin  = "limine-eltorito-efi.bin",
+            export  = target:targetdir() .. "/LuaOS-x86_64.iso" 
+        };
+        
+        if os.isfile(xorrisofiles.export) then
+            os.rm(xorrisofiles.export);
+        end
+
+        local xorrisoargs = "-as mkisofs -b ";
+
+        xorrisoargs = strcat(xorrisoargs, xorrisofiles.cdbin .. " -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot ");
+        xorrisoargs = strcat(xorrisoargs, xorrisofiles.efibin .. " -efi-boot-part --efi-boot-image --protective-msdos-label ");
+        xorrisoargs = strcat(xorrisoargs, target:targetdir() .. " -o " .. xorrisofiles.export);
+
+        print("XORRISO = " .. xorrisoargs);
     
+        os.run("xorriso " .. xorrisoargs);
+
+        local exec = "./" .. liminepath .. "limine-install " .. xorrisofiles.export;
+
+        print("EXEC = " .. exec);
+
+        os.run(exec);
     end);
 target_end();

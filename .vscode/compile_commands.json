@@ -1,31 +1,21 @@
 [
 {
   "directory": "/Users/Frityet/Documents/LuaOS",
-  "arguments": ["/usr/local/bin/nasm", "-f", "bin", "-o", "build/boot/LuaOS-Boot/macosx/x86_64/release/boot/boot.asm.o", "boot/boot.asm"],
-  "file": "boot/boot.asm"
-},
-{
-  "directory": "/Users/Frityet/Documents/LuaOS",
-  "arguments": ["/usr/local/bin/nasm", "-I", "kernel", "-I", "kernel/lib", "-f", "elf32", "-o", "build/kernel/LuaOS-kernel/macosx/x86_64/release/kernel/kernel_start.asm.o", "kernel/kernel_start.asm"],
-  "file": "kernel/kernel_start.asm"
-},
-{
-  "directory": "/Users/Frityet/Documents/LuaOS",
-  "arguments": ["/usr/local/i386elfgcc/bin/i386-elf-gcc", "-c", "-Ikernel", "-Ikernel/lib", "-ffreestanding", "-o", "build/kernel/LuaOS-kernel/macosx/x86_64/release/kernel/drivers/display.c.o", "kernel/drivers/display.c"],
+  "arguments": ["/usr/local/x86_64-elf-gcc/bin/x86_64-elf-gcc", "-c", "-Ikernel", "-Ikernel/lib", "-ffreestanding", "-I.", "-std=gnu11", "-fno-stack-protector", "-fpie", "-mno-80387", "-mno-mmx", "-mno-3dnow", "-mno-sse", "-mno-sse2", "-mno-red-zone", "-o", "build/LuaOS/cross/none/release/kernel/drivers/display.c.o", "kernel/drivers/display.c"],
   "file": "kernel/drivers/display.c"
 },
 {
   "directory": "/Users/Frityet/Documents/LuaOS",
-  "arguments": ["/usr/local/i386elfgcc/bin/i386-elf-gcc", "-c", "-Ikernel", "-Ikernel/lib", "-ffreestanding", "-o", "build/kernel/LuaOS-kernel/macosx/x86_64/release/kernel/drivers/ports.c.o", "kernel/drivers/ports.c"],
+  "arguments": ["/usr/local/x86_64-elf-gcc/bin/x86_64-elf-gcc", "-c", "-Ikernel", "-Ikernel/lib", "-ffreestanding", "-I.", "-std=gnu11", "-fno-stack-protector", "-fpie", "-mno-80387", "-mno-mmx", "-mno-3dnow", "-mno-sse", "-mno-sse2", "-mno-red-zone", "-o", "build/LuaOS/cross/none/release/kernel/drivers/ports.c.o", "kernel/drivers/ports.c"],
   "file": "kernel/drivers/ports.c"
 },
 {
   "directory": "/Users/Frityet/Documents/LuaOS",
-  "arguments": ["/usr/local/i386elfgcc/bin/i386-elf-gcc", "-c", "-Ikernel", "-Ikernel/lib", "-ffreestanding", "-o", "build/kernel/LuaOS-kernel/macosx/x86_64/release/kernel/kernel.c.o", "kernel/kernel.c"],
+  "arguments": ["/usr/local/x86_64-elf-gcc/bin/x86_64-elf-gcc", "-c", "-Ikernel", "-Ikernel/lib", "-ffreestanding", "-I.", "-std=gnu11", "-fno-stack-protector", "-fpie", "-mno-80387", "-mno-mmx", "-mno-3dnow", "-mno-sse", "-mno-sse2", "-mno-red-zone", "-o", "build/LuaOS/cross/none/release/kernel/kernel.c.o", "kernel/kernel.c"],
   "file": "kernel/kernel.c"
 },
 {
   "directory": "/Users/Frityet/Documents/LuaOS",
-  "arguments": ["/usr/local/i386elfgcc/bin/i386-elf-gcc", "-c", "-Ikernel", "-Ikernel/lib", "-ffreestanding", "-o", "build/kernel/LuaOS-kernel/macosx/x86_64/release/kernel/lib/string.c.o", "kernel/lib/string.c"],
+  "arguments": ["/usr/local/x86_64-elf-gcc/bin/x86_64-elf-gcc", "-c", "-Ikernel", "-Ikernel/lib", "-ffreestanding", "-I.", "-std=gnu11", "-fno-stack-protector", "-fpie", "-mno-80387", "-mno-mmx", "-mno-3dnow", "-mno-sse", "-mno-sse2", "-mno-red-zone", "-o", "build/LuaOS/cross/none/release/kernel/lib/string.c.o", "kernel/lib/string.c"],
   "file": "kernel/lib/string.c"
 }]
