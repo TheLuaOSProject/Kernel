@@ -19,9 +19,21 @@ static void clear(void);
  * Wrapper over the Stivale2 console interface 
  */
 struct kernel_console {
+    /**
+     * Prints a line into the kernel console
+     * @param msg Message to print
+     */
     void    (*println)(cstr_t msg);
+    
+    /**
+     * Prints into the kernel console
+     * @param msg Message to print
+     */
     void    (*print)(cstr_t msg);
     
+    /**
+     * Clears the kernel console
+     */
     void    (*clear)(void);
 };
 
