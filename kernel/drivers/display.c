@@ -2,51 +2,41 @@
 // Created by Frityet on 2021-09-10.
 //
 
+#include <common.h>
+
 #include "display.h"
 
-uint16_t    get_cursor_offset(void);
+static void kprint(cstr_t msg)
+{
+    stivale_print(msg, strlen(msg));
+}
 
-void        set_cursor_offset(uint16_t offset);
+static void kprintln(cstr_t msg)
+{
+    kprint(msg);
+    stivale_print("\n", 1);
+}
 
-uint16_t    printchar(char      chr, 
-                      uint16_t  col, 
-                      uint16_t  row,
-                      char      attr);
-
-uint16_t    get_offset(uint16_t col, uint16_t row);
-
-uint16_t    get_row_offset(uint16_t offset);
-
-uint16_t    get_col_offset(uint16_t offset);
-
-void clear_screen(void)
+static void clear(void)
 {
     
 }
 
-void kernel_print(string_t msg)
+struct kernel_console setup_console(struct stivale2_struct *bootloader)
 {
+    terminal_tag = get_stivale_tag(bootloader, STIVALE2_STRUCT_TAG_TERMINAL_ID);
+
+    if (terminal_tag == NULL) {
+        HANG();
+    }
     
-}
-
-void kernel_print_at(string_t msg, uint16_t col, uint16_t row)
-{
+    stivale_print = (void *) terminal_tag->term_write;
     
-}
-
-
-
-uint16_t get_offset(uint16_t col, uint16_t row)
-{
-    return (2 * row * MAX_COLUMNS + col);
-}
-
-uint16_t get_col_offset(uint16_t offset)
-{
-    return (offset - (get_row_offset(offset) * 2 * MAX_COLUMNS)) / 2;
-}
-
-uint16_t get_row_offset(uint16_t offset)
-{
-    return (offset / (2 * MAX_COLUMNS));
+    struct kernel_console kconsole;
+    
+    kconsole.clear      = &clear;
+    kconsole.print      = &kprint;
+    kconsole.println    = &kprintln;
+    
+    return kconsole;
 }

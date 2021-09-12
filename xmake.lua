@@ -82,15 +82,9 @@ target("LuaOS");
         xorrisoargs = strcat(xorrisoargs, xorrisofiles.cdbin .. " -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot ");
         xorrisoargs = strcat(xorrisoargs, xorrisofiles.efibin .. " -efi-boot-part --efi-boot-image --protective-msdos-label ");
         xorrisoargs = strcat(xorrisoargs, target:targetdir() .. " -o " .. xorrisofiles.export);
-
-        print("XORRISO = " .. xorrisoargs);
-    
         os.run("xorriso " .. xorrisoargs);
 
         local exec = "./" .. liminepath .. "limine-install " .. xorrisofiles.export;
-
-        print("EXEC = " .. exec);
-
         os.run(exec);
     end);
 target_end();

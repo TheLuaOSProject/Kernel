@@ -5,28 +5,28 @@
 #ifndef LUAOS_KERNEL_DISPLAY
 #define LUAOS_KERNEL_DISPLAY
 
-#include "types.h"
-#include "lib/string.h"
+#include "stivale.h"
 
-#define VIDEO_MEMORY            0xb8000
+#include <types.h>
+#include <lib/string.h>
 
-#define MAX_ROWS                25
-#define MAX_COLUMNS             80
+static void kprint(cstr_t msg);
+static void kprintln(cstr_t msg);
 
-#define SCREEN_CONTROL_REGISTER 0x3d
-#define SCREEN_DATA_REGISTER    0x3d5;
+static void clear(void);
 
-enum colours {
-    WHITE_ON_BLACK              = 0x0f,
-    GREEN_ON_BLACK              = 0xA0,
-    RED_ON_WHITE                = 0xf4
+struct kernel_console {
+    void    (*println)(cstr_t msg);
+    void    (*print)(cstr_t msg);
+    
+    void    (*clear)(void);
 };
 
 
-void clear_screen(void);
-void kernel_print(string_t msg);
-void kernel_print_at(string_t   msg, 
-                     uint16_t   col, 
-                     uint16_t   row);
+static void (*stivale_print)(const char *string, size_t length);
+
+struct kernel_console setup_console(struct stivale2_struct *bootloader);
+
+static struct stivale2_struct_tag_terminal *terminal_tag;
 
 #endif //LUAOS_KERNEL_DISPLAY

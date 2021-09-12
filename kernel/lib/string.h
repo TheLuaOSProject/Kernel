@@ -7,15 +7,6 @@
 
 #include "types.h"
 
-typedef struct string {
-    cstr_t  cstring;
-    size_t  length;
-    char    first_char;
-    char    last_char;
-} string_t;
-
-struct string str(cstr_t str);
-
-size_t strlen(cstr_t str);
+size_t strlen(const cstr_t str);
 
 #endif //LUAOS_STRING
