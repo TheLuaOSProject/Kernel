@@ -34,7 +34,7 @@ target("LuaOS");
     add_includedirs("kernel/", "kernel/lib/");
 
     add_asflags("-f elf64", { force = true });
-    add_cflags("-ffreestanding -I. -std=gnu11 -fno-stack-protector -fpie -mno-80387 -mno-mmx -mno-3dnow -mno-sse -mno-sse2 -mno-red-zone", { force = true });
+    add_cflags("-ffreestanding -I. -std=gnu11 -fno-stack-protector -fpie -mno-80387 -mno-mmx -mno-3dnow -mno-sse -mno-sse2 -mno-red-zone -g", { force = true });
                 
     add_ldflags("-Tkernel/linker.ld -nostdlib -zmax-page-size=0x1000 -static -pie --no-dynamic-linker -ztext", { force = true });
     
@@ -61,7 +61,7 @@ target("LuaOS");
             efibin  = liminepath .. "limine-eltorito-efi.bin"
         };
         
-        for k, v in pairs(liminefiles) do
+        for _, v in pairs(liminefiles) do
             os.cp(v, target:targetdir());
         end
         
