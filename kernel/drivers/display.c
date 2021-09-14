@@ -14,7 +14,7 @@ static void kprint(cstr_t msg)
 static void kprintln(cstr_t msg)
 {
     kprint(msg);
-    stivale_print('\n', 1);
+    stivale_print("\n", 1);
 }
 
 static void clear(void)

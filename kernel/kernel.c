@@ -7,9 +7,9 @@
  */
 void kstart(struct stivale2_struct *bootloader)
 {
-    s2bootloader = bootloader;
+    struct kernel_console console = setup_console(bootloader);
     
-    kernel_console_t console = setup_console();
+    console.println("Hello, World!");
     
     HANG();
 }
