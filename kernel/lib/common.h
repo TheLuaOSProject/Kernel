@@ -5,7 +5,9 @@
 #ifndef LUAOS_COMMON
 #define LUAOS_COMMON
 
-#include <lib/string.h>
+#include "string.h"
+
+#include "stivale2.h"
 
 /**
  * Halts the computer

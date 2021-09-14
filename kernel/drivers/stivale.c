@@ -2,9 +2,8 @@
 // Created by Frityet on 2021-09-12.
 //
 
+
 #include "stivale.h"
-
-
 
 // We need to tell the stivale bootloader where we want our stack to be.
 // We are going to allocate our stack as an uninitialised array in .bss.

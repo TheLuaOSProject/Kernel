@@ -87,4 +87,32 @@ target("LuaOS");
         local exec = "./" .. liminepath .. "limine-install " .. xorrisofiles.export;
         os.run(exec);
     end);
+
+    on_run (
+        function(target)
+            import("core.base.process");
+
+            local files = {
+                img = target:targetdir() .. "/LuaOS-x86_64.iso";
+                elf = target:targetdir() .. "/LuaOS";
+            };
+            
+            local qemucmd = "qemu-system-x86_64 -M q35 -m 1G -cdrom " .. files.img .. " -s";
+            print(qemucmd);
+            local qemu = process.open(qemucmd, { stderr = "qemulog.txt" });
+            
+            os.run("sleep 1");
+            
+            local gdb = process.openv (
+                "/usr/local/x86_64-elf-gcc/bin/x86_64-elf-gdb",
+                { 
+                    "-ex", "target remote localhost:1234", 
+                    "-ex", "file " .. files.elf
+                }
+            );
+            
+            qemu:wait();
+            gdb:wait();
+        end
+    );
 target_end();

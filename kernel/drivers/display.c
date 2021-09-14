@@ -14,12 +14,12 @@ static void kprint(cstr_t msg)
 static void kprintln(cstr_t msg)
 {
     kprint(msg);
-    stivale_print("\n", 1);
+    stivale_print('\n', 1);
 }
 
 static void clear(void)
 {
-    
+
 }
 
 struct kernel_console setup_console(struct stivale2_struct *bootloader)
@@ -29,14 +29,14 @@ struct kernel_console setup_console(struct stivale2_struct *bootloader)
     if (terminal_tag == NULL) {
         HANG();
     }
-    
-    stivale_print = (void *) terminal_tag->term_write;
-    
+
+    stivale_print = (void *)terminal_tag->term_write;
+
     struct kernel_console kconsole;
-    
+
     kconsole.clear      = &clear;
     kconsole.print      = &kprint;
     kconsole.println    = &kprintln;
-    
+
     return kconsole;
 }

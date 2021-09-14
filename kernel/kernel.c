@@ -1,4 +1,5 @@
-#include "drivers/drivers.h"
+#include <common.h>
+#include "drivers/display.h"
 
 /**
  * LuaOS Kernel Entry point
@@ -6,7 +7,9 @@
  */
 void kstart(struct stivale2_struct *bootloader)
 {
-    struct kernel_console kconsole = setup_console(bootloader);
+    s2bootloader = bootloader;
     
-    kconsole.print("LuaOS Kernel v1.0.0");
+    kernel_console_t console = setup_console();
+    
+    HANG();
 }

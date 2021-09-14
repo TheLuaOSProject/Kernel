@@ -7,3 +7,5 @@ Cmakelists.txt
 cmake-build-debug
 
 .idea/discord.xml
+
+qemulog.txt
