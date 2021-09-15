@@ -3,11 +3,7 @@
 //
 
 
-#include "stivale.h"
-
-// We need to tell the stivale bootloader where we want our stack to be.
-// We are going to allocate our stack as an uninitialised array in .bss.
-static uint8_t stack[4096];
+#include "bootloader.h"
 
 // stivale2 uses a linked list of tags for both communicating TO the
 // bootloader, or receiving info FROM it. More information about these tags

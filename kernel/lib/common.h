@@ -6,8 +6,12 @@
 #define LUAOS_COMMON
 
 #include "string.h"
-
 #include "stivale2.h"
+
+#define LUAOS_VERSION       "1.0.0"
+#define LUAOS_BUILD_DATE    "9/14/21"
+
+#define STACK_SIZE          4096
 
 /**
  * Halts the computer

@@ -1,7 +1,7 @@
 #ifndef LUAOS_DRIVERS
 #define LUAOS_DRIVERS
 
-#include "display.h"
+#include "console.h"
 
 
 #endif //LUAOS_DRIVERS
