@@ -6,7 +6,7 @@
 
 #include "string.h"
 
-size_t strlen(const cstr_t str)
+size_t strlen(const string_t str)
 {
     size_t len = 0;
 

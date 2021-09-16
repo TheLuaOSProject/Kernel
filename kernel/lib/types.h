@@ -8,6 +8,6 @@
 /**
  * C String, expands to a char pointer
  */
-typedef char* cstr_t;
+typedef char* string_t;
 
 #endif

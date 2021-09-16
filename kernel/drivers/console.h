@@ -36,18 +36,18 @@ enum ansi_escape_codes
     STYLE_STRIKETHROUGH = 18
 };
 
-extern const cstr_t ANSI_ESCAPE_CODES[];
+extern const string_t ANSI_ESCAPE_CODES[];
 
-static void kprint(cstr_t msg);
-static void kprintln(cstr_t msg);
+static void kprint(string_t msg);
+static void kprintln(string_t msg);
 
-static void kprintf(cstr_t fmt, ...);
-static void kprintfln(cstr_t fmt, ...);
+static void kprintf(string_t fmt, ...);
+static void kprintfln(string_t fmt, ...);
 
-static void kprints(cstr_t msg, enum ansi_escape_codes styles[]);
-static void kprintsln(cstr_t msg, enum ansi_escape_codes styles[]);
+static void kprints(string_t msg, enum ansi_escape_codes styles[]);
+static void kprintsln(string_t msg, enum ansi_escape_codes styles[]);
 
-static void kset_style(const enum ansi_escape_codes code, bool reset);
+static void kset_style(enum ansi_escape_codes code, bool reset);
 static void kset_styles(const enum ansi_escape_codes codes[], bool reset);
 
 static void clear(void);
@@ -60,13 +60,13 @@ struct kernel_console {
      * Prints a line into the kernel console
      * @param msg Message to print
      */
-    void    (*println)(cstr_t msg);
+    void    (*println)(string_t msg);
     
     /**
      * Prints into the kernel console
      * @param msg Message to print
      */
-    void    (*print)(cstr_t msg);
+    void    (*print)(string_t msg);
     
     /**
      * Clears the kernel console
@@ -76,22 +76,22 @@ struct kernel_console {
     /**
      * Prints a string with the specified format
      */
-    void    (*printf)(cstr_t fmt, ...);
+    void    (*printf)(string_t fmt, ...);
 
     /**
     * Prints a line with the specified format
     */
-    void    (*printfln)(cstr_t fmt, ...);
+    void    (*printfln)(string_t fmt, ...);
     
     /**
      * Prints with the specified style(s)
      */
-    void    (*prints)(cstr_t msg, enum ansi_escape_codes styles[]);
+    void    (*prints)(string_t msg, enum ansi_escape_codes styles[]);
     
     /**
      * Prints a line with the specified style(s)
      */
-     void   (*printsln)(cstr_t msg, enum ansi_escape_codes styles[]);
+     void   (*printsln)(string_t msg, enum ansi_escape_codes styles[]);
 
     /**
     * Sets the console style
@@ -101,7 +101,7 @@ struct kernel_console {
     /**
     * Sets the console styles
     */
-    void    (*set_styles)(enum ansi_escape_codes styles[], bool reset);
+    void    (*set_styles)(const enum ansi_escape_codes styles[], bool reset);
 };
 
 

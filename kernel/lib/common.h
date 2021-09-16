@@ -7,9 +7,10 @@
 
 #include "string.h"
 #include "stivale2.h"
+#include "utilities.h"
 
-#define LUAOS_VERSION       "1.0.0"
-#define LUAOS_BUILD_DATE    "9/14/21"
+#define LUAOS_VERSION       "0.1.13"
+#define LUAOS_BUILD_DATE    "9/16/21"
 
 #define STACK_SIZE          4096
 

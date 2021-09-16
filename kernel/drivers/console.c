@@ -7,7 +7,7 @@
 
 #include "console.h"
 
-const cstr_t ANSI_ESCAPE_CODES[] = {
+const string_t ANSI_ESCAPE_CODES[] = {
     "\x1b",     //ESCAPE
     
     /*Cursor*/
@@ -35,7 +35,7 @@ const cstr_t ANSI_ESCAPE_CODES[] = {
     "\x1b[9m",  //STRIKETHROUGH STYLE
 };
 
-static void kprintf(cstr_t fmt, ...)
+static void kprintf(string_t fmt, ...)
 {
     va_list arglist;
     va_start(arglist, fmt);
@@ -49,13 +49,13 @@ static void kprintf(cstr_t fmt, ...)
         }
         
         traverse++;
-        kprint(va_arg(arglist, cstr_t));
+        kprint(va_arg(arglist, string_t));
     }
 
     va_end(arglist);
 }
 
-static void kprintfln(cstr_t fmt, ...)
+static void kprintfln(string_t fmt, ...)
 {
     va_list arglist;
     va_start(arglist, fmt);
@@ -69,31 +69,31 @@ static void kprintfln(cstr_t fmt, ...)
         }
 
         traverse++;
-        kprint(va_arg(arglist, cstr_t));
+        kprint(va_arg(arglist, string_t));
     }
 
     va_end(arglist);
     stivale_print("\n", 1);
 }
 
-static void kprint(cstr_t msg)
+static void kprint(string_t msg)
 {
     stivale_print(msg, strlen(msg));
 }
 
-static void kprintln(cstr_t msg)
+static void kprintln(string_t msg)
 {
     kprint(msg);
     stivale_print("\n", 1);
 }
 
-static void kprints(cstr_t msg, enum ansi_escape_codes styles[])
+static void kprints(string_t msg, enum ansi_escape_codes styles[])
 {
     kset_styles(styles, true);
     kprint(msg);
 }
 
-static void kprintsln(cstr_t msg, enum ansi_escape_codes styles[])
+static void kprintsln(string_t msg, enum ansi_escape_codes styles[])
 {
     kprints(msg, styles);
     stivale_print("\n", 1);
