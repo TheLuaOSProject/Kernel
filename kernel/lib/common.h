@@ -71,4 +71,6 @@
 
 /* END */
 
+#define ARRAY_LENGTH(array) ((sizeof(array)/sizeof(0[array])) / ((size_t)(!(sizeof(array) % sizeof(0[array])))))
+
 #endif //LUAOS_COMMON

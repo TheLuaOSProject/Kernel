@@ -10,7 +10,7 @@
 #include <types.h>
 #include <lib/string.h>
 
-enum ANSI_ESCAPE_CODES
+enum ansi_escape_codes
 {
     ESCAPE              = 0,
     
@@ -36,39 +36,19 @@ enum ANSI_ESCAPE_CODES
     STYLE_STRIKETHROUGH = 18
 };
 
-const cstr_t ANSI_ESCAPE_CODES[] = {
-        "\x1b",     //ESCAPE
-        
-        /*Cursor*/
-        "\x1b[H",   //CURSOR TO HOME POS
-        
-        /*Screen Clearing*/
-        "\x1b[J",   //CLEAR SCREEN
-        "\x1b[0J",  //CLEAR SCREEN UNTIL END
-        "\x1b[1J",  //CLEAR SCREEN TO START
-        "\x1b[2J",  //CLEAR ALL
-        "\x1b[K",   //CLEAR LINE
-        "\x1b[0K",  //CLEAR LINE FROM CURSOR TO ENDL
-        "\x1b[1K",  //CLEAR LINE FROM CURSOR TO STARTL
-        "\x1b[2K",  //CLEAR ENTIRE LINE
-        
-        /*Text Styling*/
-        "\x1b[0m",  //RESET ALL STYLES
-        "\x1b[1m",  //BOLD STYLE
-        "\x1b[2m",  //DIM STYLE
-        "\x1b[3m",  //ITALIC STYLE
-        "\x1b[4m",  //UNDERLINE STYLE
-        "\x1b[5m",  //BLINKING STYLE
-        "\x1b[7m",  //REVERSE STYLE
-        "\x1b[8m",  //HIDDEN STYLE
-        "\x1b[9m",  //STRIKETHROUGH STYLE
-};
+extern const cstr_t ANSI_ESCAPE_CODES[];
 
 static void kprint(cstr_t msg);
 static void kprintln(cstr_t msg);
 
 static void kprintf(cstr_t fmt, ...);
 static void kprintfln(cstr_t fmt, ...);
+
+static void kprints(cstr_t msg, enum ansi_escape_codes styles[]);
+static void kprintsln(cstr_t msg, enum ansi_escape_codes styles[]);
+
+static void kset_style(const enum ansi_escape_codes code, bool reset);
+static void kset_styles(const enum ansi_escape_codes codes[], bool reset);
 
 static void clear(void);
 
@@ -102,6 +82,26 @@ struct kernel_console {
     * Prints a line with the specified format
     */
     void    (*printfln)(cstr_t fmt, ...);
+    
+    /**
+     * Prints with the specified style(s)
+     */
+    void    (*prints)(cstr_t msg, enum ansi_escape_codes styles[]);
+    
+    /**
+     * Prints a line with the specified style(s)
+     */
+     void   (*printsln)(cstr_t msg, enum ansi_escape_codes styles[]);
+
+    /**
+    * Sets the console style
+    */
+    void    (*set_style)(enum ansi_escape_codes style, bool reset);
+     
+    /**
+    * Sets the console styles
+    */
+    void    (*set_styles)(enum ansi_escape_codes styles[], bool reset);
 };
 
 

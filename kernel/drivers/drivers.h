@@ -2,6 +2,6 @@
 #define LUAOS_DRIVERS
 
 #include "console.h"
-
+#include "bootloader.h"
 
 #endif //LUAOS_DRIVERS
