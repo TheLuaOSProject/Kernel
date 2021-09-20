@@ -2,7 +2,7 @@
 #define LUAOS_DRIVERS
 
 #include "console.h"
-#include "bootloader.h"
 #include "ports.h"
+#include "screen.h"
 
 #endif //LUAOS_DRIVERS

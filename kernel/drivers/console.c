@@ -7,6 +7,8 @@
 
 #include "console.h"
 
+struct console console;
+
 const string_t ANSI_ESCAPE_CODES[] = {
     "\x1b",     //ESCAPE
     
@@ -126,27 +128,30 @@ static void clear(void)
     kprint(ANSI_ESCAPE_CODES[CLEAR_ALL]);
 }
 
-struct kernel_console setup_console(struct stivale2_struct *bootloader)
+bool initialise_console(struct stivale2_struct *bootloader)
 {
     terminal_tag = get_stivale_tag(bootloader, STIVALE2_STRUCT_TAG_TERMINAL_ID);
-
-    if (terminal_tag == NULL) {
-        HANG();
-    }
+    
 
     stivale_print = (void *)terminal_tag->term_write;
 
-    struct kernel_console kconsole;
+    console.clear      = &clear;
+    console.print      = &kprint;
+    console.println    = &kprintln;
+    console.printf     = &kprintf;
+    console.printfln   = &kprintfln;
+    console.prints     = &kprints;
+    console.printsln   = &kprintsln;
+    console.set_style  = &kset_style;
+    console.set_styles = &kset_styles;
 
-    kconsole.clear      = &clear;
-    kconsole.print      = &kprint;
-    kconsole.println    = &kprintln;
-    kconsole.printf     = &kprintf;
-    kconsole.printfln   = &kprintfln;
-    kconsole.prints     = &kprints;
-    kconsole.printsln   = &kprintsln;
-    kconsole.set_style  = &kset_style;
-    kconsole.set_styles = &kset_styles;
+    console.initialised = true;
+    
+    return true;
+    
+}
 
-    return kconsole;
+struct console get_console()
+{
+    return console;
 }

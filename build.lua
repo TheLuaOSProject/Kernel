@@ -34,11 +34,11 @@ function task:create(name, dependencies, action)
 end
 
 function build_luaos()
-    os.execute("xbuild -rvD");
+    os.execute("xmake -rvD");
 end
 
 function run_luaos()
-    os.execute("xbuild -rvD run");
+    os.execute("xmake -rvD run");
 end
 
 function debug_luaos()
@@ -74,7 +74,7 @@ local tasks = {
 }
 
 for _, v in pairs(tasks) do
-    if v.name == args[1] then
+    if v.name == arg[1] then
         if v.dependencies ~= nil then
             for _, p in pairs(v.dependencies) do
                 p.action();
@@ -82,4 +82,4 @@ for _, v in pairs(tasks) do
         end
         v.action();
     end
-end
+end 

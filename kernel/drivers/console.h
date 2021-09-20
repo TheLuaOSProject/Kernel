@@ -5,8 +5,6 @@
 #ifndef LUAOS_KERNEL_DISPLAY
 #define LUAOS_KERNEL_DISPLAY
 
-#include "bootloader.h"
-
 #include <types.h>
 #include <lib/string.h>
 
@@ -55,7 +53,7 @@ static void clear(void);
 /**
  * Wrapper over the Stivale2 console interface 
  */
-struct kernel_console {
+extern struct console {
     /**
      * Prints a line into the kernel console
      * @param msg Message to print
@@ -102,7 +100,9 @@ struct kernel_console {
     * Sets the console styles
     */
     void    (*set_styles)(const enum ansi_escape_codes styles[], bool reset);
-};
+    
+    bool    initialised;
+} console;
 
 
 static void (*stivale_print)(const char *string, size_t length);
@@ -112,7 +112,7 @@ static void (*stivale_print)(const char *string, size_t length);
  * @param bootloader Stivale2 struct passed in the kernel entry point
  * @return The setup wrapper
  */
-struct kernel_console setup_console(struct stivale2_struct *bootloader);
+bool initialise_console(struct stivale2_struct *bootloader);
 
 static struct stivale2_struct_tag_terminal *terminal_tag;
 

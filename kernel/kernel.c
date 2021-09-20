@@ -7,7 +7,12 @@
  */
 void kstart(struct stivale2_struct *bootloader)
 {
-    struct kernel_console console = setup_console(bootloader);
+    initialise_screen(bootloader);
+    initialise_console(bootloader);
+
+    point_t pos     = { screen.screen_size.x / 2, screen.screen_size.y / 2 };
+    point_t size    = { 128, 256 };
+    screen.draw_rect(pos, size, 0x8075FF);
     
     console.printfln("Started LuaOS v%, built %%", LUAOS_VERSION, LUAOS_BUILD_DATE);
     console.printfln("Bootloader brand: %", bootloader->bootloader_brand);

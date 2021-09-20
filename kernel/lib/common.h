@@ -8,11 +8,10 @@
 #include "string.h"
 #include "stivale2.h"
 #include "utilities.h"
+#include "bootloader.h"
 
 #define LUAOS_VERSION       "0.1.13"
 #define LUAOS_BUILD_DATE    "9/16/21"
-
-#define STACK_SIZE          4096
 
 /**
  * Halts the computer
