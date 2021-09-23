@@ -41,17 +41,13 @@ static void kprintf(string_t fmt, ...)
 {
     va_list arglist;
     va_start(arglist, fmt);
-    
-    char *traverse;
-    for (traverse = fmt; *traverse != '\0'; traverse++) {
-        while(*traverse != '%')
-        {
-            stivale_print(traverse, 1);
-            traverse++;
+
+    for (; *fmt != '\0'; fmt++) {
+        if(*fmt == '%') {
+            kprint(va_arg(arglist, string_t));
+            continue;
         }
-        
-        traverse++;
-        kprint(va_arg(arglist, string_t));
+        stivale_print(fmt, 1);
     }
 
     va_end(arglist);
@@ -62,16 +58,12 @@ static void kprintfln(string_t fmt, ...)
     va_list arglist;
     va_start(arglist, fmt);
 
-    char *traverse;
-    for (traverse = fmt; *traverse != '\0'; traverse++) {
-        while(*traverse != '%')
-        {
-            stivale_print(traverse, 1);
-            traverse++;
+    for (; *fmt != '\0'; fmt++) {
+        if(*fmt == '%') {
+            kprint(va_arg(arglist, string_t));
+            continue;
         }
-
-        traverse++;
-        kprint(va_arg(arglist, string_t));
+        stivale_print(fmt, 1);
     }
 
     va_end(arglist);

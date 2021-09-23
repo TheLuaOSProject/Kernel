@@ -13,16 +13,6 @@ void copy_memory(const  int8_t      *src,
         *(dest + i) = *(src + i);
     }
 }
-//K&R ftw 
-void strint(int num, char *output)
-{
-    int i = 0, sign = num;
-    if (sign < 0) num = -num;
-    
-    do {
-        output[i++] = num % 10 + '0';
-    } while ((num /= 10) > 0);
 
-    if (sign < 0) output[i++] = '-';
-    output[i] = '\0';
-}
+
+

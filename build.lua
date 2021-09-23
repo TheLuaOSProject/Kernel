@@ -38,7 +38,7 @@ function build_luaos()
 end
 
 function run_luaos()
-    os.execute("xmake -rvD run");
+    os.execute("xmake run");
 end
 
 function debug_luaos()

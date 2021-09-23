@@ -36,10 +36,6 @@ bool initialise_screen(struct stivale2_struct *bootloader)
     return true;
 } 
 
-struct screen get_screen()
-{
-    return screen;
-}
 
 void clear_screen(uint32_t colour)
 {

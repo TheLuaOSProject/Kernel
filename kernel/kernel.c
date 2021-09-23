@@ -1,5 +1,6 @@
 #include <common.h>
 #include "drivers/drivers.h"
+#include "cpu/cpu.h"
 
 /**
  * LuaOS Kernel Entry point
@@ -9,16 +10,26 @@ void kstart(struct stivale2_struct *bootloader)
 {
     initialise_screen(bootloader);
     initialise_console(bootloader);
-
-    point_t pos     = { screen.screen_size.x / 2, screen.screen_size.y / 2 };
-    point_t size    = { 128, 256 };
-    screen.draw_rect(pos, size, 0x8075FF);
+    struct GDTdescriptor descriptor = {
+            .size = sizeof(struct GDT) - 1,
+            .offset = (uint64_t)&global_descriptor_table
+    };
+    load_gdt(&descriptor);
     
-    console.printfln("Started LuaOS v%, built %%", LUAOS_VERSION, LUAOS_BUILD_DATE);
+    console.set_style(STYLE_BOLD, true);
+    console.printfln("\x1b[32mStarted LuaOS v%, built %", LUAOS_VERSION, LUAOS_BUILD_DATE);
+    console.set_style(RESET_STYLES, true);
     console.printfln("Bootloader brand: %", bootloader->bootloader_brand);
     console.printfln("Bootloader version: %", bootloader->bootloader_version);
-    console.println("Written by Amrit Bhogal (Frityet)");
-    console.println("Project started in late July 2021");
+    console.set_style(STYLE_BOLD, true);
+    console.println("---------------------------------");
     
+    
+    string_t screen_size[2];
+    strint(screen.screen_size.x, screen_size[0]);
+    strint(screen.screen_size.y, screen_size[1]);
+     
+    console.printfln("Screen size: X = %, Y = %", screen_size[0], screen_size[1]);
+
     HANG();
 }

@@ -10,8 +10,8 @@
 #include "utilities.h"
 #include "bootloader.h"
 
-#define LUAOS_VERSION       "0.1.13"
-#define LUAOS_BUILD_DATE    "9/16/21"
+#define LUAOS_VERSION       "0.1.36"
+#define LUAOS_BUILD_DATE    "9/20/21"
 
 /**
  * Halts the computer

@@ -16,11 +16,8 @@ void copy_memory(const  int8_t  *src,
                         int8_t  *dest, 
                         int     byte_count);
 
-/**
- * Converts an integer to a char
- * @param num Integer to convert
- * @param output Output from the conversion
- */
-void strint(int num, char *output);
+
+
+
 
 #endif //LUAOS_UTILITIES
