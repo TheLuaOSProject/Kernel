@@ -7,26 +7,30 @@
 
 #include <common.h>
 
-struct IDTentry {
-    uint16_t    low_base;
+#define IDT_TYPE_ATTRIBUTE_INTERRUPT_GATE   0b10001110
+#define IDT_TYPE_ATTRIBUTE_CALL_GATE        0b10001100
+#define IDT_TYPE_ATTRIBUTE_TRAP_GATE        0b10001111
+
+struct IDT_descriptor_entry {
+    uint16_t    offset_0;
     uint16_t    selector;
-    uint8_t     interrupt_standard_table;
-    uint8_t     flags;
-    uint16_t    mid_base;
-    uint16_t    high_base;
+    uint8_t     interrupt_stack_table;
+    uint8_t     type_attribute;
+    uint16_t    offset_1;
+    uint32_t    offset_2;
     uint32_t    reserved;
 };
 
-struct IDT {
+struct IDT_descriptor {
     uint16_t    limit;
-    int64_t     base;
-};
+    uint16_t    offset;
+} __attribute__((packed));
 
-struct registers {
-    uint64_t    ds;
-    uint64_t    rdi, rsi, rbp, rsp, rbx, rdx, rcx, rax;
-    uint64_t    interrupt_number, error_code;
-    uint64_t    rip, code_segment, eflags, useresp, ss;
-};
+extern struct IDT_descriptor descriptor;
+void initialise_interrupts(void);
+
+void        set_descriptor_entry_offset(struct IDT_descriptor_entry *descriptor_entry, uint64_t offset);
+uint64_t    get_descriptor_entry_offset(struct IDT_descriptor_entry *descriptor_entry);
+
 
 #endif //LUAOS_IDT

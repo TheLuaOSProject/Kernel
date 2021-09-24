@@ -5,7 +5,8 @@
 #ifndef LUAOS_CPU
 #define LUAOS_CPU
 
-#include "GDT.h"
+#include "interrupts.h"
 #include "IDT.h"
+#include "GDT.h"
 
 #endif //LUAOS_CPU

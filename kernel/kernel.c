@@ -10,11 +10,7 @@ void kstart(struct stivale2_struct *bootloader)
 {
     initialise_screen(bootloader);
     initialise_console(bootloader);
-    struct GDTdescriptor descriptor = {
-            .size = sizeof(struct GDT) - 1,
-            .offset = (uint64_t)&global_descriptor_table
-    };
-    load_gdt(&descriptor);
+    
     
     console.set_style(STYLE_BOLD, true);
     console.printfln("\x1b[32mStarted LuaOS v%, built %", LUAOS_VERSION, LUAOS_BUILD_DATE);
