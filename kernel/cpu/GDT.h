@@ -7,12 +7,12 @@
 
 #include <common.h>
 
-struct GDTdescriptor {
+struct gdt_descriptor {
     uint16_t    limit;
     uint64_t    offset;
 } __attribute__((packed));
 
-struct GDTentry {
+struct gdt_entry {
     uint16_t    limit0;
     uint16_t    base0;
     uint8_t     base1;
@@ -22,19 +22,19 @@ struct GDTentry {
 } __attribute__((packed));
 
 
-struct GDT {
-    struct GDTentry     null;
-    struct GDTentry     kernel_code;
-    struct GDTentry     kernel_data;
+struct gdt {
+    struct gdt_entry     null;
+    struct gdt_entry     kernel_code;
+    struct gdt_entry     kernel_data;
     
-    struct GDTentry     user_null;
-    struct GDTentry     user_code;
-    struct GDTentry     user_data;
+    struct gdt_entry     user_null;
+    struct gdt_entry     user_code;
+    struct gdt_entry     user_data;
 } __attribute__((packed))
   __attribute((aligned(0x1000)));
 
-extern const struct GDT global_descriptor_table;
+extern const struct gdt global_descriptor_table;
 
-extern void load_gdt(struct GDTdescriptor *descriptor);
+extern void load_gdt(struct gdt_descriptor *descriptor);
 
 #endif //LUAOS_GDT

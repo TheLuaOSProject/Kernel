@@ -7,30 +7,37 @@
 
 #include <common.h>
 
-#define IDT_TYPE_ATTRIBUTE_INTERRUPT_GATE   0b10001110
-#define IDT_TYPE_ATTRIBUTE_CALL_GATE        0b10001100
-#define IDT_TYPE_ATTRIBUTE_TRAP_GATE        0b10001111
-
-struct IDT_descriptor_entry {
-    uint16_t    offset_0;
-    uint16_t    selector;
-    uint8_t     interrupt_stack_table;
-    uint8_t     type_attribute;
-    uint16_t    offset_1;
-    uint32_t    offset_2;
-    uint32_t    reserved;
+struct interrupt_frame {
+    uint64_t    error_code;
+    uint64_t    rip;
+    uint64_t    cs;
+    uint64_t    register_flags;
+    uint64_t    rsp;
+    uint64_t    ss;
 };
 
-struct IDT_descriptor {
-    uint16_t    limit;
-    uint16_t    offset;
+struct idt_descriptor {
+    uint16_t    size;
+    uint64_t    offset;
+    
 } __attribute__((packed));
 
-extern struct IDT_descriptor descriptor;
-void initialise_interrupts(void);
+struct idt_gate {
+    uint16_t    offset0;
+    uint16_t    selector;
+    uint8_t     interrupt_stack_table;
+    uint8_t     type;
+    uint16_t    offset1;
+    uint32_t    offset2;
+    uint32_t    zero;
+} __attribute__((packed));
 
-void        set_descriptor_entry_offset(struct IDT_descriptor_entry *descriptor_entry, uint64_t offset);
-uint64_t    get_descriptor_entry_offset(struct IDT_descriptor_entry *descriptor_entry);
+void initialise_idt(void);
+
+void register_interrupt_handler(uintmax_t   index,
+                                uint64_t    address, 
+                                uint8_t     gate_type,
+                                uint8_t     interrupt_stack_table);
 
 
 #endif //LUAOS_IDT

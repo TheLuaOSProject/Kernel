@@ -6,6 +6,10 @@
 #define LUAOS_UTILITIES
 #include "types.h"
 
+void set_memory(void        *pointer,
+                uintmax_t   value,
+                uintmax_t   bytes);
+
 /**
  * Copies memory from a source to a destination
  * @param src Source memory
