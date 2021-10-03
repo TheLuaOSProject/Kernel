@@ -46,13 +46,13 @@ void register_interrupt_handler(uintmax_t   index,
                                 uint8_t     gate_type,
                                 uint8_t     interrupt_stack_table)
 {
-    idt[index].offset0 = address & 0xFFFF;
-    idt[index].offset1 = (address >> 16) & 0xFFFF;
-    idt[index].offset2 = address >> 32;
-    idt[index].selector = 0x08;
-    idt[index].type = gate_type;
-    idt[index].zero = 0;
-    idt[index].interrupt_stack_table = interrupt_stack_table;
+    idt[index].offset0                  = address & 0xFFFF;
+    idt[index].offset1                  = (address >> 16) & 0xFFFF;
+    idt[index].offset2                  = address >> 32;
+    idt[index].selector                 = 0x08;
+    idt[index].type                     = gate_type;
+    idt[index].zero                     = 0;
+    idt[index].interrupt_stack_table    = interrupt_stack_table;
 }
 
 void idiv_by_zero(struct interrupt_frame *iframe)
