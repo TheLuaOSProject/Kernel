@@ -10,13 +10,13 @@
 #include "utilities.h"
 #include "bootloader.h"
 
-#define LUAOS_VERSION       "0.1.36"
-#define LUAOS_BUILD_DATE    "9/20/21"
+#define LUAOS_VERSION       "0.1.50"
+#define LUAOS_BUILD_DATE    "10/3/21"
 
 /**
  * Halts the computer
  */
-#define HANG() for (;;) asm("hlt");
+#define HANG() while(1) asm("hlt")
 
 /* va_args_count. https://github.com/donmccaughey/va_args_count
  Copyright (c) 2014, Don McCaughey. All rights reserved.

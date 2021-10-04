@@ -4,5 +4,6 @@
 #include "console.h"
 #include "ports.h"
 #include "screen.h"
+#include "keyboard.h"
 
 #endif //LUAOS_DRIVERS

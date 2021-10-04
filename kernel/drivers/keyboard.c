@@ -1,0 +1,97 @@
+//
+// Created by Frityet on 2021-10-03.
+//
+
+#include "keyboard.h"
+
+#include "console.h"
+
+extern const char NORMAL_KEYS[] = {
+        '\0', '\0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-',
+        '=', '\0', '\0', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[',
+        ']', '\0', '\0', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'',
+        '`', '\0', '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/',
+        '\0', '\0', '\0', ' '
+};
+
+extern const char CAPITAL_KEYS[] = {
+        '\0', '\0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-',
+        '=', '\0', '\0', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[',
+        ']', '\0', '\0', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', '\'',
+        '`', '\0', '\\', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/',
+        '\0', '\0', '\0', ' '
+};
+
+extern const char SHIFT_KEYS[] = {
+        '\0', '\0', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',
+        '\0', '\0', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}',
+        '\0', '\0', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', '~',
+        '\0', '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?'
+};
+
+extern const char SHIFT_CAPITAL_KEYS[] = {
+        '\0', '\0', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',
+        '\0', '\0', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '{', '}',
+        '\0', '\0', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ':', '"', '~',
+        '\0', '|', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '<', '>', '?'
+};
+
+static struct keyboard_state kb_state = {
+        .shift  = false,
+        .caps   = false
+};
+
+void asm_keyboard();
+
+void initialise_keyboard(void)
+{
+    register_interrupt_handler(0x21, 
+                               (uint64_t)&asm_keyboard,
+                               0x8E,
+                               0);
+}
+
+void ikeyboard(struct interrupt_frame *frame)
+{
+    uint8_t key = port_in(0x60);
+
+    //0x59 = max scan code
+    if (key >= 0x59) {
+        uint8_t released_key = key - 0x80;
+
+        switch (released_key) {
+            case LEFT_SHIFT:
+            case RIGHT_SHIFT:
+                kb_state.shift = false;
+                break;
+            default:
+                break;
+        }
+    }
+
+    switch (key) {
+        case LEFT_SHIFT:
+        case RIGHT_SHIFT:
+            kb_state.shift = true;
+            return;
+        case CAPS_LOCK:
+            kb_state.caps = true;
+            return;
+        default:
+            break;
+    }
+    
+    char buffer;
+
+    if (kb_state.shift && kb_state.caps) {
+        buffer = SHIFT_CAPITAL_KEYS[key];
+    } else if (kb_state.shift) {
+        buffer = SHIFT_KEYS[key];
+    } else if (kb_state.caps) {
+        buffer = CAPITAL_KEYS[key];
+    } else {
+        buffer = NORMAL_KEYS[key];
+    }
+    
+    console.print(buffer);
+}

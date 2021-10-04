@@ -3,6 +3,8 @@
 --- DateTime: 2021-09-15 4:20 p.m.
 ---
 
+local JSON = require("rapidjson");
+
 ---@class task
 ---@field name          string
 ---@field dependencies  table[] | nil
@@ -34,6 +36,7 @@ function task:create(name, dependencies, action)
 end
 
 function build_luaos()
+    os.execute("xmake f -p cross");
     os.execute("xmake -rvD");
 end
 
@@ -73,6 +76,41 @@ local tasks = {
     debug
 }
 
+---@class Log
+local log = {
+    date = "",
+    build_number = 0,
+    action = "",
+    runtime = ""
+};
+
+
+
+---@type Log[]
+local logs = JSON.load("buildlog.json");
+
+if logs == nil then
+    logs = {
+        [0] = { 
+            build_number = 0,
+            date = "nil",
+            action = "nil"
+        }
+    }
+end
+
+logs[#logs + 1] = {
+    build_number = logs[#logs].build_number + 1;
+    date = os.date("%Y/%m/%d at %H:%M"),
+    action = arg[1]
+};
+
+JSON.dump(logs, "buildlog.json", { pretty = true });
+
+print("Build " .. logs[#logs].build_number);
+print("Date: " .. logs[#logs].date);
+print("Action: " .. logs[#logs].action);
+
 for _, v in pairs(tasks) do
     if v.name == arg[1] then
         if v.dependencies ~= nil then
@@ -82,4 +120,6 @@ for _, v in pairs(tasks) do
         end
         v.action();
     end
-end 
+end
+
+

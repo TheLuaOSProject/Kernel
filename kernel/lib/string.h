@@ -22,6 +22,14 @@ size_t strlen(const string_t str);
 void strint(int num, string_t output);
 
 /**
+ * Concatinates 2 strings
+ * @param str1 String 1
+ * @param str2 String 2
+ * @return The two strings, combined
+ */
+string_t strcat(string_t str1, string_t str2);
+
+/**
  * Converts an hexadecimal number to a string
  * @param hex Hexadecimal value
  * @param output Output of the converison

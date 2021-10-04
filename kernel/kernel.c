@@ -11,7 +11,6 @@ void kstart(struct stivale2_struct *bootloader)
     initialise_screen(bootloader);
     initialise_console(bootloader);
     
-    
     console.set_style(STYLE_BOLD, true);
     console.printfln("\x1b[32mStarted LuaOS v%, built %", LUAOS_VERSION, LUAOS_BUILD_DATE);
     console.set_style(RESET_STYLES, true);
@@ -26,6 +25,18 @@ void kstart(struct stivale2_struct *bootloader)
     strint(screen.screen_size.y, screen_size[1]);
      
     console.printfln("Screen size: X = %, Y = %", screen_size[0], screen_size[1]);
+    
+    console.print("\x1b[1;93mInitialising IDT... ");
+    console.set_style(STYLE_BOLD, true);
+    initialise_idt();
+    console.println("\x1b[32m[Done]");
 
+    console.print("\x1b[1;93mInitialising keyboard inputs... ");
+    console.set_style(STYLE_BOLD, true);
+    initialise_keyboard();
+    console.println("\x1b[32m[Done]");
+    
+    
+    
     HANG();
 }

@@ -142,8 +142,3 @@ bool initialise_console(struct stivale2_struct *bootloader)
     return true;
     
 }
-
-struct console get_console()
-{
-    return console;
-}

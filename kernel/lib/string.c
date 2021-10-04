@@ -34,6 +34,25 @@ void strint(int num, string_t output)
     output[i] = '\0';
 }
 
+string_t strcat(string_t str1, string_t str2)
+{
+    size_t  str1_len    = strlen(str1),
+            str2_len    = strlen(str2),
+            catstr_len  = str1_len + str2_len;
+    
+    char catstr[catstr_len];
+
+    for (int i = 0; i < str1_len; ++i) {
+        catstr[i] = str1[i];
+    }
+
+    for (int i = 0; i < str2_len; ++i) {
+        catstr[str1_len + i] = str2[i];
+    }
+    
+    return catstr;
+}
+
 __attribute__((unused)) void strhex(uint64_t hex, string_t output)
 {
     uint64_t i = 0;
