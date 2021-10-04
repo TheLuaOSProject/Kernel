@@ -16,9 +16,6 @@ void asm_breakpoint();
 void asm_double_fault();
 void asm_general_protection();
 
-void reschedule_handler(void);
-void syscall_entry(void);
-
 static struct idt_gate idt[256];
 static struct idt_descriptor descriptor;
 
@@ -44,16 +41,6 @@ void initialise_idt(void)
     register_interrupt_handler(0xD,
                                (uint64_t)&asm_general_protection,
                                0x8E,
-                               0);
-    
-    
-    register_interrupt_handler(0x20, 
-                               (uint64_t)&reschedule_handler, 
-                               0x8E, 
-                               0);
-    register_interrupt_handler(0x80, 
-                               (uint64_t)&syscall_entry, 
-                               0xEE, 
                                0);
      
     descriptor.size     = sizeof(idt);
