@@ -1,3 +1,5 @@
+GLOBAL  LOAD_GDT  
+
 [BITS 64]
 LOAD_GDT:
     LGDT                [RDI]       ; Loads the GDT from the RDI register, which is where the GDT will be located once called from the Kernel
@@ -13,5 +15,5 @@ LOAD_GDT:
     PUSH                RDI
     RETFQ
 
-GLOBAL  LOAD_GDT    
+  
     

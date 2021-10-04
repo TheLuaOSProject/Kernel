@@ -4,6 +4,8 @@
 
 #include <stdarg.h>
 
+#include <common.h>
+
 #include "string.h"
 
 size_t strlen(const string_t str)
@@ -53,6 +55,18 @@ string_t strcat(string_t str1, string_t str2)
     return catstr;
 }
 
+string_t strcatv(string_t str1, ...)
+{
+    va_list argv;
+    size_t argc = VA_ARGS_COUNT(...);
+    
+    va_start(argv, str1);
+    
+    for (int i = 0; i < argc; ++i) {
+        
+    }
+}
+
 __attribute__((unused)) void strhex(uint64_t hex, string_t output)
 {
     uint64_t i = 0;
@@ -66,3 +80,4 @@ __attribute__((unused)) void strhex(uint64_t hex, string_t output)
      
     output[i] = '\0';
 }
+

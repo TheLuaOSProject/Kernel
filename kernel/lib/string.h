@@ -30,11 +30,22 @@ void strint(int num, string_t output);
 string_t strcat(string_t str1, string_t str2);
 
 /**
+ * Concatinates n strings
+ * @param str1 String 1
+ * @param ... n Strings
+ * @return All of the strings, combined
+ */
+string_t strcatv(string_t str1, ...);
+
+/**
  * Converts an hexadecimal number to a string
  * @param hex Hexadecimal value
  * @param output Output of the converison
  */
 __attribute__((unused)) void strhex(uint64_t hex, string_t output);
+
+
+void sprintf(string_t fmt, ...);
 
 
 #endif //LUAOS_STRING

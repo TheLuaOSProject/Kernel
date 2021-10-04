@@ -21,20 +21,32 @@ struct gdt_entry {
     uint8_t     base2;
 } __attribute__((packed));
 
+struct tss_entry {
+    uint16_t    limit;
+    uint16_t    base0;
+    uint8_t     base1;
+    uint8_t     flags0;
+    uint8_t     flags1;
+    uint8_t     base2;
+    uint32_t    base3;
+    uint32_t    reserved;
+};
+
 
 struct gdt {
-    struct gdt_entry     null;
-    struct gdt_entry     kernel_code;
-    struct gdt_entry     kernel_data;
+    struct gdt_entry        null;
+    struct gdt_entry        kernel_code;
+    struct gdt_entry        kernel_data;
     
-    struct gdt_entry     user_null;
-    struct gdt_entry     user_code;
-    struct gdt_entry     user_data;
-} __attribute__((packed))
-  __attribute((aligned(0x1000)));
+    struct gdt_entry        user_code;
+    struct gdt_entry        user_data;
+    
+    struct tss_entry        tss;
+} __attribute__((packed));
 
-extern const struct gdt global_descriptor_table;
+void initialise_gdt(void);
+void initialise_tss(uint64_t address);
 
-extern void load_gdt(struct gdt_descriptor *descriptor);
+extern void LOAD_GDT(struct gdt_descriptor *descriptor);
 
 #endif //LUAOS_GDT

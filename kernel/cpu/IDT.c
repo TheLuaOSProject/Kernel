@@ -24,7 +24,7 @@ static struct idt_descriptor descriptor;
 
 void initialise_idt(void)
 {
-    set_memory(idt, 0, sizeof(idt));
+    memset(idt, 0, sizeof(idt));
     
     register_interrupt_handler(0x0,
                                (uint64_t)&asm_div_by_zero,
@@ -47,14 +47,14 @@ void initialise_idt(void)
                                0);
     
     
-//    register_interrupt_handler(0x20, 
-//                               (uint64_t)&reschedule_handler, 
-//                               0x8E, 
-//                               0);
-//    register_interrupt_handler(0x80, 
-//                               (uint64_t)&syscall_entry, 
-//                               0xEE, 
-//                               0);
+    register_interrupt_handler(0x20, 
+                               (uint64_t)&reschedule_handler, 
+                               0x8E, 
+                               0);
+    register_interrupt_handler(0x80, 
+                               (uint64_t)&syscall_entry, 
+                               0xEE, 
+                               0);
      
     descriptor.size     = sizeof(idt);
     descriptor.offset   = (uint64_t)&idt;

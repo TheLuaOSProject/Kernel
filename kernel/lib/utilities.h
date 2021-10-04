@@ -6,9 +6,9 @@
 #define LUAOS_UTILITIES
 #include "types.h"
 
-void set_memory(void        *pointer,
-                uintmax_t   value,
-                uintmax_t   bytes);
+void memset(void        *pointer,
+            uintmax_t   value,
+            uintmax_t   bytes);
 
 /**
  * Copies memory from a source to a destination
@@ -16,9 +16,9 @@ void set_memory(void        *pointer,
  * @param dest Destination of the memory
  * @param byte_count Number of bytes to copy
  */
-void copy_memory(const  int8_t  *src, 
-                        int8_t  *dest, 
-                        int     byte_count);
+void memcpy(const int8_t    *src,
+            int8_t          *dest,
+            int             byte_count);
 
 
 

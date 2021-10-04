@@ -10,4 +10,10 @@
  */
 typedef char* string_t;
 
+/**
+ * kek
+ */
+typedef void* any_t;
+
+
 #endif
