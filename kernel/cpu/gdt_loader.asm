@@ -10,8 +10,8 @@ LOAD_GDT:
     MOV                 GS, AX
     MOV                 SS, AX
     POP                 RDI
-    MOV                 RAX, 0x08   ; Kernel code segment selector 
-    PUSH                RAX
+      
+    PUSH                0x08 ; Kernel code segment selector 
     PUSH                RDI
     RETFQ
 

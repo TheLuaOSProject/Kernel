@@ -9,39 +9,39 @@ static struct gdt_descriptor    descriptor;
 
 void initialise_gdt(void)
 {
-    table.null = (struct gdt_entry) {  
-        .base2          = 0,
-        .access_byte    = 0,
-        .base1          = 0,
-        .base0          = 0,
-        .limit0         = 0,
-        .flags          = 0
-    };
-    
-    table.kernel_code = (struct gdt_entry) {
-        .limit0         = 0,
-        .base0          = 0,
-        .base1          = 0,
-        .access_byte    = 0x9A,
-        .flags          = 0x20,
-        .base2          = 0
-    };
-
-    table.kernel_data = (struct gdt_entry) {
+    table.null = (struct gdt_entry) {
             .limit0         = 0,
             .base0          = 0,
             .base1          = 0,
+            .access_byte    = 0x00,
+            .flags          = 0x00,
+            .base2          = 0
+    };
+    
+    table.kernel_code = (struct gdt_entry) {
+            .limit0         = 0xFFFF,
+            .base0          = 0,
+            .base1          = 0,
+            .access_byte    = 0x9A,
+            .flags          = 0x80,
+            .base2          = 0
+    };
+
+    table.kernel_data = (struct gdt_entry) {
+            .limit0         = 0xFFFF,
+            .base0          = 0,
+            .base1          = 0,
             .access_byte    = 0x92,
-            .flags          = 0,
+            .flags          = 0x80,
             .base2          = 0
     };
 
     table.user_code = (struct gdt_entry) {
-            .limit0         = 0,
+            .limit0         = 0xFFFF,
             .base0          = 0,
             .base1          = 0,
-            .access_byte    = 0xFA,
-            .flags          = 0x20,
+            .access_byte    = 0x92,
+            .flags          = 0xCF,
             .base2          = 0
     };
 
@@ -49,8 +49,8 @@ void initialise_gdt(void)
             .limit0         = 0,
             .base0          = 0,
             .base1          = 0,
-            .access_byte    = 0xF2,
-            .flags          = 0,
+            .access_byte    = 0x9A,
+            .flags          = 0xA2,
             .base2          = 0
     };
 
@@ -63,6 +63,11 @@ void initialise_gdt(void)
             .base2          = 0,
             .base3          = 0,
             .reserved       = 0
+    };
+    
+    descriptor = (struct gdt_descriptor) {
+            .limit      = sizeof(table) - 1,
+            .offset     = (uint64_t)&table
     };
 
     LOAD_GDT(&descriptor);
