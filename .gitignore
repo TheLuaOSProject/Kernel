@@ -10,3 +10,4 @@ cmake-build-debug
 
 qemulog.txt
 /buildlog.json
+dump.asm

@@ -20,8 +20,15 @@ void memcpy(const int8_t    *src,
             int8_t          *dest,
             int             byte_count);
 
+/**
+ * Instantly crashes the machine by calling the UD2 instruction
+ */
+extern void CRASH();
 
-
+/**
+ * Divides by zero (doing in C results in the UD2 instruction being generated)
+ */
+extern void DIV_BY_ZERO();
 
 
 #endif //LUAOS_UTILITIES
