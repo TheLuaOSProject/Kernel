@@ -41,17 +41,17 @@ static struct keyboard_state kb_state = {
         .caps   = false
 };
 
-void asm_keyboard();
+void ASM_KEYBOARD();
 
 void initialise_keyboard(void)
 {
     register_interrupt_handler(0x21, 
-                               (uint64_t)&asm_keyboard,
+                               (uint64_t)&ASM_KEYBOARD,
                                0x8E,
                                0);
 }
 
-void ikeyboard(struct interrupt_frame *frame)
+void keyboard_i(struct interrupt_frame *frame)
 {
     uint8_t key = port_in(0x60);
 

@@ -6,15 +6,19 @@
 
 #include <drivers/drivers.h>
 
-void idiv_by_zero(struct interrupt_frame *iframe);
-void ibreakpoint(struct interrupt_frame *iframe);
-void idouble_fault(struct interrupt_frame *iframe);
-void igeneral_protection(struct interrupt_frame *iframe);
+void div_by_zero_i(struct interrupt_frame *iframe);
+void breakpoint_i(struct interrupt_frame *iframe);
+void double_fault_i(struct interrupt_frame *iframe);
+void general_protection_i(struct interrupt_frame *iframe);
+void debug_i(struct interrupt_frame *iframe);
 
-void asm_div_by_zero();
-void asm_breakpoint();
-void asm_double_fault();
-void asm_general_protection();
+extern void LOAD_IDT(struct idt_descriptor *descriptor);
+
+extern void ASM_DIV_BY_ZERO();
+extern void ASM_BREAKPOINT();
+extern void ASM_DOUBLE_FAULT();
+extern void ASM_GENERAL_PROTECTION();
+extern void ASM_DEBUG();
 
 static struct idt_gate          interrupt_descriptor_table[256];
 static struct idt_descriptor    descriptor;
@@ -24,29 +28,34 @@ void initialise_idt(void)
     memset(interrupt_descriptor_table, 0, sizeof(interrupt_descriptor_table));
     
     register_interrupt_handler(0x0,
-                               (uint64_t)&asm_div_by_zero,
+                               (uint64_t) &ASM_DIV_BY_ZERO,
                                0x8E,
                                0);
 
     register_interrupt_handler(0x3,
-                               (uint64_t)&asm_breakpoint,
+                               (uint64_t) &ASM_BREAKPOINT,
+                               0x8E,
+                               0);
+
+    register_interrupt_handler(0x72,
+                               (uint64_t) &ASM_DEBUG,
                                0x8E,
                                0);
 
     register_interrupt_handler(0x8,
-                               (uint64_t)&asm_double_fault,
+                               (uint64_t) &ASM_DOUBLE_FAULT,
                                0x8E,
                                0);
 
     register_interrupt_handler(0xD,
-                               (uint64_t)&asm_general_protection,
+                               (uint64_t) &ASM_GENERAL_PROTECTION,
                                0x8E,
                                0);
      
     descriptor.limit    = sizeof(interrupt_descriptor_table) - 1;
     descriptor.offset   = &interrupt_descriptor_table;
 
-    asm volatile("lidt (%0)" :: "r"(&descriptor));
+    LOAD_IDT(&descriptor);
 }
 
 void register_interrupt_handler(uintmax_t   index,
@@ -69,26 +78,32 @@ void register_interrupt_handler(uintmax_t   index,
     interrupt_descriptor_table[index].interrupt_stack_table    = interrupt_stack_table;
 }
 
-void idiv_by_zero(struct interrupt_frame *iframe)
+void div_by_zero_i(struct interrupt_frame *iframe)
 {
     console.println("\x1b[1;31mERROR: DIVISION BY ZERO");
     HANG();
 }
 
-void ibreakpoint(struct interrupt_frame *iframe)
+void breakpoint_i(struct interrupt_frame *iframe)
 {
     console.println("\x1b[1;34mDEBUG: BREAKPOINT");
     HANG();
 }
 
-void idouble_fault(struct interrupt_frame *iframe)
+void double_fault_i(struct interrupt_frame *iframe)
 {
     console.println("\x1b[1;31mERROR: DOUBLE FAULT");
     HANG();
 }
 
-void igeneral_protection(struct interrupt_frame *iframe)
+void general_protection_i(struct interrupt_frame *iframe)
 {
     console.println("\x1b[1;31mERROR");
+    HANG();
+}
+
+void debug_i(struct interrupt_frame *iframe)
+{
+    console.println("\x1b[1;34mDEBUG: Interrupt 0x72 called!");
     HANG();
 }

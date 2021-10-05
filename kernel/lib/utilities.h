@@ -30,5 +30,9 @@ extern void CRASH();
  */
 extern void DIV_BY_ZERO();
 
+/**
+ * Executes the debug interrupt (0x72)
+ */
+extern void DEBUG_INTERRUPT();
 
 #endif //LUAOS_UTILITIES

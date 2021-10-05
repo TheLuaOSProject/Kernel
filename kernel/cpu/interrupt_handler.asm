@@ -1,4 +1,3 @@
-
 %macro STACK_START 0
 
     MOV RDI, RSP
@@ -45,37 +44,23 @@
 
 %endmacro
 
-GLOBAL asm_div_by_zero
-EXTERN idiv_by_zero
-asm_div_by_zero:
-    STACK_START
-    call    idiv_by_zero
-    STACK_END
-    
-GLOBAL asm_breakpoint
-EXTERN ibreakpoint
-asm_breakpoint:
-    STACK_START
-    call    ibreakpoint
-    STACK_END
-    
-GLOBAL asm_double_fault
-EXTERN idouble_fault
-asm_double_fault:
-    STACK_START
-    call    idouble_fault
-    STACK_END
-    
-GLOBAL asm_general_protection
-EXTERN igeneral_protection
-asm_general_protection:
-    STACK_START
-    call    igeneral_protection
-    STACK_END    
-    
-GLOBAL asm_keyboard
-EXTERN ikeyboard
-asm_keyboard:
-    STACK_START
-    call    ikeyboard
-    STACK_END
+%macro REGISTER_INTERRUPT 2
+    GLOBAL  %1
+    EXTERN  %2
+    %1:
+        STACK_START
+        call    %2
+        STACK_END
+%endmacro
+
+GLOBAL REGISTER_IDT
+REGISTER_IDT:
+    LIDT    [RDI]
+    RET
+
+REGISTER_INTERRUPT  ASM_DIV_BY_ZERO, div_by_zero_i
+REGISTER_INTERRUPT  ASM_BREAKPOINT, breakpoint_i
+REGISTER_INTERRUPT  ASM_DOUBLE_FAULT, double_fault_i
+REGISTER_INTERRUPT  ASM_GENERAL_PROTECTION, general_protection_i
+REGISTER_INTERRUPT  ASM_KEYBOARD, keyboard_i
+REGISTER_INTERRUPT  ASM_DEBUG, debug_i

@@ -29,7 +29,7 @@ extern const char   NORMAL_KEYS[],
                     SHIFT_KEYS[],
                     SHIFT_CAPITAL_KEYS[];
 
-void ikeyboard(struct interrupt_frame *frame);
+void keyboard_i(struct interrupt_frame *frame);
 void initialise_keyboard(void);
 
 #endif //LUAOS_KEYBOARD
