@@ -47,7 +47,6 @@ void initialise_idt(void)
     descriptor.offset   = &interrupt_descriptor_table;
 
     asm volatile("lidt (%0)" :: "r"(&descriptor));
-    
 }
 
 void register_interrupt_handler(uintmax_t   index,

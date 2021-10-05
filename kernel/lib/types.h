@@ -10,9 +10,6 @@
  */
 typedef char* string_t;
 
-/**
- * kek
- */
-typedef void* any_t;
+typedef void (*voidfunc_f)(void);
 
 #endif
