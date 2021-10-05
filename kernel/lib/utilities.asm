@@ -14,13 +14,4 @@ GLOBAL DEBUG_INTERRUPT
 DEBUG_INTERRUPT:
     INT     0x72   
     RET
-    
-GLOBAL ADD_ASM
-ADD_ASM:
-    MOV     EAX, 0
-    ADD     EAX, RDI
-    ADD     EAX, RSI
-    PUSH    EAX
-    RET
-      
    
