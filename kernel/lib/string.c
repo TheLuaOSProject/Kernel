@@ -55,16 +55,21 @@ string_t strcat(string_t str1, string_t str2)
     return catstr;
 }
 
-string_t strcatv(string_t str1, ...)
+__attribute__((unused)) string_t strcatv(string_t str1, ...)
 {
     va_list argv;
-    size_t argc = VA_ARGS_COUNT(...);
+    size_t  argc = VA_ARGS_COUNT(...),
+            strc[argc];
+    string_t strv[argc];
     
     va_start(argv, str1);
     
     for (int i = 0; i < argc; ++i) {
-        
+        strv[i] = va_arg(argv, string_t);
+        strc[i] = strlen(strv[i]);
     }
+
+    va_end(argv);
 }
 
 __attribute__((unused)) void strhex(uint64_t hex, string_t output)

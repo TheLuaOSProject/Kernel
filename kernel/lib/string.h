@@ -35,7 +35,7 @@ string_t strcat(string_t str1, string_t str2);
  * @param ... n Strings
  * @return All of the strings, combined
  */
-string_t strcatv(string_t str1, ...);
+__attribute__((unused)) string_t strcatv(string_t str1, ...);
 
 /**
  * Converts an hexadecimal number to a string

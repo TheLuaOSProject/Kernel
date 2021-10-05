@@ -15,5 +15,4 @@ typedef char* string_t;
  */
 typedef void* any_t;
 
-
 #endif
