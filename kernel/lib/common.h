@@ -18,6 +18,7 @@
  */
 #define HANG() while(1) asm("hlt")
 
+extern void CRASH();
 /* va_args_count. https://github.com/donmccaughey/va_args_count
  Copyright (c) 2014, Don McCaughey. All rights reserved.
  Redistribution and use in source and binary forms, with or without

@@ -15,13 +15,6 @@ struct interrupt_frame {
     uint64_t    rsp;
     uint64_t    ss;
 };
-
-struct idt_descriptor {
-    uint16_t    size;
-    uint64_t    offset;
-    
-} __attribute__((packed));
-
 struct idt_gate {
     uint16_t    offset0;
     uint16_t    selector;
@@ -31,6 +24,13 @@ struct idt_gate {
     uint32_t    offset2;
     uint32_t    zero;
 } __attribute__((packed));
+
+struct idt_descriptor {
+    uint16_t            limit;
+    struct idt_gate     *offset;
+
+} __attribute__((packed));
+
 
 void initialise_idt(void);
 
