@@ -97,7 +97,7 @@ target("LuaOS");
                 elf = target:targetdir() .. "/LuaOS";
             };
             
-            local qemucmd = "qemu-system-x86_64 -M q35 -m 1G -cdrom " .. files.img .. " -s";
+            local qemucmd = "qemu-system-x86_64 -M q35 -m 1G -cdrom " .. files.img .. " -s -machine smm=off -d int -no-reboot";
             print(qemucmd);
             local qemu = process.open(qemucmd, { stderr = "qemulog.txt" });
             

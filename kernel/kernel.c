@@ -26,10 +26,10 @@ void kstart(struct stivale2_struct *bootloader)
      
     console.printfln("Screen size: X = %, Y = %", screen_size[0], screen_size[1]);
 
-    console.print("\x1b[1;93mInitialising GDT... ");
-    console.set_style(STYLE_BOLD, true);
-    initialise_gdt();
-    console.println("\x1b[32m[Done]");
+//    console.print("\x1b[1;93mInitialising GDT... ");
+//    console.set_style(STYLE_BOLD, true);
+//    initialise_gdt();
+//    console.println("\x1b[32m[Done]");
     
     console.print("\x1b[1;93mInitialising IDT... ");
     console.set_style(STYLE_BOLD, true);
