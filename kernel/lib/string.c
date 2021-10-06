@@ -8,7 +8,7 @@
 
 #include "string.h"
 
-size_t strlen(const string_t str)
+size_t strlen(const cstring str)
 {
     size_t len = 0;
 
@@ -23,7 +23,7 @@ size_t strlen(const string_t str)
 }
 
 //K&R ftw 
-void strint(int num, string_t output)
+void strint(int num, cstring output)
 {
     int i = 0, sign = num;
     if (sign < 0) num = -num;
@@ -36,7 +36,7 @@ void strint(int num, string_t output)
     output[i] = '\0';
 }
 
-string_t strcat(string_t str1, string_t str2)
+cstring strcat(cstring str1, cstring str2)
 {
     size_t  str1_len    = strlen(str1),
             str2_len    = strlen(str2),
@@ -55,24 +55,24 @@ string_t strcat(string_t str1, string_t str2)
     return catstr;
 }
 
-__attribute__((unused)) string_t strcatv(string_t str1, ...)
+__attribute__((unused)) cstring strcatv(cstring str1, ...)
 {
     va_list argv;
     size_t  argc = VA_ARGS_COUNT(...),
             strc[argc];
-    string_t strv[argc];
+    cstring strv[argc];
     
     va_start(argv, str1);
     
     for (int i = 0; i < argc; ++i) {
-        strv[i] = va_arg(argv, string_t);
+        strv[i] = va_arg(argv, cstring);
         strc[i] = strlen(strv[i]);
     }
 
     va_end(argv);
 }
 
-__attribute__((unused)) void strhex(uint64_t hex, string_t output)
+__attribute__((unused)) void strhex(uint64_t hex, cstring output)
 {
     uint64_t i = 0;
     
@@ -86,3 +86,10 @@ __attribute__((unused)) void strhex(uint64_t hex, string_t output)
     output[i] = '\0';
 }
 
+string_t str(cstring str)
+{
+    string_t string;
+    string.length = strlen(str);
+    string.buffer = str;
+    return string;
+}

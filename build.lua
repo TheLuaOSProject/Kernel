@@ -5,6 +5,66 @@
 
 local JSON = require("rapidjson");
 
+---@class Log
+local log = {
+    date = "",
+    build_number = 0,
+    action = "",
+    runtime = ""
+};
+
+
+
+---@type Log[]
+local logs = JSON.load("buildlog.json");
+
+if logs == nil then
+    logs = {
+        [0] = {
+            build_number = 0,
+            date = "nil",
+            action = "nil"
+        }
+    }
+end
+
+logs[#logs + 1] = {
+    build_number = logs[#logs].build_number + 1;
+    date = os.date("%Y/%m/%d at %H:%M"),
+    action = arg[1]
+};
+
+JSON.dump(logs, "buildlog.json", { pretty = true });
+
+local bn = logs[#logs].build_number;
+local bd = logs[#logs].date;
+
+print("Build " .. bn);
+print("Date: " .. bd);
+print("Action: " .. logs[#logs].action);
+
+local commonfile_read = io.open("kernel/lib/common.h", "r");
+
+---@type string[]
+local content = {};
+
+for line in commonfile_read:lines() do
+    table.insert(content, line);
+end
+
+commonfile_read:close();
+
+content[13] = "#define LUAOS_VERSION       \"0.1." .. tostring(bn) .. "\"";
+content[14] = "#define LUAOS_BUILD_DATE    \"" .. bd .. "\"";
+
+local commonfile_write = io.open("kernel/lib/common.h", "w");
+
+for i, v in pairs(content) do
+    commonfile_write:write(v .. "\n");
+end
+
+commonfile_write:close();
+
 ---@class task
 ---@field name          string
 ---@field dependencies  table[] | nil
@@ -75,41 +135,6 @@ local tasks = {
     run,
     debug
 }
-
----@class Log
-local log = {
-    date = "",
-    build_number = 0,
-    action = "",
-    runtime = ""
-};
-
-
-
----@type Log[]
-local logs = JSON.load("buildlog.json");
-
-if logs == nil then
-    logs = {
-        [0] = { 
-            build_number = 0,
-            date = "nil",
-            action = "nil"
-        }
-    }
-end
-
-logs[#logs + 1] = {
-    build_number = logs[#logs].build_number + 1;
-    date = os.date("%Y/%m/%d at %H:%M"),
-    action = arg[1]
-};
-
-JSON.dump(logs, "buildlog.json", { pretty = true });
-
-print("Build " .. logs[#logs].build_number);
-print("Date: " .. logs[#logs].date);
-print("Action: " .. logs[#logs].action);
 
 for _, v in pairs(tasks) do
     if v.name == arg[1] then

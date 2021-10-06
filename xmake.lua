@@ -51,9 +51,11 @@ target("LuaOS");
             os.rm(liminepath);
         end
 
+        print("Cloning limine...")
         local gitcmd = "git clone https://github.com/limine-bootloader/limine.git " .. liminepath .. " --branch=v2.0-branch-binary --depth=1";
         os.run(gitcmd);
 
+        print("Making limine")
         os.run("make -C " .. liminepath);
 
         local liminefiles = { 
@@ -63,7 +65,9 @@ target("LuaOS");
             efibin  = liminepath .. "limine-eltorito-efi.bin"
         };
         
+        print("Copying files")
         for _, v in pairs(liminefiles) do
+            print("Copying file " .. v)
             os.cp(v, target:targetdir());
         end
         
@@ -84,9 +88,12 @@ target("LuaOS");
         xorrisoargs = strcat(xorrisoargs, xorrisofiles.cdbin .. " -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot ");
         xorrisoargs = strcat(xorrisoargs, xorrisofiles.efibin .. " -efi-boot-part --efi-boot-image --protective-msdos-label ");
         xorrisoargs = strcat(xorrisoargs, target:targetdir() .. " -o " .. xorrisofiles.export);
+        
+        print("Creating bootable media");
         os.run("xorriso " .. xorrisoargs);
 
         local exec = "./" .. liminepath .. "limine-install " .. xorrisofiles.export;
+        print("Executing limine")
         os.run(exec);
     end);
 

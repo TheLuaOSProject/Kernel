@@ -8,7 +8,7 @@
  */
 void kstart(struct stivale2_struct *bootloader)
 {
-    initialise_screen(bootloader);
+//    initialise_screen(bootloader);
     initialise_console(bootloader);
     
     console.set_style(STYLE_BOLD, true);
@@ -20,7 +20,7 @@ void kstart(struct stivale2_struct *bootloader)
     console.println("---------------------------------");
     
     
-    string_t screen_size[2];
+    cstring screen_size[2];
     strint(screen.screen_size.x, screen_size[0]);
     strint(screen.screen_size.y, screen_size[1]);
      
@@ -42,10 +42,6 @@ void kstart(struct stivale2_struct *bootloader)
     console.set_style(STYLE_BOLD, true);
     initialise_idt();
     console.println("\x1b[32m[Done]");
-    
-    console.println("\x1b[31mTesting interrupts...");
-    DEBUG_INTERRUPT();
-    console.println("\x1b[31mTest failed!");
     
     console.print("\x1b[1;93mInitialising keyboard inputs... ");
     console.set_style(STYLE_BOLD, true);

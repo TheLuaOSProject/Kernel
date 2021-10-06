@@ -18,7 +18,7 @@ void initialise_logger(void)
 //    logger.writefln = &lwritefln;
 }
 
-void lwrite(string_t message)
+void lwrite(cstring message)
 {
 #ifdef QEMU
     for (int i = 0; i < strlen(message); ++i) {
@@ -34,7 +34,7 @@ void lwritec(char character)
 #endif
 }
 
-void lwriteln(string_t message)
+void lwriteln(cstring message)
 {
 #ifdef QEMU
     lwrite(message);

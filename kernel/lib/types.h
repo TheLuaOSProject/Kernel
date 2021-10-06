@@ -8,7 +8,14 @@
 /**
  * C String, expands to a char pointer
  */
-typedef char* string_t;
+typedef char* cstring;
+
+typedef struct string {
+    size_t  length;
+    cstring buffer;
+} string_t;
+
+
 
 typedef void (*voidfunc_f)(void);
 

@@ -56,6 +56,7 @@
 GLOBAL LOAD_IDT
 LOAD_IDT:
     LIDT    [RDI]
+    STI
     RET
 
 REGISTER_INTERRUPT  ASM_DIV_BY_ZERO, div_by_zero_i

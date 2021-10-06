@@ -12,14 +12,14 @@
  * @param str string to measure
  * @return length of str
  */
-size_t strlen(const string_t str);
+size_t strlen(const cstring str);
 
 /**
  * Converts an integer to a string
  * @param num Integer to convert
  * @param output Output from the conversion
  */
-void strint(int num, string_t output);
+void strint(int num, cstring output);
 
 /**
  * Concatinates 2 strings
@@ -27,7 +27,7 @@ void strint(int num, string_t output);
  * @param str2 String 2
  * @return The two strings, combined
  */
-string_t strcat(string_t str1, string_t str2);
+cstring strcat(cstring str1, cstring str2);
 
 /**
  * Concatinates n strings
@@ -35,17 +35,19 @@ string_t strcat(string_t str1, string_t str2);
  * @param ... n Strings
  * @return All of the strings, combined
  */
-__attribute__((unused)) string_t strcatv(string_t str1, ...);
+__attribute__((unused)) cstring strcatv(cstring str1, ...);
 
 /**
  * Converts an hexadecimal number to a string
  * @param hex Hexadecimal value
  * @param output Output of the converison
  */
-__attribute__((unused)) void strhex(uint64_t hex, string_t output);
+__attribute__((unused)) void strhex(uint64_t hex, cstring output);
 
 
-void sprintf(string_t fmt, ...);
+void sprintf(cstring fmt, ...);
+
+string_t str(cstring str);
 
 
 #endif //LUAOS_STRING
