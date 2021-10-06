@@ -43,9 +43,9 @@ void kstart(struct stivale2_struct *bootloader)
     initialise_idt();
     console.println("\x1b[32m[Done]");
     
-//    console.println("\x1b[31mTesting interrupts...");
-//    DEBUG_INTERRUPT();
-//    console.println("\x1b[31mTest failed!");
+    console.println("\x1b[31mTesting interrupts...");
+    DEBUG_INTERRUPT();
+    console.println("\x1b[31mTest failed!");
     
     console.print("\x1b[1;93mInitialising keyboard inputs... ");
     console.set_style(STYLE_BOLD, true);

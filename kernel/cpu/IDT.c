@@ -81,7 +81,7 @@ void register_interrupt_handler(uintmax_t   index,
     interrupt_descriptor_table[index].offset0                  = address & 0xFFFF;
     interrupt_descriptor_table[index].offset1                  = (address >> 16) & 0xFFFF;
     interrupt_descriptor_table[index].offset2                  = address >> 32;
-    interrupt_descriptor_table[index].selector                 = 0x08;
+    interrupt_descriptor_table[index].selector                 = 0x28;
     interrupt_descriptor_table[index].type                     = gate_type;
     interrupt_descriptor_table[index].zero                     = 0;
     interrupt_descriptor_table[index].interrupt_stack_table    = interrupt_stack_table;
