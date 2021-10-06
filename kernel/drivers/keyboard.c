@@ -5,6 +5,7 @@
 #include "keyboard.h"
 
 #include "console.h"
+#include "logger.h"
 
 extern const char NORMAL_KEYS[] = {
         '\0', '\0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-',
@@ -45,10 +46,12 @@ void ASM_KEYBOARD();
 
 void initialise_keyboard(void)
 {
+    logger.writeln("KEYBOARD INIT");
     register_interrupt_handler(0x21, 
                                (uint64_t)&ASM_KEYBOARD,
                                0x8E,
                                0);
+    logger.writeln("DONE");
 }
 
 void keyboard_i(struct interrupt_frame *frame)

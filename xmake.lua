@@ -41,6 +41,8 @@ target("LuaOS");
     set_objectdir("build/");
     set_targetdir("build/bin");
 
+    add_defines("QEMU");
+
     after_link(function (target)
         local liminepath = target:objectdir() .. "/limine/";
         local kernelimg = target:targetdir() .. "/LuaOS";
@@ -97,8 +99,9 @@ target("LuaOS");
                 elf = target:targetdir() .. "/LuaOS";
             };
             
-            local qemucmd = "qemu-system-x86_64 -M q35 -m 1G -cdrom " .. files.img .. " -s -machine smm=off -d int -no-reboot";
+            local qemucmd = "qemu-system-x86_64 -M q35 -m 1G -cdrom " .. files.img .. " -s -machine smm=off -d int -no-reboot -serial file:luaos.log";
             print(qemucmd);
+            
             local qemu = process.open(qemucmd, { stderr = "qemulog.txt" });
             
             os.run("sleep 1");

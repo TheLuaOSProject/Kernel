@@ -9,5 +9,7 @@ cmake-build-debug
 .idea/discord.xml
 
 qemulog.txt
+luaos.log
 /buildlog.json
 dump.asm
+

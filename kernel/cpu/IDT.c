@@ -11,6 +11,7 @@ void breakpoint_i(struct interrupt_frame *iframe);
 void double_fault_i(struct interrupt_frame *iframe);
 void general_protection_i(struct interrupt_frame *iframe);
 void debug_i(struct interrupt_frame *iframe);
+void invalid_opcode_i(struct interrupt_frame *iframe);
 
 extern void LOAD_IDT(struct idt_descriptor *descriptor);
 
@@ -19,12 +20,14 @@ extern void ASM_BREAKPOINT();
 extern void ASM_DOUBLE_FAULT();
 extern void ASM_GENERAL_PROTECTION();
 extern void ASM_DEBUG();
+extern void ASM_INVALID_OPCODE();
 
 static struct idt_gate          interrupt_descriptor_table[256];
 static struct idt_descriptor    descriptor;
 
 void initialise_idt(void)
 {
+    logger.writeln("IDT INIT");
     memset(interrupt_descriptor_table, 0, sizeof(interrupt_descriptor_table));
     
     register_interrupt_handler(0x0,
@@ -56,6 +59,7 @@ void initialise_idt(void)
     descriptor.offset   = &interrupt_descriptor_table;
 
     LOAD_IDT(&descriptor);
+    logger.writeln("DONE");
 }
 
 void register_interrupt_handler(uintmax_t   index,
@@ -106,4 +110,9 @@ void debug_i(struct interrupt_frame *iframe)
 {
     console.println("\x1b[1;34mDEBUG: Interrupt 0x72 called!");
     HANG();
+}
+
+void invalid_opcode_i(struct interrupt_frame *iframe)
+{
+    debug_i(iframe);
 }

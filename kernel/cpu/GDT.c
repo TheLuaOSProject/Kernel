@@ -4,11 +4,14 @@
 
 #include "GDT.h"
 
+#include "drivers/logger.h"
+
 static struct gdt               table;
 static struct gdt_descriptor    descriptor;
 
 void initialise_gdt(void)
 {
+    logger.writeln("GDT INIT");
     table.null = (struct gdt_entry) {
             .limit0         = 0,
             .base0          = 0,
@@ -71,14 +74,17 @@ void initialise_gdt(void)
     };
 
     LOAD_GDT(&descriptor);
+    logger.writeln("DONE");
 }
 
 void initialise_tss(uint64_t address)
 {
+    logger.writeln("TSS INIT");
     table.tss.base0 = address & 0xFFFF;
     table.tss.base1 = (address >> 16) & 0xFF;
     table.tss.base2 = (address >> 24) & 0xFF;
     table.tss.base3 = address >> 32;
     
     asm volatile ("ltr %0" :: "r"((uint16_t)0x28));
+    logger.writeln("DONE");
 }
