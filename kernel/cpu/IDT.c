@@ -54,9 +54,14 @@ void initialise_idt(void)
                                (uint64_t) &ASM_GENERAL_PROTECTION,
                                0x8E,
                                0);
+
+    register_interrupt_handler(0x6,
+                               (uint64_t)&ASM_INVALID_OPCODE,
+                               0x8E,
+                               0);
      
     descriptor.limit    = sizeof(interrupt_descriptor_table) - 1;
-    descriptor.offset   = &interrupt_descriptor_table;
+    descriptor.offset   = (uint64_t)&interrupt_descriptor_table;
 
     LOAD_IDT(&descriptor);
     logger.writeln("DONE");
@@ -67,9 +72,9 @@ void register_interrupt_handler(uintmax_t   index,
                                 uint8_t     gate_type,
                                 uint8_t     interrupt_stack_table)
 {
-    if (index > 256)
+    if (index > 255)
     {
-        console.println("\x1b[31mYou actual fucking dumbass, IDT entries cannot be over 256 you genuine fucking idiot");
+        console.println("\x1b[31mYou actual fucking dumbass, IDT entries cannot be over 255 you genuine fucking idiot");
         return;
     }
     

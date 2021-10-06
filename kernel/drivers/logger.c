@@ -11,8 +11,10 @@ struct logger logger;
 void initialise_logger(void)
 {
     logger.write = &lwrite;
+    logger.writec = &lwritec;
 //    logger.writef = &lwritef;
     logger.writeln = &lwriteln;
+    logger.writecln = &lwritecln;
 //    logger.writefln = &lwritefln;
 }
 
@@ -25,10 +27,25 @@ void lwrite(string_t message)
 #endif
 }
 
+void lwritec(char character)
+{
+#ifdef QEMU
+    port_out(LOGGING_PORT, character);
+#endif
+}
+
 void lwriteln(string_t message)
 {
 #ifdef QEMU
     lwrite(message);
+    port_out(LOGGING_PORT, '\n');
+#endif
+}
+
+void lwritecln(char character)
+{
+#ifdef QEMU
+    lwritec(character);
     port_out(LOGGING_PORT, '\n');
 #endif
 }

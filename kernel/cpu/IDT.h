@@ -27,7 +27,7 @@ struct idt_gate {
 
 struct idt_descriptor {
     uint16_t            limit;
-    struct idt_gate     *offset;
+    uint64_t            offset;
 
 } __attribute__((packed));
 

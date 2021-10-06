@@ -29,7 +29,7 @@ void port_out(uint16_t port, uint8_t data);
  * @param port Port to get from
  * @return u16_t - Word returned from the port
  */
-uint16_t wport_in(uint16_t port);
+uint16_t port_inw(uint16_t port);
 
 /**
  * @brief Sends a word to the specified port
@@ -37,6 +37,6 @@ uint16_t wport_in(uint16_t port);
  * @param port Port to send data to
  * @param data Data to send
  */
-void wport_out(uint16_t port, uint16_t data);
+void port_outw(uint16_t port, uint16_t data);
 
 #endif //LUAOS_PORTS
