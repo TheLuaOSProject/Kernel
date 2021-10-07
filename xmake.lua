@@ -34,7 +34,7 @@ target("LuaOS");
     add_includedirs("kernel/", "kernel/lib/");
 
     add_asflags("-f elf64", { force = true });
-    add_cflags("-ffreestanding -I. -std=gnu11 -fno-stack-protector -fpie -mno-80387 -mno-mmx -mno-3dnow -mno-sse -mno-sse2 -mno-red-zone -g", { force = true });
+    add_cflags("-ffreestanding -I. -std=gnu11 -fno-stack-protector -fno-omit-frame-pointer -fpie -mno-80387 -mno-mmx -mno-3dnow -mno-sse -mno-sse2 -mno-red-zone -g -ggdb ", { force = true });
                 
     add_ldflags("-Tkernel/linker.ld -nostdlib -zmax-page-size=0x1000 -static -pie --no-dynamic-linker -ztext", { force = true });
     
@@ -106,23 +106,24 @@ target("LuaOS");
                 elf = target:targetdir() .. "/LuaOS";
             };
             
-            local qemucmd = "qemu-system-x86_64 -M q35 -m 1G -cdrom " .. files.img .. " -s -machine smm=off -d int -no-reboot -serial file:luaos.log";
+            local qemucmd = "qemu-system-x86_64 -M q35 -m 1G -cdrom " .. files.img .. " -s -machine smm=off -d int -no-reboot -serial file:luaos.log -monitor stdio";
             print(qemucmd);
             
             local qemu = process.open(qemucmd, { stderr = "qemulog.txt" });
             
             os.run("sleep 1");
             
-            local gdb = process.openv (
-                "/usr/local/x86_64-elf-gcc/bin/x86_64-elf-gdb",
-                { 
-                    "-ex", "target remote localhost:1234", 
-                    "-ex", "file " .. files.elf
-                }
-            );
-            
+
+            --local gdb = process.openv (
+            --    "/usr/local/x86_64-elf-gcc/bin/x86_64-elf-gdb",
+            --    {
+            --        "-ex", "target remote localhost:1234",
+            --        "-ex", "file " .. files.elf
+            --    }
+            --);
+
             qemu:wait();
-            gdb:wait();
+            --gdb:wait();
         end
     );
 target_end();

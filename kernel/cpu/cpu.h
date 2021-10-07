@@ -7,5 +7,7 @@
 
 #include "IDT.h"
 #include "GDT.h"
+#include "apic.h"
+#include "cpuid.h"
 
 #endif //LUAOS_CPU

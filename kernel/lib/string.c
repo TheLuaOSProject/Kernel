@@ -8,7 +8,7 @@
 
 #include "string.h"
 
-size_t strlen(const cstring str)
+size_t strlen(const string str)
 {
     size_t len = 0;
 
@@ -23,7 +23,7 @@ size_t strlen(const cstring str)
 }
 
 //K&R ftw 
-void strint(int num, cstring output)
+void strint(int num, string output)
 {
     int i = 0, sign = num;
     if (sign < 0) num = -num;
@@ -36,7 +36,7 @@ void strint(int num, cstring output)
     output[i] = '\0';
 }
 
-cstring strcat(cstring str1, cstring str2)
+string strcat(string str1, string str2)
 {
     size_t  str1_len    = strlen(str1),
             str2_len    = strlen(str2),
@@ -55,24 +55,35 @@ cstring strcat(cstring str1, cstring str2)
     return catstr;
 }
 
-__attribute__((unused)) cstring strcatv(cstring str1, ...)
+__attribute__((unused)) string strcatv(string str1, ...)
 {
     va_list argv;
     size_t  argc = VA_ARGS_COUNT(...),
             strc[argc];
-    cstring strv[argc];
+    string strv[argc];
     
     va_start(argv, str1);
     
     for (int i = 0; i < argc; ++i) {
-        strv[i] = va_arg(argv, cstring);
+        strv[i] = va_arg(argv, string);
         strc[i] = strlen(strv[i]);
     }
 
     va_end(argv);
 }
 
-__attribute__((unused)) void strhex(uint64_t hex, cstring output)
+void strcpy(string dest, const string src)
+{
+    int i = 0;
+    do {
+        dest[i] = src[i];
+        ++i;
+    } while (src[i] != '\0');
+
+    dest[i] = src[i]; //Null termination
+}
+
+__attribute__((unused)) void strhex(uint64_t hex, string output)
 {
     uint64_t i = 0;
     
@@ -84,12 +95,4 @@ __attribute__((unused)) void strhex(uint64_t hex, cstring output)
     if (hex < 0) output[i++] = '-';
      
     output[i] = '\0';
-}
-
-string_t str(cstring str)
-{
-    string_t string;
-    string.length = strlen(str);
-    string.buffer = str;
-    return string;
 }

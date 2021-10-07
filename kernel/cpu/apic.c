@@ -4,10 +4,14 @@
 
 #include "apic.h"
 
+#include "drivers/logger.h"
+#include "cpu.h"
+
 struct apic apic;
 
 static void enable_apic(void)
 {
+    
 }
 
 static uint32_t read_apic_register(enum apic_register offset)
@@ -33,12 +37,16 @@ static void send_ipi(uint8_t destination, uint8_t vector, uint32_t type)
 void initialise_apic(void)
 {
     if (apic.initialised) return;
+    
+    logger.writeln("Initialising APIC");
 
     apic.enable = &enable_apic;
     apic.read_register = &read_apic_register;
     apic.write_register = &write_apic_register;
     apic.send_eoi = &send_apic_eoi;
     apic.send_ipi = &send_ipi;
+    
+    logger.writeln("Done");
     
     apic.initialised = true;
 }

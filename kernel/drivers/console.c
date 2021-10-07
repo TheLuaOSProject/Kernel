@@ -9,7 +9,7 @@
 
 struct console console;
 
-const cstring ANSI_ESCAPE_CODES[] = {
+const string ANSI_ESCAPE_CODES[] = {
     "\x1b",     //ESCAPE
     
     /*Cursor*/
@@ -37,14 +37,14 @@ const cstring ANSI_ESCAPE_CODES[] = {
     "\x1b[9m",  //STRIKETHROUGH STYLE
 };
 
-static void kprintf(cstring fmt, ...)
+static void kprintf(string fmt, ...)
 {
     va_list arglist;
     va_start(arglist, fmt);
 
     for (; *fmt != '\0'; fmt++) {
         if(*fmt == '%') {
-            kprint(va_arg(arglist, cstring));
+            kprint(va_arg(arglist, string));
             continue;
         }
         stivale_print(fmt, 1);
@@ -53,14 +53,14 @@ static void kprintf(cstring fmt, ...)
     va_end(arglist);
 }
 
-static void kprintfln(cstring fmt, ...)
+static void kprintfln(string fmt, ...)
 {
     va_list arglist;
     va_start(arglist, fmt);
 
     for (; *fmt != '\0'; fmt++) {
         if(*fmt == '%') {
-            kprint(va_arg(arglist, cstring));
+            kprint(va_arg(arglist, string));
             continue;
         }
         stivale_print(fmt, 1);
@@ -70,24 +70,24 @@ static void kprintfln(cstring fmt, ...)
     stivale_print("\n", 1);
 }
 
-static void kprint(cstring msg)
+static void kprint(string msg)
 {
     stivale_print(msg, strlen(msg));
 }
 
-static void kprintln(cstring msg)
+static void kprintln(string msg)
 {
     kprint(msg);
     stivale_print("\n", 1);
 }
 
-static void kprints(cstring msg, enum ansi_escape_codes styles[])
+static void kprints(string msg, enum ansi_escape_codes styles[])
 {
     kset_styles(styles, true);
     kprint(msg);
 }
 
-static void kprintsln(cstring msg, enum ansi_escape_codes styles[])
+static void kprintsln(string msg, enum ansi_escape_codes styles[])
 {
     kprints(msg, styles);
     stivale_print("\n", 1);

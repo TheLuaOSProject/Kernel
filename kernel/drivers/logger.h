@@ -12,26 +12,26 @@
 
 #define LOG(str) \
 
-static void lwrite(cstring message);
+static void lwrite(string message);
 static void lwritec(char character);
-static void lwritef(cstring message);
-static void lwriteln(cstring message);
+static void lwritef(string message);
+static void lwriteln(string message);
 static void lwritecln(char character);
-static void lwritefln(cstring message);
+static void lwritefln(string message);
 
 extern struct logger {
     /**
      * Writes a message to the log
      * @param message message to write
      */
-    void    (*write)(cstring message);
+    void    (*write)(string message);
     /**
      * Writes a character to the log
      * @param character char to write
      */
     void    (*writec)(char character);
 //    void    (*writef)(string message);
-    void    (*writeln)(cstring message);
+    void    (*writeln)(string message);
     void    (*writecln)(char character);
 //    void    (*writefln)(string message);
 } logger;

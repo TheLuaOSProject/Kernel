@@ -35,4 +35,9 @@ extern void DIV_BY_ZERO();
  */
 extern void DEBUG_INTERRUPT();
 
+/**
+ * Executes the breakpoint interrupt
+ */
+extern void BREAKPOINT();
+
 #endif //LUAOS_UTILITIES

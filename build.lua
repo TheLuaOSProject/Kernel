@@ -54,7 +54,7 @@ end
 
 commonfile_read:close();
 
-content[13] = "#define LUAOS_VERSION       \"0.1." .. tostring(bn) .. "\"";
+content[13] = "#define LUAOS_VERSION       \"1.0." .. tostring(bn) .. "\"";
 content[14] = "#define LUAOS_BUILD_DATE    \"" .. bd .. "\"";
 
 local commonfile_write = io.open("kernel/lib/common.h", "w");

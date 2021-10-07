@@ -8,12 +8,7 @@
 /**
  * C String, expands to a char pointer
  */
-typedef char* cstring;
-
-typedef struct string {
-    size_t  length;
-    cstring buffer;
-} string_t;
+typedef char* string;
 
 
 
