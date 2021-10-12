@@ -7,19 +7,17 @@
 
 #include "types.h"
 
+enum base {
+    BASE_10 = 10,
+    BASE_16 = 16
+};
+
 /**
  * Gets the length of a string
  * @param str string to measure
  * @return length of str
  */
 size_t strlen(const string str);
-
-/**
- * Converts an integer to a string
- * @param num Integer to convert
- * @param output Output from the conversion
- */
-void strint(int num, string output);
 
 /**
  * Concatinates 2 strings
@@ -37,17 +35,9 @@ string strcat(string str1, string str2);
  */
 __attribute__((unused)) string strcatv(string str1, ...);
 
-/**
- * Converts an hexadecimal number to a string
- * @param hex Hexadecimal value
- * @param output Output of the converison
- */
-__attribute__((unused)) void strhex(uint64_t hex, string output);
-
 void strcpy(string dest, string src);
 
-
-void sprintf(string fmt, ...);
+string strnum(int64_t num, enum base);
 
 
 #endif //LUAOS_STRING

@@ -22,37 +22,22 @@ size_t strlen(const string str)
     return len;
 }
 
-//K&R ftw 
-void strint(int num, string output)
-{
-    int i = 0, sign = num;
-    if (sign < 0) num = -num;
-
-    do {
-        output[i++] = num % 10 + '0';
-    } while ((num /= 10) > 0);
-
-    if (sign < 0) output[i++] = '-';
-    output[i] = '\0';
-}
-
 string strcat(string str1, string str2)
 {
+    static char buffer[1024]; //fuck you, I am too tired to try and make this safe
+
     size_t  str1_len    = strlen(str1),
-            str2_len    = strlen(str2),
-            catstr_len  = str1_len + str2_len;
-    
-    char catstr[catstr_len];
+            str2_len    = strlen(str2);
 
     for (int i = 0; i < str1_len; ++i) {
-        catstr[i] = str1[i];
+        buffer[i] = str1[i];
     }
 
     for (int i = 0; i < str2_len; ++i) {
-        catstr[str1_len + i] = str2[i];
+        buffer[str1_len + i] = str2[i];
     }
     
-    return catstr;
+    return buffer;
 }
 
 __attribute__((unused)) string strcatv(string str1, ...)
@@ -83,16 +68,59 @@ void strcpy(string dest, const string src)
     dest[i] = src[i]; //Null termination
 }
 
-__attribute__((unused)) void strhex(uint64_t hex, string output)
+void reverse(string str)
 {
-    uint64_t i = 0;
-    
-    if (hex < 0) hex = -hex;
-    do {
-        output[i++] = hex % 16 + '0';
-    } while ((hex /= 10) > 0);
+    int c, i, j;
+    for (i = 0, j = strlen(str)-1; i < j; i++, j--) {
+        c = str[i];
+        str[i] = str[j];
+        str[j] = c;
+    }
+}
 
-    if (hex < 0) output[i++] = '-';
-     
-    output[i] = '\0';
+void append(string str, char character)
+{
+    size_t len = strlen(str);
+    str[len] = character;
+    str[len + 1] = '\0';
+}
+
+string strnum(int64_t num, enum base base)
+{
+    static char buffer[32];
+    uint8_t i, sign;
+
+    if (base == BASE_10) {
+        if ((sign = num) < 0) num = -num;
+        i = 0;
+        do {
+            buffer[i++] = num % 10 + '0';
+        } while ((num /= 10) > 0);
+
+        if (sign < 0) buffer[i++] = '-';
+        buffer[i] = '\0';
+
+        reverse(buffer);
+    }
+
+    if (base == BASE_16) {
+        append(buffer, '0');
+        append(buffer, 'x');
+        char zeros = 0;
+
+        int32_t tmp;
+        for (i = 28; i > 0; i -= 4) {
+            tmp = (num >> i) & 0xF;
+            if (tmp == 0 && zeros == 0) continue;
+            zeros = 1;
+            if (tmp > 0xA) append(buffer, tmp - 0xA + 'a');
+            else append(buffer, tmp + '0');
+        }
+
+        tmp = num & 0xF;
+        if (tmp >= 0xA) append(buffer, tmp - 0xA + 'a');
+        else append(buffer, tmp + '0');
+    }
+
+    return buffer;
 }

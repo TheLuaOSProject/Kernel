@@ -4,7 +4,7 @@
 
 #include "logger.h"
 
-#include "ports.h"
+#include <stdarg.h>
 
 struct logger logger;
 
@@ -12,10 +12,10 @@ void initialise_logger(void)
 {
     logger.write = &lwrite;
     logger.writec = &lwritec;
-//    logger.writef = &lwritef;
+    logger.writef = &lwritef;
     logger.writeln = &lwriteln;
     logger.writecln = &lwritecln;
-//    logger.writefln = &lwritefln;
+    logger.writefln = &lwritefln;
 }
 
 void lwrite(string message)
@@ -31,6 +31,48 @@ void lwritec(char character)
 {
 #ifdef QEMU
     port_out(LOGGING_PORT, character);
+#endif
+}
+
+void lwritef(string fmt, ...)
+{
+#ifdef QEMU
+    va_list list;
+    va_start(list, fmt);
+    int i = 0;
+    while(fmt[i] != '\0') {
+        if (fmt[i] == '%') {
+            lwrite(va_arg(list, string));
+            goto end;
+        }
+        lwritec(fmt[i]);
+
+        end:
+        ++i;
+    }
+
+    va_end(list);
+#endif
+}
+
+void lwritefln(string fmt, ...)
+{
+#ifdef QEMU
+    va_list list;
+    va_start(list, fmt);
+
+    int i = 0;
+    while(fmt[i] != '\0') {
+        if (fmt[i] == '%') {
+            lwrite(va_arg(list, string));
+        }
+        lwritec(fmt[i]);
+        ++i;
+    }
+
+    va_end(list);
+
+    lwritec('\n');
 #endif
 }
 

@@ -1,6 +1,7 @@
 #include <common.h>
-#include "drivers/drivers.h"
-#include "cpu/cpu.h"
+#include <components.h>
+#include <drivers.h>
+
 
 /**
  * LuaOS Kernel Entry point
@@ -18,29 +19,38 @@ void kstart(struct stivale2_struct *bootloader)
     console.set_style(RESET_STYLES, true);
     console.println("---------------------------------");
 
-#ifdef QEMU
+
     console.print("\x1b[1;93mInitialising logger... ");
     console.set_style(STYLE_BOLD, true);
+#ifdef QEMU
     initialise_logger();
-    console.println("\x1b[32m[Done]");
 #endif
+    console.println("\x1b[32m[Done]");
+
     logger.writeln("Started logger");
+
+
 
 //    console.print("\x1b[1;93mInitialising GDT... ");
 //    console.set_style(STYLE_BOLD, true);
 //    initialise_gdt();
 //    console.println("\x1b[32m[Done]");
+
+    //initialise_memory_manager(bootloader);
     
     console.print("\x1b[1;93mInitialising IDT... ");
     console.set_style(STYLE_BOLD, true);
     initialise_idt();
     console.println("\x1b[32m[Done]");
 
-    console.print("\x1b[1;93mInitialising framebuffer... ");
+    console.println("\x1b[1;93mInitialising framebuffer... ");
     initialise_screen(bootloader);
-    string screen_size[2];
-    strint(screen.screen_size.x, screen_size[0]);
-    strint(screen.screen_size.y, screen_size[1]);
+
+    string screen_size[2] = {
+            strnum(screen.screen_size.x, 10),
+            strnum(screen.screen_size.y, 10)
+    };
+
     console.printfln("Screen size: X = %, Y = %", screen_size[0], screen_size[1]);
     console.println("\x1b[32m[Done]");
 

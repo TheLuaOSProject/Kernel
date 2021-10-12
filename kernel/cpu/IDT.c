@@ -4,7 +4,7 @@
 
 #include "IDT.h"
 
-#include <drivers/drivers.h>
+#include <drivers.h>
 
 void div_by_zero_i(struct interrupt_frame *iframe);
 void breakpoint_i(struct interrupt_frame *iframe);

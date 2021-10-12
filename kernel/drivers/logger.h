@@ -14,10 +14,10 @@
 
 static void lwrite(string message);
 static void lwritec(char character);
-static void lwritef(string message);
+static void lwritef(string fmt, ...);
 static void lwriteln(string message);
 static void lwritecln(char character);
-static void lwritefln(string message);
+static void lwritefln(string fmt, ...);
 
 extern struct logger {
     /**
@@ -30,10 +30,10 @@ extern struct logger {
      * @param character char to write
      */
     void    (*writec)(char character);
-//    void    (*writef)(string message);
+    void    (*writef)(string fmt, ...);
     void    (*writeln)(string message);
     void    (*writecln)(char character);
-//    void    (*writefln)(string message);
+    void    (*writefln)(string fmt, ...);
 } logger;
 
 void initialise_logger(void);
