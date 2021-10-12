@@ -8,7 +8,7 @@
 #include <stddef.h>
 #include <stivale2.h>
 
-#define STACK_SIZE          4096
+#define STACK_SIZE          2 << 13
 
 // We need to tell the stivale bootloader where we want our stack to be.
 // We are going to allocate our stack as an uninitialised array in .bss.
