@@ -9,9 +9,10 @@
 #include "stivale2.h"
 #include "utilities.h"
 #include "bootloader.h"
+#include "lock.h"
 
-#define LUAOS_VERSION       "1.0.172"
-#define LUAOS_BUILD_DATE    "2021/10/12 at 11:22"
+#define LUAOS_VERSION       "1.0.181"
+#define LUAOS_BUILD_DATE    "2021/10/13 at 14:50"
 
 /**
  * Halts the computer

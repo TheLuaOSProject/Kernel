@@ -10,7 +10,7 @@
  */
 typedef char* string;
 
-
+typedef void* voidptr;
 
 typedef void (*voidfunc_f)(void);
 

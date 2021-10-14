@@ -32,22 +32,21 @@ string get_vendor_name()
     BREAKPOINT();
 
     logger.writeln("Attempting to get CPU vendor name");
-    logger.write("EBX register: ");
-    logger.writeln(ebx);
-    logger.write("EDX register: ");
-    logger.writeln(edx);
     logger.write("ECX register: ");
-    logger.writeln(ecx);
-
     for (int i = 0; i < 4; ++i) {
+        logger.writefln("Index %: %", strnum(i, BASE_10), strnum(ecx[i], BASE_16));
         fullname[i] = ecx[i];
     }
 
+    logger.write("EDX register: ");
     for (int i = 0; i < 4; ++i) {
+        logger.writefln("Index %: %", strnum(i, BASE_10), strnum(edx[i], BASE_16));
         fullname[i + 4] = edx[i];
     }
 
+    logger.write("EBX register: ");
     for (int i = 0; i < 4; ++i) {
+        logger.writefln("Index %: %", strnum(i, BASE_10), strnum(ebx[i], BASE_16));
         fullname[i + 8] = ebx[i];
     }
 
