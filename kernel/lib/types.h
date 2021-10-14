@@ -14,4 +14,6 @@ typedef void* voidptr;
 
 typedef void (*voidfunc_f)(void);
 
+typedef uint64_t memaddr_t;
+
 #endif

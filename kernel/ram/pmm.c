@@ -4,14 +4,14 @@
 
 #include "pmm.h"
 #include "drivers/logger.h"
+#include <common.h>
 
 struct pmm physical_memory_manager;
 
-uintptr_t    top_page = 0;
-uint8_t      *bitmap;
+static lock_t pmm_lock;
 
 
-void initialise_memory_manager(struct stivale2_struct *bootloader)
+void initialise_pmm(struct stivale2_struct *bootloader)
 {
     logger.writeln("Initialising Physical Memory Manager");
 
@@ -42,24 +42,24 @@ void initialise_memory_manager(struct stivale2_struct *bootloader)
             continue;
 
         uintptr_t top = entry.base + entry.length;
-        if (top > top_page) {
-            top_page = top;
+        if (top > physical_memory_manager.top_page) {
+            physical_memory_manager.top_page = top;
         }
     }
 
     logger.writefln("Initalising bitmap");
     //Set bitmap
-    size_t bitmap_size = ROUND_UP(top_page / PAGE_SIZE, 8);
+    size_t bitmap_size = ROUND_UP(physical_memory_manager.top_page / PAGE_SIZE, 8);
     for (int i = 0; i < physical_memory_manager.entry_count; ++i) {
         struct stivale2_mmap_entry entry = physical_memory_manager.memory_map[i];
         if (entry.type != STIVALE2_MMAP_USABLE || entry.length < bitmap_size)
             continue;
 
 
-        bitmap = (uint8_t *)entry.base + PHYSICAL_BASE_ADDRESS;
+        physical_memory_manager.bitmap = (uint8_t *)entry.base + PHYSICAL_BASE_ADDRESS;
         size_t bm_pages = ROUND_UP(bitmap_size, PAGE_SIZE);
 
-        memset(bitmap, 0xFF, bitmap_size);
+        memset(physical_memory_manager.bitmap, 0xFF, bitmap_size);
 
         //Val not ref
         physical_memory_manager.memory_map[i].base   += bm_pages * PAGE_SIZE;
@@ -78,20 +78,90 @@ void initialise_memory_manager(struct stivale2_struct *bootloader)
                 length      = entry.length / PAGE_SIZE;
 
         for (size_t j = page_num; j <= page_num + length; ++j) {
-            CLEAR_BIT(bitmap, j);
+            clear_bit(physical_memory_manager.bitmap, j);
         }
     }
 
-    physical_memory_manager.allocate = &allocate;
-
+    physical_memory_manager.alloc = &alloc;
+    physical_memory_manager.free = &free;
+    physical_memory_manager.get_free_memory = &get_free_memory;
     logger.writeln("Done");
 }
 
-static voidptr allocate(size_t size)
+static voidptr alloc(size_t size)
 {
     size_t count = 0;
 
-    for (int i = 0; i < b; ++i) {
-        
+    acquire_lock(&pmm_lock);
+
+    for (int i = 0; i < physical_memory_manager.bitmap_size * 8; ++i) {
+        if (is_bit_set(physical_memory_manager.bitmap, i)) {
+            ++count;
+
+            if (count == size) {
+                uintptr_t page = i - size + 1;
+
+                for (int j = page; j < page + size; ++j) {
+                    set_bit(physical_memory_manager.bitmap, j);
+                }
+
+                memaddr_t address = page * PAGE_SIZE;
+                memset((voidptr) (address + PHYSICAL_BASE_ADDRESS), 0, size + PAGE_SIZE);
+
+                release_lock(&pmm_lock);
+                return (voidptr)address;
+            }
+        } else {
+           count = 0;
+        }
     }
+
+    release_lock(&pmm_lock);
+
+    return NULL;
+}
+
+static void free(voidptr ptr, size_t size)
+{
+    uintptr_t page = (uintptr_t)ptr / PAGE_SIZE;
+
+    acquire_lock(&pmm_lock);
+
+    for (uintptr_t i = page; i < page + size; ++i) {
+        clear_bit(physical_memory_manager.bitmap, i);
+    }
+
+    release_lock(&pmm_lock);
+}
+
+static uint64_t get_free_memory(void)
+{
+    uint64_t free_pages = 0;
+
+    for (size_t i = 0; i < physical_memory_manager.bitmap_size * 8; i++) {
+        if (is_bit_set(physical_memory_manager.bitmap, i)) {
+            ++free_pages;
+        }
+    }
+
+    return free_pages * PAGE_SIZE;
+}
+
+inline void clear_bit(uint8_t *bitmap, uintptr_t bit)
+{
+    bitmap[bit / 8] |= (1 << (7 - bit % 8));
+}
+
+inline bool is_bit_set(const uint8_t *bitmap, uintptr_t bit)
+{
+    if (bitmap[bit/8] & (1 << (7 - bit%8))) {
+        return true;
+    }
+
+    return false;
+}
+
+inline void set_bit(uint8_t *bitmap, uintptr_t bit)
+{
+    bitmap[bit / 8] |= (1 << (7 - bit % 8));
 }

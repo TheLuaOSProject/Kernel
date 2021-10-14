@@ -37,7 +37,7 @@ void kstart(struct stivale2_struct *bootloader)
 
     console.println("\x1b[1;93mInitialising memory manager...");
     console.printfln("Stack size: %", strnum(STACK_SIZE, BASE_10));
-    initialise_memory_manager(bootloader);
+    initialise_pmm(bootloader);
     console.println("\x1b[32m[Done]");
     
     console.print("\x1b[1;93mInitialising IDT... ");
