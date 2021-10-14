@@ -36,8 +36,8 @@ void kstart(struct stivale2_struct *bootloader)
 //    console.println("\x1b[32m[Done]");
 
     console.println("\x1b[1;93mInitialising memory manager...");
-    console.printfln("Stack size: %", strnum(STACK_SIZE, BASE_10));
     initialise_pmm(bootloader);
+    console.printfln("Free memory: % bytes free", itoa(physical_memory_manager.get_free_memory(), BASE_10));
     console.println("\x1b[32m[Done]");
     
     console.print("\x1b[1;93mInitialising IDT... ");
@@ -49,15 +49,15 @@ void kstart(struct stivale2_struct *bootloader)
     initialise_screen(bootloader);
 
     string screen_size[2] = {
-            strnum(screen.screen_size.x, 10),
-            strnum(screen.screen_size.y, 10)
+            itoa(screen.screen_size.x, BASE_10),
+            itoa(screen.screen_size.y, BASE_10)
     };
 
     console.printfln("Screen size: X = %, Y = %", screen_size[0], screen_size[1]);
     console.println("\x1b[32m[Done]");
 
-    console.set_style(RESET_STYLES, true);
-    console.println("CPU Info");
+    console.set_style(STYLE_BOLD, true);
+    console.println("\x1b[1;93mCPU Info");
     console.printfln("CPU Vendor: %", get_vendor_name());
     console.set_style(STYLE_BOLD, true);
     

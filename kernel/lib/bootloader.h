@@ -11,7 +11,7 @@
 #define STACK_SIZE          2 << 13
 
 // We need to tell the stivale bootloader where we want our stack to be.
-// We are going to alloc our stack as an uninitialised array in .bss.
+// We are going to memalloc our stack as an uninitialised array in .bss.
 static uint8_t stack[STACK_SIZE];
 
 /**

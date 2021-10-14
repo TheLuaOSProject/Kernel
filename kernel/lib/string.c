@@ -8,6 +8,8 @@
 
 #include "string.h"
 
+static char buffer[128];
+
 size_t strlen(const string str)
 {
     size_t len = 0;
@@ -71,7 +73,7 @@ void strcpy(string dest, const string src)
 void reverse(string str)
 {
     int c, i, j;
-    for (i = 0, j = strlen(str)-1; i < j; i++, j--) {
+    for (i = 0, j = strlen(str) - 1; i < j; i++, j--) {
         c = str[i];
         str[i] = str[j];
         str[j] = c;
@@ -85,42 +87,34 @@ void append(string str, char character)
     str[len + 1] = '\0';
 }
 
-string strnum(int64_t num, enum base base)
+string itoa(int64_t value, enum base base)
 {
-    static char buffer[32];
-    uint8_t i, sign;
+    uint8_t signage = 0,
+            i       = 0;
 
-    if (base == BASE_10) {
-        if ((sign = num) < 0) num = -num;
-        i = 0;
-        do {
-            buffer[i++] = num % 10 + '0';
-        } while ((num /= 10) > 0);
-
-        if (sign < 0) buffer[i++] = '-';
+    if (value == 0) {
+        buffer[i++] = '0';
         buffer[i] = '\0';
-
-        reverse(buffer);
+        return buffer;
     }
 
-    if (base == BASE_16) {
-        append(buffer, '0');
-        append(buffer, 'x');
-        char zeros = 0;
-
-        int32_t tmp;
-        for (i = 28; i > 0; i -= 4) {
-            tmp = (num >> i) & 0xF;
-            if (tmp == 0 && zeros == 0) continue;
-            zeros = 1;
-            if (tmp > 0xA) append(buffer, tmp - 0xA + 'a');
-            else append(buffer, tmp + '0');
-        }
-
-        tmp = num & 0xF;
-        if (tmp >= 0xA) append(buffer, tmp - 0xA + 'a');
-        else append(buffer, tmp + '0');
+    if (value < 0 && base == BASE_10) {
+        signage = 1;
+        value = -value;
     }
+
+    while(value) {
+        int64_t digit = value % base;
+        buffer[i++] = (digit > 9) ? (digit - 10) + 'a' : digit + '0';
+        value = value / base;
+    }
+
+    if (signage)
+        buffer[i++] = '-';
+
+    buffer[i] = '\0';
+
+    reverse(buffer);
 
     return buffer;
 }

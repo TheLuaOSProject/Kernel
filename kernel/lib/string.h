@@ -37,7 +37,7 @@ __attribute__((unused)) string strcatv(string str1, ...);
 
 void strcpy(string dest, string src);
 
-string strnum(int64_t num, enum base);
+string itoa(int64_t value, enum base base);
 
 
 #endif //LUAOS_STRING

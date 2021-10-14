@@ -10,9 +10,12 @@
 #include "utilities.h"
 #include "bootloader.h"
 #include "lock.h"
-#define LUAOS_VERSION       "1.0.182"
-#define LUAOS_BUILD_DATE    "2021/10/14 at 13:05"
-#define LUAOS_BUILD_DATE    "2021/10/13 at 14:50"
+
+
+/* IMORTANT: KEEP THESE DEFINES ON LINE 16 AND 17   */
+#define LUAOS_VERSION       "1.0.199"
+#define LUAOS_BUILD_DATE    "2021/10/14 at 14:13"
+/* OR EDIT BUILD.LUA LINE 57!!!                     */
 
 /**
  * Halts the computer

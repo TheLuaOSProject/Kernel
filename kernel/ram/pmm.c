@@ -10,6 +10,7 @@ struct pmm physical_memory_manager;
 
 static lock_t pmm_lock;
 
+static size_t last_used = 0;
 
 void initialise_pmm(struct stivale2_struct *bootloader)
 {
@@ -88,37 +89,40 @@ void initialise_pmm(struct stivale2_struct *bootloader)
     logger.writeln("Done");
 }
 
-static voidptr alloc(size_t size)
+static voidptr memalloc(size_t size, size_t limit)
 {
     size_t count = 0;
 
-    acquire_lock(&pmm_lock);
-
-    for (int i = 0; i < physical_memory_manager.bitmap_size * 8; ++i) {
-        if (is_bit_set(physical_memory_manager.bitmap, i)) {
-            ++count;
-
-            if (count == size) {
-                uintptr_t page = i - size + 1;
-
-                for (int j = page; j < page + size; ++j) {
-                    set_bit(physical_memory_manager.bitmap, j);
+    while (last_used < limit) {
+        if (is_bit_set(physical_memory_manager.bitmap, last_used++)){
+            if (++count == size) {
+                uintptr_t page = last_used - count;
+                for (size_t i = page; i < last_used; ++i) {
+                    set_bit(physical_memory_manager.bitmap, i);
                 }
-
-                memaddr_t address = page * PAGE_SIZE;
-                memset((voidptr) (address + PHYSICAL_BASE_ADDRESS), 0, size + PAGE_SIZE);
-
-                release_lock(&pmm_lock);
-                return (voidptr)address;
+                return (voidptr)(page * PAGE_SIZE);
             }
         } else {
-           count = 0;
+            count = 0;
         }
     }
 
-    release_lock(&pmm_lock);
-
     return NULL;
+}
+
+static voidptr alloc(size_t size)
+{
+    acquire_lock(&pmm_lock);
+
+    size_t last = last_used;
+    voidptr mem = memalloc(size, physical_memory_manager.entry_count / PAGE_SIZE);
+    if (mem == NULL) {
+        last_used = 0;
+        mem = memalloc(size, last);
+    }
+
+    release_lock(&pmm_lock);
+    return mem;
 }
 
 static void free(voidptr ptr, size_t size)
@@ -139,7 +143,7 @@ static uint64_t get_free_memory(void)
     uint64_t free_pages = 0;
 
     for (size_t i = 0; i < physical_memory_manager.bitmap_size * 8; i++) {
-        if (is_bit_set(physical_memory_manager.bitmap, i)) {
+        if (!is_bit_set(physical_memory_manager.bitmap, i)) {
             ++free_pages;
         }
     }
