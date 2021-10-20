@@ -12,10 +12,7 @@
 
 extern struct pmm {
     struct stivale2_mmap_entry  *memory_map;
-    uint32_t                    entry_count;
-    uintptr_t                   top_page;
-    uint8_t                     *bitmap;
-    size_t                      bitmap_size;
+    uint64_t                    memory_map_entry_count;
     voidptr                     (*alloc)(size_t size);
     void                        (*free)(voidptr ptr, size_t size);
     uint64_t                    (*get_free_memory)(void);
@@ -24,13 +21,8 @@ extern struct pmm {
 void initialise_pmm(struct stivale2_struct *bootloader);
 
 static voidptr alloc(size_t size);
-static voidptr memalloc(size_t size, size_t limit);
 static void free(voidptr ptr, size_t size);
 static uint64_t get_free_memory(void);
-
-inline void clear_bit(uint8_t *bitmap, uintptr_t bit);
-inline bool is_bit_set(const uint8_t *bitmap, uintptr_t bit);
-inline void set_bit(uint8_t *bitmap, uintptr_t bit);
 
 
 #endif //LUAOS_PMM

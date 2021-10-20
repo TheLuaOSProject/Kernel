@@ -10,11 +10,11 @@
 #include "utilities.h"
 #include "bootloader.h"
 #include "lock.h"
-
-
+#include "bitmap.h"
+#include "free_list.h"
 /* IMORTANT: KEEP THESE DEFINES ON LINE 16 AND 17   */
-#define LUAOS_VERSION       "1.0.199"
-#define LUAOS_BUILD_DATE    "2021/10/14 at 14:13"
+#define LUAOS_VERSION       "1.0.255"
+#define LUAOS_BUILD_DATE    "2021/10/15 at 13:59"
 /* OR EDIT BUILD.LUA LINE 57!!!                     */
 
 /**

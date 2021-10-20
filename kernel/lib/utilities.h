@@ -6,7 +6,7 @@
 #define LUAOS_UTILITIES
 #include "types.h"
 
-#define ROUND_UP(A, B) ({                                   \
+#define ROUND_DIV(A, B) ({                                  \
         typeof(A) _a_ROUND_UP_ = A;                         \
         typeof(B) _b_ROUND_UP_ = B;                         \
         (_a_ROUND_UP_ + (_b_ROUND_UP_ - 1)) / _b_ROUND_UP_; \
@@ -29,21 +29,23 @@ void memcpy(const int8_t    *src,
 /**
  * Instantly crashes the machine by calling the UD2 instruction
  */
-extern void CRASH();
+extern void CRASH(void);
 
 /**
  * Divides by zero (doing in C results in the UD2 instruction being generated)
  */
-extern void DIV_BY_ZERO();
+extern void DIV_BY_ZERO(void);
 
 /**
  * Executes the debug interrupt (0x72)
  */
-extern void DEBUG_INTERRUPT();
+extern void DEBUG_INTERRUPT(void);
 
 /**
  * Executes the breakpoint interrupt
  */
-extern void BREAKPOINT();
+extern void BREAKPOINT(void);
+
+extern void HALT(void);
 
 #endif //LUAOS_UTILITIES

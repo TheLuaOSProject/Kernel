@@ -47,14 +47,13 @@ target("LuaOS");
         local liminepath = target:objectdir() .. "/limine/";
         local kernelimg = target:targetdir() .. "/LuaOS";
 
-        if os.isdir(liminepath) then
-            os.rm(liminepath);
+        local limineExists = os.isdir(liminepath);
+
+        if limineExists == false then
+            print("Cloning limine...")
+            local gitcmd = "git clone https://github.com/limine-bootloader/limine.git " .. liminepath .. " --branch=v2.0-branch-binary --depth=1";
+            os.run(gitcmd);
         end
-
-        print("Cloning limine...")
-        local gitcmd = "git clone https://github.com/limine-bootloader/limine.git " .. liminepath .. " --branch=v2.0-branch-binary --depth=1";
-        os.run(gitcmd);
-
         print("Making limine")
         os.run("make -C " .. liminepath);
 

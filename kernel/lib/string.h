@@ -37,6 +37,8 @@ __attribute__((unused)) string strcatv(string str1, ...);
 
 void strcpy(string dest, string src);
 
+#define strnum(value) itoa(value, BASE_10)
+#define strhex(value) itoa(value, BASE_16)
 string itoa(int64_t value, enum base base);
 
 

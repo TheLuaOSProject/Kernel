@@ -63,10 +63,11 @@ void lwritefln(string fmt, ...)
 
     int i = 0;
     while(fmt[i] != '\0') {
-        if (fmt[i] == '%') {
+        if (fmt[i] == '%')
             lwrite(va_arg(list, string));
-        }
-        lwritec(fmt[i]);
+        else
+            lwritec(fmt[i]);
+
         ++i;
     }
 

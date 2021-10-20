@@ -32,4 +32,6 @@ extern const char   NORMAL_KEYS[],
 void keyboard_i(struct interrupt_frame *iframe);
 void initialise_keyboard(void);
 
+extern void KEYBOARD_INPUT(void);
+
 #endif //LUAOS_KEYBOARD
