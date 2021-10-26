@@ -13,8 +13,8 @@
 #include "bitmap.h"
 #include "free_list.h"
 /* IMORTANT: KEEP THESE DEFINES ON LINE 16 AND 17   */
-#define LUAOS_VERSION       "1.0.255"
-#define LUAOS_BUILD_DATE    "2021/10/15 at 13:59"
+#define LUAOS_VERSION       "1.0.256"
+#define LUAOS_BUILD_DATE    "2021/10/25 at 12:05"
 /* OR EDIT BUILD.LUA LINE 57!!!                     */
 
 /**
@@ -75,6 +75,6 @@
 
 /* END */
 
-#define ARRAY_LENGTH(array) ((sizeof(array)/sizeof(0[array])) / ((size_t)(!(sizeof(array) % sizeof(0[array])))))
+#define ARRAY_LENGTH(array) ((sizeof(array) / sizeof(0[array])) / ((size_t)(!(sizeof(array) % sizeof(0[array])))))
 
 #endif //LUAOS_COMMON
