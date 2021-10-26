@@ -68,5 +68,7 @@ enum cpuid_feature {
 };
 
 string get_vendor_name(void);
+uint32_t get_cpu_model(void);
+bool check_apic(void);
 
 #endif //LUAOS_CPUID

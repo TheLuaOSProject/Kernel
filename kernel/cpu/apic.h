@@ -34,8 +34,8 @@ static void send_ipi(uint8_t destination, uint8_t vector, uint32_t type);
 
 extern struct apic {
     void        (*enable)();
-    uint32_t    (*read_register)(uint16_t offset);
-    void        (*write_register)(uint16_t offset, uint32_t value);
+    uint32_t    (*read_register)(enum apic_register offset);
+    void        (*write_register)(enum apic_register offset, uint32_t value);
     void        (*send_eoi)();
     void        (*send_ipi)(uint8_t destination, uint8_t vector, uint32_t type);
     
