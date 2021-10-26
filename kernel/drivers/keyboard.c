@@ -42,7 +42,7 @@ static struct keyboard_state kb_state = {
         .caps   = false
 };
 
-void ASM_KEYBOARD();
+extern void ASM_KEYBOARD();
 
 void initialise_keyboard(void)
 {
