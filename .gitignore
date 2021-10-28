@@ -8,7 +8,6 @@ cmake-build-debug/
 
 qemulog.txt
 luaos.log
-buildlog.json
 dump.asm
 compile_commands.json
 
