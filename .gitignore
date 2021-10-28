@@ -1,16 +1,14 @@
 *.DS_STORE
 
-build
-.xmake
+build/
+.xmake/
 
 Cmakelists.txt
-cmake-build-debug
-
-.idea/discord.xml
+cmake-build-debug/
 
 qemulog.txt
 luaos.log
-/buildlog.json
+buildlog.json
 dump.asm
 compile_commands.json
 

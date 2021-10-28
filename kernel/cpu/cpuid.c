@@ -4,26 +4,52 @@
 
 #include "cpuid.h"
 
-#include <cpuid.h>
+#include "drivers/logger.h"
 
-#define cpuid(leaf, eax, ebx, ecx, edx)     __cpuid(leaf, eax, ebx, ecx, edx)
-#define get_cpuid(leaf, eax, ebx, ecx, edx) __get_cpuid(leaf, eax, ebx, ecx, edx)
 
+static string vendor_name = NULL;
 string get_vendor_name()
 {
+    if (vendor_name != NULL)
+        return vendor_name;
 
-}
+    char    ebx[4],
+            edx[4],
+            ecx[4];
 
-uint32_t get_cpu_model()
-{
-    uint32_t ebx, nil;
-    cpuid(0, nil, ebx, nil, nil);
-    return ebx;
-}
+    static char fullname[13]; //Vendor name + null byte
 
-bool check_apic(void)
-{
-    uint32_t eax, nil, edx;
-    get_cpuid(1, &eax, &nil, &nil, &edx);
-    return edx & CPUID_FEATURE_EDX_APIC;
+    asm volatile (
+            "CPUID\n"
+            "MOV    %%EBX, %0\n"
+            "MOV    %%EDX, %1\n"
+            "MOV    %%ECX, %2\n"
+            :"=rm" (ebx),
+            "=rm" (edx),
+            "=rm" (ecx)
+    );
+
+    logger.writeln("Attempting to get CPU vendor name");
+    logger.write("ECX register: ");
+    for (int i = 0; i < 4; ++i) {
+        fullname[i] = ecx[i];
+    }
+
+    logger.write("EDX register: ");
+    for (int i = 0; i < 4; ++i) {
+        fullname[i + 4] = edx[i];
+    }
+
+    logger.write("EBX register: ");
+    for (int i = 0; i < 4; ++i) {
+        fullname[i + 8] = ebx[i];
+    }
+
+    fullname[12] = '\0';
+
+    logger.write("Final string: ");
+    logger.writeln(fullname);
+
+    strcpy(vendor_name, fullname);
+    return vendor_name;
 }

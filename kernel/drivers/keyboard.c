@@ -56,7 +56,9 @@ void initialise_keyboard(void)
 
 void keyboard_i(struct interrupt_frame *iframe)
 {
+    logger.writeln("Key pressed!");
     uint8_t key = port_in(0x60);
+    logger.writefln("Key: %", NORMAL_KEYS[key]);
 
     //0x59 = max scan code
     if (key >= 0x59) {

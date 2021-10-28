@@ -36,8 +36,6 @@ static void send_ipi(uint8_t destination, uint8_t vector, uint32_t type)
 
 void initialise_apic(void)
 {
-
-
     if (apic.initialised) return;
     
     logger.writeln("Initialising APIC");

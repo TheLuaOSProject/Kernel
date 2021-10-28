@@ -5,7 +5,6 @@ KEYBOARD_INPUT:
 
 GLOBAL ASM_KEYBOARD
 EXTERN keyboard_i
-ASM_KEYBOARD:
     MOV RDI, RSP
 
     PUSH R15
@@ -23,8 +22,8 @@ ASM_KEYBOARD:
     PUSH RCX
     PUSH RBX
     PUSH RAX
-    CLD
 
+    CLD
     CALL    keyboard_i
 
     POP RAX
