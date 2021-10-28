@@ -69,21 +69,11 @@ void kstart(struct stivale2_struct *bootloader)
     console.printfln("Screen size: X = %, Y = %", screen_size[0], screen_size[1]);
     console.println("\x1b[32m[Done]");
 
-    console.print("\x1b[1;93mInitialising APIC... ");
-    bool apic = check_apic();
-    if (apic)
-        console.println("\x1b[32mAPIC detected!");
-    else
-        console.println("\x1b[1;31mNo APIC detected!");
-
     console.set_style(STYLE_BOLD, true);
     console.println("\x1b[1;93mCPU Info");
-    console.printfln("CPU model ID: %", itoa(get_cpu_model(), BASE_10));
     console.printfln("CPU Vendor: %", get_vendor_name());
     console.set_style(STYLE_BOLD, true);
-
-    console.println("\x1b[32m[Done]");
-
+    
     console.print("\x1b[1;93mInitialising keyboard inputs... ");
     console.set_style(STYLE_BOLD, true);
     initialise_keyboard();
