@@ -6,8 +6,6 @@ build/
 Cmakelists.txt
 cmake-build-debug/
 
-.idea/
-
 qemulog.txt
 luaos.log
 buildlog.json
