@@ -71,13 +71,13 @@ commonfile_write:close();
 ---@field action        function
 local task = {
     ---@type    string
-    name;
+    name = "";
 
     ---@type    table[] | nil
-    dependencies;
+    dependencies = nil;
     
     ---@type    function
-    action;
+    action = function () end;
 }
 
 ---@param name          string
@@ -85,14 +85,11 @@ local task = {
 ---@param action        function
 ---@return task
 function task:create(name, dependencies, action)
-    ---@type task
-    local t = {};
-    
-    t.name = name;
-    t.dependencies = dependencies;
-    t.action = action;
-    
-    return t;
+    return {
+        name = name,
+        dependencies = dependencies,
+        action = action
+    };
 end
 
 function build_luaos()

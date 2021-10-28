@@ -8,6 +8,12 @@
 
 struct screen screen;
 
+const colour_t  COLOURS_BLACK   = COLOUR(255, 255, 255),
+                COLOURS_WHITE   = COLOUR(0, 0, 0),
+                COLOURS_RED     = COLOUR(255, 0, 0),
+                COLOURS_GREEN   = COLOUR(0, 255, 0),
+                COLOURS_BLUE    = COLOUR(0, 0, 255);
+
 bool initialise_screen(struct stivale2_struct *bootloader)
 {
     struct stivale2_struct_tag_framebuffer *framebuffer = get_stivale_tag(bootloader, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID);
@@ -18,18 +24,15 @@ bool initialise_screen(struct stivale2_struct *bootloader)
     screen.screen_size.x    = framebuffer->framebuffer_width;
     screen.screen_size.y    = framebuffer->framebuffer_height;
     screen.memory_model     = framebuffer->memory_model;
-    screen.red_mask.size    = framebuffer->red_mask_size;
-    screen.red_mask.shift   = framebuffer->red_mask_shift;
-    screen.green_mask.size  = framebuffer->green_mask_size;
-    screen.green_mask.shift = framebuffer->green_mask_shift;
-    screen.blue_mask.size   = framebuffer->blue_mask_size;
-    screen.blue_mask.shift  = framebuffer->blue_mask_shift;
-
-    clear_screen(0x8075FF);
+    screen.masks.red_mask.size    = framebuffer->red_mask_size;
+    screen.masks.red_mask.shift   = framebuffer->red_mask_shift;
+    screen.masks.green_mask.size  = framebuffer->green_mask_size;
+    screen.masks.green_mask.shift = framebuffer->green_mask_shift;
+    screen.masks.blue_mask.size   = framebuffer->blue_mask_size;
+    screen.masks.blue_mask.shift  = framebuffer->blue_mask_shift;
     
     screen.clear_screen     = &clear_screen;
     screen.draw_rect        = &draw_rect;
-    screen.set_pixel        = &set_pixel;
     
     screen.initialised      = true;
     
@@ -37,32 +40,12 @@ bool initialise_screen(struct stivale2_struct *bootloader)
 } 
 
 
-void clear_screen(uint32_t colour)
+void clear_screen(colour_t colour)
 {
-    point_t pos = { 0, 0 };
-    draw_rect(pos, screen.screen_size, colour);
+    draw_rect((point_t){ .x = 0, .y = 0 }, screen.screen_size, colour);
 }
 
-void set_pixel(point_t position, uint32_t colour)
+void draw_rect(point_t position, point_t size, colour_t colour)
 {
-    if (position.x >= screen.cursor_position.x || position.y >= screen.cursor_position.y) return;
-    screen.framebuffer[position.y * (screen.pitch / 4) + position.x] = colour;
-}
-
-void draw_rect(point_t position, point_t size, uint32_t colour)
-{
-    screen.cursor_position = position;
     
-    for (int height = 0; height < size.y; ++height) {
-        for (int width = 0; width < size.x; ++width) {
-            //TODO: find out what the fuck this means
-            screen.framebuffer[screen.cursor_position.y * (screen.pitch / 4)] = colour;
-            screen.cursor_position.x++;
-        }
-        screen.cursor_position.x = position.x;
-        screen.cursor_position.y++;
-    }
-    
-    screen.cursor_position.x = 0;
-    screen.cursor_position.y = 0;
 }

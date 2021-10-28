@@ -37,6 +37,29 @@ const string ANSI_ESCAPE_CODES[] = {
     "\x1b[9m",  //STRIKETHROUGH STYLE
 };
 
+bool initialise_console(struct stivale2_struct *bootloader)
+{
+    terminal_tag = get_stivale_tag(bootloader, STIVALE2_STRUCT_TAG_TERMINAL_ID);
+
+
+    stivale_print = (void *)terminal_tag->term_write;
+
+    console.clear      = &clear;
+    console.print      = &kprint;
+    console.println    = &kprintln;
+    console.printf     = &kprintf;
+    console.printfln   = &kprintfln;
+    console.prints     = &kprints;
+    console.printsln   = &kprintsln;
+    console.set_style  = &kset_style;
+    console.set_styles = &kset_styles;
+
+    console.initialised = true;
+
+    return true;
+
+}
+
 static void kprintf(string fmt, ...)
 {
     va_list arglist;
@@ -113,6 +136,7 @@ void kset_styles(const enum ansi_escape_codes codes[], bool reset)
     for (int i = 0; i < codeslen; ++i) {
         kprint(ANSI_ESCAPE_CODES[codes[i]]);
     }
+
 }
 
 static void clear(void)
@@ -120,25 +144,4 @@ static void clear(void)
     kprint(ANSI_ESCAPE_CODES[CLEAR_ALL]);
 }
 
-bool initialise_console(struct stivale2_struct *bootloader)
-{
-    terminal_tag = get_stivale_tag(bootloader, STIVALE2_STRUCT_TAG_TERMINAL_ID);
-    
 
-    stivale_print = (void *)terminal_tag->term_write;
-
-    console.clear      = &clear;
-    console.print      = &kprint;
-    console.println    = &kprintln;
-    console.printf     = &kprintf;
-    console.printfln   = &kprintfln;
-    console.prints     = &kprints;
-    console.printsln   = &kprintsln;
-    console.set_style  = &kset_style;
-    console.set_styles = &kset_styles;
-
-    console.initialised = true;
-    
-    return true;
-    
-}

@@ -17,7 +17,7 @@ enum base {
  * @param str string to measure
  * @return length of str
  */
-size_t strlen(const string str);
+size_t strlen(string str);
 
 /**
  * Concatinates 2 strings
@@ -37,7 +37,7 @@ __attribute__((unused)) string strcatv(string str1, ...);
 
 void strcpy(string dest, string src);
 
-#define strnum(value) itoa(value, BASE_10)
+#define strnum(value) itoa(value, BASE_10) 
 #define strhex(value) itoa(value, BASE_16)
 string itoa(int64_t value, enum base base);
 

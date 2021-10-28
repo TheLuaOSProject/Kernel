@@ -65,6 +65,8 @@ void kstart(struct stivale2_struct *bootloader)
             itoa(screen.screen_size.x, BASE_10),
             itoa(screen.screen_size.y, BASE_10)
     };
+    
+    screen.clear_screen(COLOURS_WHITE);
 
     console.printfln("Screen size: X = %, Y = %", screen_size[0], screen_size[1]);
     console.println("\x1b[32m[Done]");
