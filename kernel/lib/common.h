@@ -13,8 +13,8 @@
 #include "bitmap.h"
 #include "free_list.h"
 /* IMORTANT: KEEP THESE DEFINES ON LINE 16 AND 17   */
-#define LUAOS_VERSION       "1.0.271"
-#define LUAOS_BUILD_DATE    "2021/10/29 at 00:18"
+#define LUAOS_VERSION       "1.0.277"
+#define LUAOS_BUILD_DATE    "2021/10/29 at 00:27"
 /* OR EDIT BUILD.LUA LINE 57!!!                     */
 
 /**

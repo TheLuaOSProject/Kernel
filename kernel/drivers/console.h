@@ -8,6 +8,8 @@
 #include <types.h>
 #include <common.h>
 
+#include "screen.h"
+
 enum ansi_escape_codes
 {
     ESCAPE              = 0,

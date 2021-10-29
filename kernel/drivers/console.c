@@ -4,7 +4,6 @@
 
 #include <stdarg.h>
 #include <common.h>
-#include "screen.h"
 
 #include "console.h"
 
@@ -150,4 +149,3 @@ static void clear(void)
 }
 
 
-}

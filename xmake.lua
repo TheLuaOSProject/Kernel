@@ -33,10 +33,10 @@ target("LuaOS");
     add_headerfiles("kernel/**.h");
     add_includedirs("kernel/", "kernel/lib/");
 
-    add_asflags("-f elf64", { force = true });
+    --add_asflags("-f elf64", { force = true });
     add_cflags("-ffreestanding", "-I.", "-std=gnu11", "-fno-stack-protector", "-fno-omit-frame-pointer", "-fpie", "-mno-80387", "-mno-mmx", "-mno-3dnow", "-mno-sse", "-mno-sse2", "-mno-red-zone", "-g", "-ggdb", { force = true });
                 
-    add_ldflags("-Tkernel/linker.ld -nostdlib -zmax-page-size=0x1000 -static -pie --no-dynamic-linker -ztext", { force = true });
+    add_ldflags("-Tkernel/linker.ld", "-nostdlib", "-zmax-page-size=0x1000", "-static", "-pie", "--no-dynamic-linker", "-ztext", { force = true });
     
     set_objectdir("build/");
     set_targetdir("build/bin");
