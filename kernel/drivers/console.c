@@ -4,6 +4,7 @@
 
 #include <stdarg.h>
 #include <common.h>
+#include "screen.h"
 
 #include "console.h"
 
@@ -54,10 +55,11 @@ bool initialise_console(struct stivale2_struct *bootloader)
     console.set_style  = &kset_style;
     console.set_styles = &kset_styles;
 
+    console.size = POINT(terminal_tag->rows, terminal_tag->cols);
+
     console.initialised = true;
 
     return true;
-
 }
 
 static void kprintf(string fmt, ...)
@@ -141,7 +143,11 @@ void kset_styles(const enum ansi_escape_codes codes[], bool reset)
 
 static void clear(void)
 {
+    if (screen.initialised) {
+        screen.cursor_position = POINT(0, 0);
+    }
     kprint(ANSI_ESCAPE_CODES[CLEAR_ALL]);
 }
 
 
+}

@@ -3,6 +3,10 @@
 --- DateTime: 2021-09-15 4:20 p.m.
 ---
 
+
+--Uncomment if Luarocks path setup properly
+require("luarocks.loader");
+package.cpath = package.cpath .. ";/usr/local/lib/lua/5.2/?.so";
 local JSON = require("rapidjson");
 
 ---@class Log

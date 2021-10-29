@@ -34,7 +34,7 @@ target("LuaOS");
     add_includedirs("kernel/", "kernel/lib/");
 
     add_asflags("-f elf64", { force = true });
-    add_cflags("-ffreestanding -I. -std=gnu11 -fno-stack-protector -fno-omit-frame-pointer -fpie -mno-80387 -mno-mmx -mno-3dnow -mno-sse -mno-sse2 -mno-red-zone -g -ggdb ", { force = true });
+    add_cflags("-ffreestanding", "-I.", "-std=gnu11", "-fno-stack-protector", "-fno-omit-frame-pointer", "-fpie", "-mno-80387", "-mno-mmx", "-mno-3dnow", "-mno-sse", "-mno-sse2", "-mno-red-zone", "-g", "-ggdb", { force = true });
                 
     add_ldflags("-Tkernel/linker.ld -nostdlib -zmax-page-size=0x1000 -static -pie --no-dynamic-linker -ztext", { force = true });
     
@@ -47,9 +47,9 @@ target("LuaOS");
         local liminepath = target:objectdir() .. "/limine/";
         local kernelimg = target:targetdir() .. "/LuaOS";
 
-        local limineExists = os.isdir(liminepath);
+        local limine_exists = os.isdir(liminepath);
 
-        if limineExists == false then
+        if limine_exists == false then
             print("Cloning limine...")
             local gitcmd = "git clone https://github.com/limine-bootloader/limine.git " .. liminepath .. " --branch=v2.0-branch-binary --depth=1";
             os.run(gitcmd);

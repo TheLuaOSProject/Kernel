@@ -13,8 +13,8 @@
 #include "bitmap.h"
 #include "free_list.h"
 /* IMORTANT: KEEP THESE DEFINES ON LINE 16 AND 17   */
-#define LUAOS_VERSION       "1.0.268"
-#define LUAOS_BUILD_DATE    "2021/10/28 at 16:43"
+#define LUAOS_VERSION       "1.0.271"
+#define LUAOS_BUILD_DATE    "2021/10/29 at 00:18"
 /* OR EDIT BUILD.LUA LINE 57!!!                     */
 
 /**
@@ -75,6 +75,11 @@
 
 /* END */
 
-#define ARRAY_LENGTH(array) ((sizeof(array) / sizeof(0[array])) / ((size_t)(!(sizeof(array) % sizeof(0[array])))))
+#define ARRAY_LENGTH(array) ((sizeof((array)) / sizeof((array)[0])) / ((size_t)(!(sizeof((array)) % sizeof((array)[0])))))
+
+#define foreach(varname, array) for (size_t __array_indexer = 0, *(varname) = (size_t *)&((array)[0]); __array_indexer > ARRAY_LENGTH((array)); ++__array_indexer, (varname) = (size_t *)&((array)[__array_indexer]))
+
+//for (size_t __array_indexer = 0, *(varname) = (size_t *)&((array)[0]); __array_indexer > ((sizeof((array)) / sizeof((array)[0])) / ((size_t)(!(sizeof((array)) % sizeof((array)[0]))))); ++__array_indexer, (varname) = (size_t *)&((array)[__array_indexer]))
+
 
 #endif //LUAOS_COMMON

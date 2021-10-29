@@ -14,17 +14,17 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca8c931b-23a5-43d3-bea6-d928f13656c4" name="Changes" comment="Buildlog">
+    <list default="true" id="ca8c931b-23a5-43d3-bea6-d928f13656c4" name="Changes" comment="update gitignore">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.lua" beforeDir="false" afterPath="$PROJECT_DIR$/build.lua" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/buildlog.json" beforeDir="false" afterPath="$PROJECT_DIR$/buildlog.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/drivers/console.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/drivers/console.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kernel/drivers/keyboard.asm" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/drivers/keyboard.asm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/drivers/console.h" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/drivers/console.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/drivers/screen.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/drivers/screen.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/drivers/screen.h" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/drivers/screen.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/kernel.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/kernel.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kernel/lib/common.h" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/lib/common.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kernel/lib/string.h" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/lib/string.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/xmake.lua" beforeDir="false" afterPath="$PROJECT_DIR$/xmake.lua" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,11 +37,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="MacroExpansionManager">
-    <option name="directoryName" value="zkjac039" />
-  </component>
   <component name="ProjectId" id="207WG6S3IViEJPjiUMaMfercPMc" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -59,14 +55,10 @@
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="editing.templates" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
-  <component name="RunManager" selected="Shell Script.Run">
-    <configuration name="LuaOS" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="LuaOS" TARGET_NAME="LuaOS" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="LuaOS" RUN_TARGET_NAME="LuaOS">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager">
     <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -76,21 +68,6 @@
       <method v="2">
         <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
-    </configuration>
-    <configuration name="Build" type="ShConfigurationType">
-      <option name="SCRIPT_TEXT" value="lua build.lua build" />
-      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
-      <option name="SCRIPT_PATH" value="" />
-      <option name="SCRIPT_OPTIONS" value="" />
-      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
-      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
-      <option name="INTERPRETER_PATH" value="/bin/zsh" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="EXECUTE_IN_TERMINAL" value="true" />
-      <option name="EXECUTE_SCRIPT_FILE" value="false" />
-      <envs />
-      <method v="2" />
     </configuration>
     <configuration name="Run" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="lua build.lua run" />
@@ -107,27 +84,6 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="dump" type="ShConfigurationType">
-      <option name="SCRIPT_TEXT" value="" />
-      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
-      <option name="SCRIPT_PATH" value="" />
-      <option name="SCRIPT_OPTIONS" value="" />
-      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
-      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
-      <option name="INTERPRETER_PATH" value="/bin/zsh" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="EXECUTE_IN_TERMINAL" value="true" />
-      <option name="EXECUTE_SCRIPT_FILE" value="true" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="CMake Application.LuaOS" />
-      <item itemvalue="Shell Script.Build" />
-      <item itemvalue="Shell Script.dump" />
-      <item itemvalue="Shell Script.Run" />
-    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -139,10 +95,12 @@
       <updated>1635396007674</updated>
       <workItem from="1635396009126" duration="371000" />
       <workItem from="1635396389244" duration="1112000" />
-      <workItem from="1635440463581" duration="23000" />
-      <workItem from="1635440500484" duration="4000" />
-      <workItem from="1635440775909" duration="45000" />
-      <workItem from="1635442071576" duration="3998000" />
+      <workItem from="1635397512734" duration="507000" />
+      <workItem from="1635398053266" duration="3027000" />
+      <workItem from="1635403236700" duration="1000" />
+      <workItem from="1635465020839" duration="1000" />
+      <workItem from="1635465460902" duration="9986000" />
+      <workItem from="1635487008860" duration="4889000" />
     </task>
     <task id="LOCAL-00001" summary="update gitignore">
       <created>1635397451174</created>
@@ -151,14 +109,28 @@
       <option name="project" value="LOCAL" />
       <updated>1635397451174</updated>
     </task>
-    <task id="LOCAL-00002" summary="Buildlog">
-      <created>1635399883148</created>
+    <task id="LOCAL-00002" summary="update gitignore">
+      <created>1635397572312</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1635399883148</updated>
+      <updated>1635397572312</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="update gitignore">
+      <created>1635397576663</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1635397576663</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Revert &quot;Replacing build system&quot;&#10;&#10;This reverts commit 15d0a067&#10;&#10;God im so fucking tired">
+      <created>1635397621410</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1635397621410</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -178,7 +150,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update gitignore" />
-    <MESSAGE value="Buildlog" />
-    <option name="LAST_COMMIT_MESSAGE" value="Buildlog" />
+    <MESSAGE value="Revert &quot;Replacing build system&quot;&#10;&#10;This reverts commit 15d0a067&#10;&#10;God im so fucking tired" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revert &quot;Replacing build system&quot;&#10;&#10;This reverts commit 15d0a067&#10;&#10;God im so fucking tired" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

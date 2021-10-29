@@ -12,6 +12,10 @@ typedef struct {
     uint32_t    y;
 } point_t;
 
+#define POINT(_x, _y)           (point_t){ .x = (_x), .y = (_y) }
+#define ENUMERATE_POINT(args)   for (int x = 0, y = 0; x < screen.screen_size.x, y < screen.screen_size.y; ++x, ++y)
+
+
 typedef struct {
     uint8_t red;
     uint8_t green;
@@ -24,7 +28,7 @@ extern const colour_t   COLOURS_BLACK,
                         COLOURS_GREEN,
                         COLOURS_BLUE;
 
-#define COLOUR(r, g, b) (colour_t){ .red = (r), .green = (g), .blue = (b) } 
+#define COLOUR(r, g, b) (colour_t){ .red = (r), .green = (g), .blue = (b) }
 
 struct mask {
     uint8_t     size;
@@ -57,8 +61,9 @@ extern struct screen {
 bool initialise_screen(struct stivale2_struct *bootloader);
 
 static void clear_screen(colour_t colour);
-static void draw_rect(  point_t     position, 
-                        point_t     size, 
-                        colour_t    colour);
+
+static void draw_rect(point_t   position,
+                      point_t   size,
+                      colour_t  colour);
 
 #endif //LUAOS_SCREEN

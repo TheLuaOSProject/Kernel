@@ -2,6 +2,11 @@
 #include <components.h>
 #include <drivers.h>
 
+void presentation()
+{
+    console.clear();
+
+}
 
 /**
  * LuaOS Kernel Entry point
@@ -80,6 +85,8 @@ void kstart(struct stivale2_struct *bootloader)
     console.set_style(STYLE_BOLD, true);
     initialise_keyboard();
     console.println("\x1b[32m[Done]");
+
+    presentation();
 
     HANG();
 }

@@ -100,7 +100,8 @@ extern struct console {
     * Sets the console styles
     */
     void    (*set_styles)(const enum ansi_escape_codes styles[], bool reset);
-    
+
+    point_t size;
     bool    initialised;
 } console;
 
