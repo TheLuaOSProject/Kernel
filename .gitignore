@@ -3,6 +3,7 @@
 build/
 .xmake/
 
+CMakeLists.txt
 Cmakelists.txt
 cmake-build-debug/
 
