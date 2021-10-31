@@ -10,10 +10,10 @@ struct logger logger;
 
 void initialise_logger(void)
 {
-    logger.write = &lwrite;
-    logger.writec = &lwritec;
-    logger.writef = &lwritef;
-    logger.writeln = &lwriteln;
+    logger.write    = &lwrite;
+    logger.writec   = &lwritec;
+    logger.writef   = &lwritef;
+    logger.writeln  = &lwriteln;
     logger.writecln = &lwritecln;
     logger.writefln = &lwritefln;
 }

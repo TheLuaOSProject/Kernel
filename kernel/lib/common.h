@@ -4,7 +4,7 @@
 
 #ifndef LUAOS_COMMON
 #define LUAOS_COMMON
-
+#include "foreach.h"
 #include "string.h"
 #include "stivale2.h"
 #include "utilities.h"
@@ -16,6 +16,8 @@
 #define LUAOS_VERSION       "1.0.277"
 #define LUAOS_BUILD_DATE    "2021/10/29 at 00:27"
 /* OR EDIT BUILD.LUA LINE 57!!!                     */
+
+#define DEBUG
 
 /**
  * Halts the computer

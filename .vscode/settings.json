@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "liballoc.h": "c",
+        "common.h": "c",
+        "string.h": "c",
+        "types.h": "c"
+    }
+}

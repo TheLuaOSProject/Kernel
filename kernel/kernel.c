@@ -2,11 +2,6 @@
 #include <components.h>
 #include <drivers.h>
 
-void presentation()
-{
-    console.clear();
-
-}
 
 /**
  * LuaOS Kernel Entry point
@@ -40,23 +35,23 @@ void kstart(struct stivale2_struct *bootloader)
 //    initialise_gdt();
 //    console.println("\x1b[32m[Done]");
 
-//    console.println("\x1b[1;93mInitialising memory manager...");
-//    initialise_pmm(bootloader);
-//    console.printfln("Free memory: % bytes free", itoa(physical_memory_manager.get_free_memory(), BASE_10));
-//
-//    console.println("\x1b[1;35mTesting memory...");
-//    console.println("Allocating 8192 bytes");
-//    voidptr mem = physical_memory_manager.alloc(2 << 12);
-//    if (mem == NULL) {
-//        console.println("\x1b[31mError, alloc returned null!");
-//        HANG();
-//    }
-//    console.println("\x1b[32mSuccess!");
-//    console.printfln("Free memory: %", itoa(physical_memory_manager.get_free_memory(), BASE_10));
-//    console.println("\x1b[1;35mFreeing...");
-//    physical_memory_manager.free(mem, 1024);
-//    console.println("\x1b[32mSuccess!");
-//    console.println("\x1b[32m[Done]");
+    console.println("\x1b[1;93mInitialising memory manager...");
+    initialise_pmm(bootloader);
+    console.printfln("Free memory: % bytes free", itoa(physical_memory_manager.get_free_memory(), BASE_10));
+ 
+    console.println("\x1b[1;35mTesting memory...");
+    console.println("Allocating 8192 bytes");
+    voidptr mem = physical_memory_manager.alloc(2 << 12);
+    if (mem == NULL) {
+        console.println("\x1b[31mError, alloc returned null!");
+        HANG();
+    }
+    console.println("\x1b[32mSuccess!");
+    console.printfln("Free memory: %", itoa(physical_memory_manager.get_free_memory(), BASE_10));
+    console.println("\x1b[1;35mFreeing...");
+    physical_memory_manager.free(mem, 1024);
+    console.println("\x1b[32mSuccess!");
+    console.println("\x1b[32m[Done]");
     
     console.print("\x1b[1;93mInitialising IDT... ");
     console.set_style(STYLE_BOLD, true);
@@ -85,8 +80,6 @@ void kstart(struct stivale2_struct *bootloader)
     console.set_style(STYLE_BOLD, true);
     initialise_keyboard();
     console.println("\x1b[32m[Done]");
-
-    presentation();
 
     HANG();
 }
