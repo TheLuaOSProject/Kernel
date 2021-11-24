@@ -1,5 +1,5 @@
 /**
- * @file    GDT.h
+ * @file    gdt.h
  * @author  Amrit Bhogal (@Frityet)
  * @brief   The global descriptor table and task state segments
  * @warning Unfinished, to be done after keyboard interrupts and PMM are finished

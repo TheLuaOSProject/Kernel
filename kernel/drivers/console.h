@@ -1,6 +1,13 @@
-//
-// Created by Frityet on 2021-09-10.
-//
+/**
+ * @file    console.h
+ * @author  Amrit Bhogal (@Frityet)
+ * @brief   Interface with the VGA console output
+ * @version 1.0
+ * @date    2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
 
 #ifndef LUAOS_KERNEL_DISPLAY
 #define LUAOS_KERNEL_DISPLAY

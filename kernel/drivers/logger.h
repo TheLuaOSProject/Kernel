@@ -1,6 +1,13 @@
-//
-// Created by Frityet on 2021-10-05.
-//
+/**
+ * @file    logger.h
+ * @author  Amrit Bhogal (@Frityet)
+ * @brief   Utilities for writing to the QEMU console output
+ * @version 1.0
+ * @date    2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
 
 #ifndef LUAOS_LOGGER
 #define LUAOS_LOGGER

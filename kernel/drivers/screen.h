@@ -1,21 +1,28 @@
-//
-// Created by Frityet on 2021-09-16.
-//
+/**
+ * @file    screen.h
+ * @author  Amrit Bhogal (@Frityet)
+ * @brief   Interface with the framebuffer provided by Limine
+ * @version 1.0
+ * @date    2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
 
 #ifndef LUAOS_SCREEN
 #define LUAOS_SCREEN
 
 #include <common.h>
 
+#define POINT(_x, _y)           (point_t){ .x = (_x), .y = (_y) }
+#define ENUMERATE_SCREEN()      for (int x = 0, y = 0; x < screen.screen_size.x, y < screen.screen_size.y; ++x, ++y)
 typedef struct {
     uint32_t    x;
     uint32_t    y;
 } point_t;
 
-#define POINT(_x, _y)           (point_t){ .x = (_x), .y = (_y) }
-#define ENUMERATE_POINT(args)   for (int x = 0, y = 0; x < screen.screen_size.x, y < screen.screen_size.y; ++x, ++y)
 
-
+#define COLOUR(r, g, b) (colour_t){ .red = (r), .green = (g), .blue = (b) }
 typedef struct {
     uint8_t red;
     uint8_t green;
@@ -28,7 +35,6 @@ extern const colour_t   COLOURS_BLACK,
                         COLOURS_GREEN,
                         COLOURS_BLUE;
 
-#define COLOUR(r, g, b) (colour_t){ .red = (r), .green = (g), .blue = (b) }
 
 struct mask {
     uint8_t     size;

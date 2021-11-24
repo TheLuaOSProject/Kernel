@@ -4,5 +4,8 @@
         "common.h": "c",
         "string.h": "c",
         "types.h": "c"
-    }
+    },
+    "cSpell.words": [
+        "Limine"
+    ]
 }

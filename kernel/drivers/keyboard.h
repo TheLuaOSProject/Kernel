@@ -1,6 +1,13 @@
-//
-// Created by Frityet on 2021-10-03.
-//
+/**
+ * @file    keyboard.h
+ * @author  Amrit Bhogal (@Frityet)
+ * @brief   Utilities for capturing keyboard input
+ * @version 1.0
+ * @date    2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
 
 #ifndef LUAOS_KEYBOARD
 #define LUAOS_KEYBOARD

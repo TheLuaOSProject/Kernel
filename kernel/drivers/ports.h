@@ -1,6 +1,13 @@
-//
-// Created by Frityet on 2021-09-16.
-//
+/**
+ * @file    ports.h
+ * @author  Amrit Bhogal (@Frityet)
+ * @brief   Interface with the ports of the computer
+ * @version 1.0
+ * @date    2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
 
 #ifndef LUAOS_PORTS
 #define LUAOS_PORTS

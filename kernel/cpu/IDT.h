@@ -1,5 +1,5 @@
 /**
- * @file        IDT.h
+ * @file        idt.h
  * @author      Amrit Bhogal (@Frityet)
  * @brief       The interrupt descriptor table, and utilities for registering interrupts
  * @attention   Also see @b interrupt_handler.asm 
