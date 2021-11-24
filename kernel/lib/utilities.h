@@ -1,9 +1,17 @@
-//
-// Created by Frityet on 2021-09-16.
-//
+/**
+ * @file    utilities.h
+ * @author  Amrit Bhogal (@Frityet)
+ * @brief   Commonly used utilities that I was to lazy to put in the proper files
+ * @version 1.0
+ * @date    2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
 
 #ifndef LUAOS_UTILITIES
 #define LUAOS_UTILITIES
+
 #include "types.h"
 
 #define ROUND_DIV(A, B) ({                                  \
