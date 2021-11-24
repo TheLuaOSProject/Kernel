@@ -12,3 +12,4 @@ luaos.log
 dump.asm
 compile_commands.json
 
+.cache/

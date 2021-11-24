@@ -1,3 +1,14 @@
+/**
+ * @file    kernel.c
+ * @author  Amrit Bhogal (@Frityet)
+ * @brief   Entry point of the kernel
+ * @version 1.0
+ * @date    2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
+
 #include <common.h>
 #include <components.h>
 #include <drivers.h>
@@ -70,16 +81,12 @@ void kstart(struct stivale2_struct *bootloader)
 
     console.printfln("Screen size: X = %, Y = %", screen_size[0], screen_size[1]);
     console.println("\x1b[32m[Done]");
-
-    console.set_style(STYLE_BOLD, true);
-    console.println("\x1b[1;93mCPU Info");
-    console.printfln("CPU Vendor: %", get_vendor_name());
-    console.set_style(STYLE_BOLD, true);
     
     console.print("\x1b[1;93mInitialising keyboard inputs... ");
     console.set_style(STYLE_BOLD, true);
     initialise_keyboard();
     console.println("\x1b[32m[Done]");
+
 
     HANG();
 }

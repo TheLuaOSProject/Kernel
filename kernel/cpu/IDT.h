@@ -1,7 +1,14 @@
-//
-// Created by Frityet on 2021-09-20.
-//
-
+/**
+ * @file        IDT.h
+ * @author      Amrit Bhogal (@Frityet)
+ * @brief       The interrupt descriptor table, and utilities for registering interrupts
+ * @attention   Also see @b interrupt_handler.asm 
+ * @version     1.0
+ * @date        2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
 #ifndef LUAOS_IDT
 #define LUAOS_IDT
 

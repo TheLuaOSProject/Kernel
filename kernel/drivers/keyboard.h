@@ -10,11 +10,6 @@
 #include "ports.h"
 #include "cpu/cpu.h"
 
-struct keyboard_state {
-    bool shift;
-    bool caps;
-};
-
 enum special_keys {
     LEFT_SHIFT      = 0x2A,
     LEFT_CONTROL    = 0x1D,

@@ -1,6 +1,13 @@
-//
-// Created by Frityet on 2021-09-12.
-//
+/**
+ * @file    common.h
+ * @author  Amrit Bhogal (@Frityet)
+ * @brief   Common utilities for use of the kernel
+ * @version 1.0
+ * @date    2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
 
 #ifndef LUAOS_COMMON
 #define LUAOS_COMMON
@@ -13,8 +20,8 @@
 #include "bitmap.h"
 #include "free_list.h"
 /* IMORTANT: KEEP THESE DEFINES ON LINE 16 AND 17   */
-#define LUAOS_VERSION       "1.0.277"
-#define LUAOS_BUILD_DATE    "2021/10/29 at 00:27"
+#define LUAOS_VERSION       "1.0.279"
+#define LUAOS_BUILD_DATE    "2021/11/24 at 08:12"
 /* OR EDIT BUILD.LUA LINE 57!!!                     */
 
 #define DEBUG
@@ -79,9 +86,9 @@
 
 #define ARRAY_LENGTH(array) ((sizeof((array)) / sizeof((array)[0])) / ((size_t)(!(sizeof((array)) % sizeof((array)[0])))))
 
-#define foreach(varname, array) for (size_t __array_indexer = 0, *(varname) = (size_t *)&((array)[0]); __array_indexer > ARRAY_LENGTH((array)); ++__array_indexer, (varname) = (size_t *)&((array)[__array_indexer]))
-
-//for (size_t __array_indexer = 0, *(varname) = (size_t *)&((array)[0]); __array_indexer > ((sizeof((array)) / sizeof((array)[0])) / ((size_t)(!(sizeof((array)) % sizeof((array)[0]))))); ++__array_indexer, (varname) = (size_t *)&((array)[__array_indexer]))
-
+#ifndef foreach
+#define foreach(name, array)    for (int (__ ## array ## _ ## indexer__) = 0, (__ ## array ## _ ## run_once__) = 1; ( __ ## array ## _ ## indexer__) < ARRAY_LENGTH(array) && (__ ## array ## _ ## run_once__); ++(__ ## array ## _ ## indexer__), (__ ## array ## _ ## run_once__) = !(__ ## array ## _ ## run_once__)) \
+                                for (typeof(array[0]) name = array[(__ ## array ## _ ## indexer__)]; (__ ## array ## _ ## run_once__); (__ ## array ## _ ## run_once__) = !(__ ## array ## _ ## run_once__))
+#endif
 
 #endif //LUAOS_COMMON

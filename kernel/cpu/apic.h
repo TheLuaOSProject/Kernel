@@ -1,13 +1,19 @@
-//
-// Created by Frityet on 2021-10-06.
-//
-
+/**
+ * @file    apic.h
+ * @author  Amrit Bhogal (@Frityet)
+ * @brief   Advanced programmable interrupt controller, access with the object @c apic
+ * @version 1.0
+ * @date    2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
 #ifndef LUAOS_APIC
 #define LUAOS_APIC
 
 #include <common.h>
 
-/* Copied from https://github.com/chocabloc/aeolos/blob/master/kernel/sys/apic/apic.h */
+/* Copied defines sfrom https://github.com/chocabloc/aeolos/blob/master/kernel/sys/apic/apic.h */
 
 #define APIC_REGISTER_ID            0x20
 #define APIC_REGISTER_VERSION       0x30

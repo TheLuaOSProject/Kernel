@@ -1,7 +1,14 @@
-//
-// Created by Frityet on 2021-09-23.
-//
-
+/**
+ * @file    GDT.h
+ * @author  Amrit Bhogal (@Frityet)
+ * @brief   The global descriptor table and task state segments
+ * @warning Unfinished, to be done after keyboard interrupts and PMM are finished
+ * @version 1.0
+ * @date    2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
 #ifndef LUAOS_GDT
 #define LUAOS_GDT
 

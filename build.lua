@@ -38,7 +38,7 @@ logs[#logs + 1] = {
     action = arg[1]
 };
 
-JSON.dump(logs, "buildlog.json", { pretty = true });
+JSON.dump(logs, "buildlog.json");
 
 local bn = logs[#logs].build_number;
 local bd = logs[#logs].date;
@@ -58,8 +58,8 @@ end
 
 commonfile_read:close();
 
-content[16] = "#define LUAOS_VERSION       \"1.0." .. tostring(bn) .. "\"";
-content[17] = "#define LUAOS_BUILD_DATE    \"" .. bd .. "\"";
+content[23] = "#define LUAOS_VERSION       \"1.0." .. tostring(bn) .. "\"";
+content[24] = "#define LUAOS_BUILD_DATE    \"" .. bd .. "\"";
 
 local commonfile_write = io.open("kernel/lib/common.h", "w");
 

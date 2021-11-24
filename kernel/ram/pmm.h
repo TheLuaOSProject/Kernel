@@ -1,7 +1,13 @@
-//
-// Created by Frityet on 2021-10-08.
-//
-
+/**
+ * @file    pmm.h
+ * @author  Amrit Bhogal (@Frityet)
+ * @brief   Physical memory manager, allows for the allocation of pages
+ * @version 1.0
+ * @date    2021-11-24
+ * 
+ * @copyright Copyright Amrit Bhogal(c) 2021
+ * 
+ */
 #ifndef LUAOS_PMM
 #define LUAOS_PMM
 
