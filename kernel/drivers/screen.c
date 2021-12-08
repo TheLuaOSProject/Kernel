@@ -18,6 +18,12 @@ const colour_t  COLOURS_BLACK   = COLOUR(255, 255, 255),
 
 const uint8_t PIXEL_WIDTH = sizeof(uint64_t);
 
+static void clear_screen(colour_t colour);
+
+static void draw_rect(point_t   position,
+                      point_t   size,
+                      colour_t  colour);
+
 bool initialise_screen(struct stivale2_struct *bootloader)
 {
     struct stivale2_struct_tag_framebuffer *framebuffer = get_stivale_tag(bootloader, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID);
@@ -60,11 +66,11 @@ void clear_screen(colour_t colour)
     draw_rect(POINT(0, 0), screen.screen_size, colour);
 }
 
-void draw_rect(point_t position, point_t size, colour_t colour)
+void draw_rect(UNUSED point_t position, point_t size, colour_t colour)
 {
     uint64_t *framebuffer = screen.framebuffer;
-    for (int i = 0; i < size.x; ++i) {
-        for (int j = 0; j < size.y; ++j) {
+    for (uint32_t i = 0; i < size.x; ++i) {
+        for (uint32_t j = 0; j < size.y; ++j) {
             framebuffer[j * PIXEL_WIDTH]        = colour.red;
             framebuffer[j * PIXEL_WIDTH + 1]    = colour.green;
             framebuffer[j * PIXEL_WIDTH + 2]    = colour.blue;

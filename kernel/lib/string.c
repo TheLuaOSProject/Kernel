@@ -37,32 +37,34 @@ string_t strcat(string_t str1, string_t str2)
     size_t  str1_len    = strlen(str1),
             str2_len    = strlen(str2);
 
-    for (int i = 0; i < str1_len; ++i) {
+    for (size_t i = 0; i < str1_len; ++i) {
         buffer[i] = str1[i];
     }
 
-    for (int i = 0; i < str2_len; ++i) {
+    for (size_t i = 0; i < str2_len; ++i) {
         buffer[str1_len + i] = str2[i];
     }
     
     return buffer;
 }
 
-__attribute__((unused)) string_t strcatv(string_t str1, ...)
+UNUSED string_t strcatv(string_t str1, ...)
 {
     va_list argv;
     size_t  argc = VA_ARGS_COUNT(...),
-            strc[argc];
+            UNUSED strc[argc];
     string_t strv[argc];
     
     va_start(argv, str1);
     
-    for (int i = 0; i < argc; ++i) {
+    for (size_t i = 0; i < argc; ++i) {
         strv[i] = va_arg(argv, string_t);
         strc[i] = strlen(strv[i]);
     }
 
     va_end(argv);
+
+    return NULL;
 }
 
 void strcpy(string_t dest, const string_t src)

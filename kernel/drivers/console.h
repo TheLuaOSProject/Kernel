@@ -45,20 +45,6 @@ enum ansi_escape_codes
 
 extern const string_t ANSI_ESCAPE_CODES[];
 
-static void kprint(string_t msg);
-static void kprintln(string_t msg);
-
-static void kprintf(string_t fmt, ...);
-static void kprintfln(string_t fmt, ...);
-
-static void kprints(string_t msg, enum ansi_escape_codes styles[]);
-static void kprintsln(string_t msg, enum ansi_escape_codes styles[]);
-
-static void kset_style(enum ansi_escape_codes code, bool reset);
-static void kset_styles(const enum ansi_escape_codes codes[], bool reset);
-
-static void clear(void);
-
 /**
  * Wrapper over the Stivale2 console interface 
  */
@@ -115,15 +101,11 @@ extern struct console {
 } console;
 
 
-static void (*stivale_print)(const char *string, size_t length);
-
 /**
  * Sets up a kernel console will correct callbacks
  * @param bootloader Stivale2 struct passed in the kernel entry point
  * @return The setup wrapper
  */
 bool initialise_console(struct stivale2_struct *bootloader);
-
-static struct stivale2_struct_tag_terminal *terminal_tag;
 
 #endif //LUAOS_KERNEL_DISPLAY

@@ -5,7 +5,7 @@
 #ifndef LUAOS_STRING
 #define LUAOS_STRING
 
-#include "types.h"
+#include "common.h"
 
 enum base {
     BASE_10 = 10,
@@ -33,7 +33,7 @@ string_t strcat(string_t str1, string_t str2);
  * @param ... n Strings
  * @return All of the strings, combined
  */
-__attribute__((unused)) string_t strcatv(string_t str1, ...);
+UNUSED string_t strcatv(string_t str1, ...);
 
 void strcpy(string_t dest, string_t src);
 

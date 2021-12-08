@@ -5,8 +5,17 @@
 #include "logger.h"
 
 #include <stdarg.h>
+#include <string.h>
+#include <drivers.h>
 
 struct logger logger;
+
+static void lwrite(string_t message);
+static void lwritec(char character);
+static void lwritef(string_t fmt, ...);
+static void lwriteln(string_t message);
+static void lwritecln(char character);
+static void lwritefln(string_t fmt, ...);
 
 void initialise_logger(void)
 {
@@ -21,7 +30,7 @@ void initialise_logger(void)
 void lwrite(string_t message)
 {
 #ifdef QEMU
-    for (int i = 0; i < strlen(message); ++i) {
+    for (size_t i = 0; i < strlen(message); ++i) {
         port_out(LOGGING_PORT, message[i]);
     }
 #endif

@@ -8,7 +8,7 @@ void memset(void        *pointer,
             uintmax_t   value,
             uintmax_t   bytes)
 {
-    for (int i = 0; i < bytes; ++i) {
+    for (uint32_t i = 0; i < bytes; ++i) {
         ((char *)pointer)[i] = value;
     }
 }

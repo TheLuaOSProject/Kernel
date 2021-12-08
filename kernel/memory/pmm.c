@@ -4,7 +4,7 @@
 
 #include "pmm.h"
 #include "drivers/logger.h"
-#include "types.h"
+#include <string.h>
 #include <common.h>
 
 #include <drivers.h>
@@ -29,7 +29,7 @@ void initialise_pmm(struct stivale2_struct *bootloader)
         .free                   = free,
     }; 
 
-    for (int i = 0; i < physical_memory_manager.memory_map_entry_count; ++i) {
+    for (size_t i = 0; i < physical_memory_manager.memory_map_entry_count; ++i) {
         struct stivale2_mmap_entry mmap_entry = physical_memory_manager.memory_map[i];
         logger.writef("Memory map entry % ", itoa(i, BASE_10));
         logger.writefln("of % found!", itoa(physical_memory_manager.memory_map_entry_count, BASE_10));
@@ -45,11 +45,10 @@ void initialise_pmm(struct stivale2_struct *bootloader)
 
     physical_memory_manager.bitmap_size = CEIL_DIV(physical_memory_manager.last_page / PAGE_SIZE, 8);
 
-    for (int i = 0; i < physical_memory_manager.memory_map_entry_count; ++i) {
+    for (size_t i = 0; i < physical_memory_manager.memory_map_entry_count; ++i) {
         struct stivale2_mmap_entry mmap_entry = physical_memory_manager.memory_map[i];
-        if  (mmap_entry.type        != STIVALE2_MMAP_USABLE
-            && mmap_entry.type      != STIVALE2_MMAP_BOOTLOADER_RECLAIMABLE
-            || mmap_entry.length    < physical_memory_manager.bitmap_size)
+        if  ((mmap_entry.type != STIVALE2_MMAP_USABLE && mmap_entry.type != STIVALE2_MMAP_BOOTLOADER_RECLAIMABLE) 
+            || mmap_entry.length < physical_memory_manager.bitmap_size)
             continue;
 
         physical_memory_manager.bitmap = (byte_t *)mmap_entry.base + PHYSICAL_BASE_ADDRESS;
@@ -63,7 +62,7 @@ void initialise_pmm(struct stivale2_struct *bootloader)
         break;
     }
 
-    for (int i = 0; i < physical_memory_manager.memory_map_entry_count; ++i) {
+    for (size_t i = 0; i < physical_memory_manager.memory_map_entry_count; ++i) {
         struct stivale2_mmap_entry mmap_entry = physical_memory_manager.memory_map[i];
         if  (mmap_entry.type    != STIVALE2_MMAP_USABLE
           && mmap_entry.type    != STIVALE2_MMAP_BOOTLOADER_RECLAIMABLE)
@@ -73,7 +72,7 @@ void initialise_pmm(struct stivale2_struct *bootloader)
 
         //Mark frames as free
         uint64_t length = mmap_entry.length / PAGE_SIZE;
-        for (int i = pagenum; i <= pagenum + length; ++i) {
+        for (size_t i = pagenum; i <= pagenum + length; ++i) {
             clear_bit(physical_memory_manager.bitmap, i);
         }
     }
@@ -81,8 +80,8 @@ void initialise_pmm(struct stivale2_struct *bootloader)
 
 static voidptr_t memalloc_raw(size_t size)
 {
-    int count = 0;
-    for (int i = 0; i < physical_memory_manager.bitmap_size * 8; ++i) {
+    size_t count = 0;
+    for (size_t i = 0; i < physical_memory_manager.bitmap_size * 8; ++i) {
         if (!test_bit(physical_memory_manager.bitmap, i)) {
             ++count;
 
@@ -128,7 +127,7 @@ static uint64_t get_free_memory(void)
 {
     uint64_t pagecount = 0;
 
-    for (int i = 0; i < physical_memory_manager.bitmap_size * 8; ++i) {
+    for (size_t i = 0; i < physical_memory_manager.bitmap_size * 8; ++i) {
         ++pagecount;
     }
 

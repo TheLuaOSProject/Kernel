@@ -2,21 +2,24 @@
 --- Created by Frityet.
 --- DateTime: 2021-09-15 4:20 p.m.
 ---
-
-
 --comment if Luarocks path setup properly
 require("luarocks.loader");
 package.cpath = package.cpath .. ";/usr/local/lib/lua/5.2/?.so";
 local JSON = require("rapidjson");
 
+if arg[1] == "buildnum" then
+    local logs = JSON.load("buildlog.json")
+    io.write(logs[#logs].build_number)
+    return
+end
+
 ---@class Log
 local log = {
-    date = "",
+    date         = "",
     build_number = 0,
-    action = "",
-    runtime = ""
+    action       = "",
+    runtime      = ""
 };
-
 
 
 ---@type Log[]
@@ -31,121 +34,16 @@ if logs == nil then
         }
     }
 end
-
 logs[#logs + 1] = {
     build_number = logs[#logs].build_number + 1;
     date = os.date("%Y/%m/%d at %H:%M"),
     action = arg[1]
 };
 
-JSON.dump(logs, "buildlog.json");
+JSON.dump(logs, "buildlog.json")
 
 local bn = logs[#logs].build_number;
 local bd = logs[#logs].date;
-
 print("Build " .. bn);
 print("Date: " .. bd);
 print("Action: " .. logs[#logs].action);
-
-local commonfile_read = io.open("kernel/lib/common.h", "r");
-
----@type string[]
-local content = {};
-
-for line in commonfile_read:lines() do
-    table.insert(content, line);
-end
-
-commonfile_read:close();
-
-content[23] = "#define LUAOS_VERSION       \"1.0." .. tostring(bn) .. "\"";
-content[24] = "#define LUAOS_BUILD_DATE    \"" .. bd .. "\"";
-
-local commonfile_write = io.open("kernel/lib/common.h", "w");
-
-for i, v in pairs(content) do
-    commonfile_write:write(v .. "\n");
-end
-
-commonfile_write:close();
-
----@class task
----@field name          string
----@field dependencies  table[] | nil
----@field action        function
-local task = {
-    ---@type    string
-    name = "";
-
-    ---@type    table[] | nil
-    dependencies = nil;
-    
-    ---@type    function
-    action = function () end;
-}
-
----@param name          string
----@param dependencies  task[] | nil
----@param action        function
----@return task
-function task:create(name, dependencies, action)
-    return {
-        name = name,
-        dependencies = dependencies,
-        action = action
-    };
-end
-
-function build_luaos()
-    os.execute("xmake f -p cross");
-    os.execute("xmake -rvD");
-end
-
-function run_luaos()
-    os.execute("xmake run");
-end
-
-function debug_luaos()
-    
-end
-
----@type task
-local build = {
-     name           = "build",
-     dependencies   = nil,
-     action         = build_luaos
-}
-
----@type task
-local run = {
-    name            = "run",
-    dependencies    = { build },
-    action          = run_luaos
-}
-
----@type task
-local debug = {
-    name            = "debug",
-    dependencies    = { build },
-    action          = debug_luaos 
-}
-
----@type task[]
-local tasks = {
-    build,
-    run,
-    debug
-}
-
-for _, v in pairs(tasks) do
-    if v.name == arg[1] then
-        if v.dependencies ~= nil then
-            for _, p in pairs(v.dependencies) do
-                p.action();
-            end
-        end
-        v.action();
-    end
-end
-
-

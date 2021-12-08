@@ -3,8 +3,8 @@
 //
 
 #include "cpuid.h"
-
 #include "drivers/logger.h"
+#include <string.h>
 
 
 static string_t vendor_name = NULL;

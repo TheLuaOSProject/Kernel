@@ -1,22 +1,18 @@
-require("luarocks.loader");
-package.cpath = package.cpath .. ";/usr/local/lib/lua/5.2/?.so";
-local JSON = require("rapidjson");
+-- require("luarocks.loader");
+-- package.cpath = package.cpath .. ";/usr/local/lib/lua/5.2/?.so";
+-- local JSON = require("rapidjson");
 
 add_rules("mode.debug", "mode.release");
 
 set_config("plat", "cross")
 
-local function tablelen(table)
-    local len = 0;
-    for k, v in pairs(table) do
-        len = len + 1;
-    end
-    return len;
-end
-
 local function strcat(base, ext)
     base = base .. ext;
     return base;
+end
+
+local function startswith(str, pattern)
+    return string.sub(str, 1, string.len(pattern)) == pattern;
 end
 
 toolchain("cross-toolchain");
@@ -39,34 +35,33 @@ target("LuaOS");
 
     add_asflags("-f elf64", { force = true });
     add_cflags (
-        "-ffreestanding", 
-        "-I.", 
-        "-std=gnu11", 
-        "-fno-stack-protector", 
-        "-fno-omit-frame-pointer", 
-        "-fpie", 
-        "-mno-80387", 
-        "-mno-mmx", 
-        "-mno-3dnow", 
-        "-mno-sse", 
-        "-mno-sse2", 
-        "-mno-red-zone", 
-        "-g", 
-        "-ggdb", 
-        "-Wall", 
-        "-Wextra", 
-        "-Werror", 
+        "-ffreestanding",
+        "-std=gnu11",
+        "-fno-stack-protector",
+        "-fno-omit-frame-pointer",
+        "-fpie",
+        "-mno-80387",
+        "-mno-mmx",
+        "-mno-3dnow",
+        "-mno-sse",
+        "-mno-sse2",
+        "-mno-red-zone",
+        "-g",
+        "-ggdb",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
         { force = true }
     );
                 
     add_ldflags (
-        "-Tkernel/linker.ld", 
-        "-nostdlib", 
-        "-zmax-page-size=0x1000", 
-        "-static", 
-        "-pie", 
-        "--no-dynamic-linker", 
-        "-ztext", 
+        "-Tkernel/linker.ld",
+        "-nostdlib",
+        "-zmax-page-size=0x1000",
+        "-static",
+        "-pie",
+        "--no-dynamic-linker",
+        "-ztext",
         { force = true }
     );
     
@@ -75,41 +70,10 @@ target("LuaOS");
 
     add_defines("QEMU");
 
-    on_build(function (target)
-        ---@class Log
-        local log = {
-           date = "",
-           build_number = 0,
-           action = "",
-           runtime = ""
-        };
+    
 
-        ---@type Log[]
-        local logs = JSON.load("buildlog.json");
-
-        if logs == nil then
-            logs = {
-                [0] = {
-                    build_number = 0,
-                    date = "nil",
-                    action = "nil"
-                }
-            }
-        end
-
-        logs[#logs + 1] = {
-            build_number = logs[#logs].build_number + 1;
-            date = os.date("%Y/%m/%d at %H:%M"),
-            action = arg[1]
-        };
-
-        JSON.dump(logs, "buildlog.json");
-
-        local bn = logs[#logs].build_number;
-        local bd = logs[#logs].date;
-        print("Build " .. bn);
-        print("Date: " .. bd);
-        print("Action: " .. logs[#logs].action);
+    before_build(function (target)
+        os.run("lua build.lua build")
 
         local commonfile_read = io.open("kernel/lib/common.h", "r");
 
@@ -122,12 +86,27 @@ target("LuaOS");
 
         commonfile_read:close();
 
-        content[23] = "#define LUAOS_VERSION       \"1.0." .. tostring(bn) .. "\"";
-        content[24] = "#define LUAOS_BUILD_DATE    \"" .. bd .. "\"";
+        local version_ln, build_ln = 0, 0;
+
+        for key, value in pairs(content) do
+            if startswith(value, "#define LUAOS_VERSION") then
+                version_ln = key;
+            else
+                if startswith(value, "#define LUAOS_BUILD_DATE") then
+                    build_ln = key;
+                end
+            end
+        end
+ 
+        local buildnum, err = os.iorunv("lua", { "build.lua", "buildnum" });
+
+
+        content[version_ln] = "#define LUAOS_VERSION       \"1.0." .. buildnum .. "\"";
+        content[build_ln] = "#define LUAOS_BUILD_DATE    \"" .. os.date("%Y/%m/%d at %H:%M") .. "\"";
 
         local commonfile_write = io.open("kernel/lib/common.h", "w");
 
-        for i, v in pairs(content) do
+        for _, v in pairs(content) do
             commonfile_write:write(v .. "\n");
         end
 
@@ -138,13 +117,11 @@ target("LuaOS");
         local liminepath = target:objectdir() .. "/limine/";
         local kernelimg = target:targetdir() .. "/LuaOS";
 
-        local limine_exists = os.isdir(liminepath);
+        if os.isdir(liminepath) then os.rm(liminepath) end
 
-        if limine_exists == false then
-            print("Cloning limine...")
-            local gitcmd = "git clone https://github.com/limine-bootloader/limine.git " .. liminepath .. " --branch=v2.0-branch-binary --depth=1";
-            os.run(gitcmd);
-        end
+        print("Cloning limine...")
+        local gitcmd = "git clone https://github.com/limine-bootloader/limine.git " .. liminepath .. " --branch=v2.0-branch-binary --depth=1";
+        os.run(gitcmd);
         print("Making limine")
         os.run("make -C " .. liminepath);
 
@@ -166,7 +143,7 @@ target("LuaOS");
             sys     = "limine-cd.bin",
             cdbin   = "limine-cd.bin",
             efibin  = "limine-eltorito-efi.bin",
-            export  = target:targetdir() .. "/LuaOS-x86_64.iso" 
+            export  = target:targetdir() .. "/LuaOS-x86_64.iso"
         };
         
         if os.isfile(xorrisofiles.export) then
@@ -187,8 +164,7 @@ target("LuaOS");
         os.run(exec);
     end);
 
-    on_run (
-        function(target)
+    on_run(function(target)
             import("core.base.process");
 
             local files = {
@@ -214,6 +190,5 @@ target("LuaOS");
 
             qemu:wait();
             --gdb:wait();
-        end
-    );
+    end);
 target_end();

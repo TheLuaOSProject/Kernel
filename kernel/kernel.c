@@ -13,6 +13,7 @@
 #include <components.h>
 #include <drivers.h>
 #include <components.h>
+#include <string.h>
 
 
 /**

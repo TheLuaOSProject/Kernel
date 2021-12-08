@@ -17,13 +17,6 @@
 
 #define LOGGING_PORT    0x3F8
 
-static void lwrite(string_t message);
-static void lwritec(char character);
-static void lwritef(string_t fmt, ...);
-static void lwriteln(string_t message);
-static void lwritecln(char character);
-static void lwritefln(string_t fmt, ...);
-
 extern struct logger {
     /**
      * Writes a message to the log

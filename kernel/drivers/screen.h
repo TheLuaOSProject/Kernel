@@ -66,10 +66,4 @@ extern struct screen {
 
 bool initialise_screen(struct stivale2_struct *bootloader);
 
-static void clear_screen(colour_t colour);
-
-static void draw_rect(point_t   position,
-                      point_t   size,
-                      colour_t  colour);
-
 #endif //LUAOS_SCREEN

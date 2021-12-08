@@ -87,38 +87,38 @@ void register_interrupt_handler(uintmax_t   index,
     interrupt_descriptor_table[index].interrupt_stack_table    = interrupt_stack_table;
 }
 
-void div_by_zero_i(struct interrupt_frame *iframe)
+void div_by_zero_i(UNUSED struct interrupt_frame *iframe)
 {
     console.println("\x1b[1;31mERROR: DIVISION BY ZERO");
-    HANG();
+    HALT();
 }
 
-void breakpoint_i(struct interrupt_frame *iframe)
+void breakpoint_i(UNUSED struct interrupt_frame *iframe)
 {
     console.println("\x1b[1;34mDEBUG: BREAKPOINT");
-    HANG();
+    HALT();
 }
 
-void double_fault_i(struct interrupt_frame *iframe)
+void double_fault_i(UNUSED struct interrupt_frame *iframe)
 {
     console.println("\x1b[1;31mERROR: DOUBLE FAULT");
-    HANG();
+    HALT();
 }
 
-void general_protection_i(struct interrupt_frame *iframe)
+void general_protection_i(UNUSED struct interrupt_frame *iframe)
 {
     console.println("\x1b[1;31mERROR");
-    HANG();
+    HALT();
 }
 
-void debug_i(struct interrupt_frame *iframe)
+void debug_i(UNUSED struct interrupt_frame *iframe)
 {
     console.println("\x1b[1;34mDEBUG: Interrupt 0x72 called!");
     return;
 }
 
-void invalid_opcode_i(struct interrupt_frame *iframe)
+void invalid_opcode_i(UNUSED struct interrupt_frame *iframe)
 {
     console.println("\x1b[1;31mINVALID OPCODE");
-    HANG();
+    HALT();
 }

@@ -7,13 +7,13 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stivale2.h>
+#include <common.h>
 
 #define STACK_SIZE          2 << 13
 
 // We need to tell the stivale bootloader where we want our stack to be.
 // We are going to memalloc our stack as an uninitialised array in .bss.
-__attribute__((unused))
-static uint8_t stack[STACK_SIZE];
+static uint8_t __attribute__((unused)) stack[STACK_SIZE];
 
 /**
  * Gets the specified Stivale2 tag

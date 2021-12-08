@@ -4,10 +4,27 @@
 
 #include <stdarg.h>
 #include <common.h>
-
+#include <string.h>
 #include "console.h"
 
 struct console console;
+
+static struct stivale2_struct_tag_terminal *terminal_tag;
+static void (*stivale_print)(char *, size_t);
+
+static void kprint(string_t msg);
+static void kprintln(string_t msg);
+
+static void kprintf(string_t fmt, ...);
+static void kprintfln(string_t fmt, ...);
+
+static void kprints(string_t msg, enum ansi_escape_codes styles[]);
+static void kprintsln(string_t msg, enum ansi_escape_codes styles[]);
+
+static void kset_style(enum ansi_escape_codes code, bool reset);
+static void kset_styles(const enum ansi_escape_codes codes[], bool reset);
+
+static void clear(void);
 
 const string_t ANSI_ESCAPE_CODES[] = {
     "\x1b",     //ESCAPE
@@ -126,18 +143,17 @@ void kset_style(const enum ansi_escape_codes code, bool reset)
     kprint(ANSI_ESCAPE_CODES[code]);
 }
 
-void kset_styles(const enum ansi_escape_codes codes[], bool reset)
+void kset_styles(UNUSED const enum ansi_escape_codes codes[], UNUSED bool reset)
 {
-    if (reset) {
-        kprint(ANSI_ESCAPE_CODES[RESET_STYLES]);
-    }
+    // if (reset) {
+    //     kprint(ANSI_ESCAPE_CODES[RESET_STYLES]);
+    // }
     
-    size_t codeslen = ARRAY_LENGTH(codes);
+    // size_t codeslen = ARRAY_LENGTH(codes);
 
-    for (int i = 0; i < codeslen; ++i) {
-        kprint(ANSI_ESCAPE_CODES[codes[i]]);
-    }
-
+    // for (int i = 0; i < codeslen; ++i) {
+    //     kprint(ANSI_ESCAPE_CODES[codes[i]]);
+    // }
 }
 
 static void clear(void)

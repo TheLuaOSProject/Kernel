@@ -12,19 +12,20 @@
 #ifndef LUAOS_COMMON
 #define LUAOS_COMMON
 #include "foreach.h"
-#include "string.h"
 #include "stivale2.h"
 #include "utilities.h"
 #include "bootloader.h"
 #include "lock.h"
 #include "bitmap.h"
+#include "types.h"
 
-/* IMORTANT: KEEP THESE DEFINES ON LINE 23 AND 24   */
-#define LUAOS_VERSION       "1.0.308"
-#define LUAOS_BUILD_DATE    "2021/12/08 at 09:50"
-/* OR EDIT BUILD.LUA LINE 57!!!                     */
+#define LUAOS_VERSION       "1.0.370"
+
+#define LUAOS_BUILD_DATE    "2021/12/08 at 15:01"
 
 #define DEBUG
+
+#define UNUSED __attribute__((unused))
 
 
 /* va_args_count. https://github.com/donmccaughey/va_args_count
@@ -82,9 +83,11 @@
 
 #define ARRAY_LENGTH(array) ((sizeof((array)) / sizeof((array)[0])) / ((size_t)(!(sizeof((array)) % sizeof((array)[0])))))
 
-#ifndef foreach
+
 #define foreach(name, array)    for (int (__ ## array ## _ ## indexer__) = 0, (__ ## array ## _ ## run_once__) = 1; ( __ ## array ## _ ## indexer__) < ARRAY_LENGTH(array) && (__ ## array ## _ ## run_once__); ++(__ ## array ## _ ## indexer__), (__ ## array ## _ ## run_once__) = !(__ ## array ## _ ## run_once__)) \
                                 for (typeof(array[0]) name = array[(__ ## array ## _ ## indexer__)]; (__ ## array ## _ ## run_once__); (__ ## array ## _ ## run_once__) = !(__ ## array ## _ ## run_once__))
-#endif
+
+
+
 
 #endif //LUAOS_COMMON
