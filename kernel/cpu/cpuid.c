@@ -7,8 +7,8 @@
 #include "drivers/logger.h"
 
 
-static string vendor_name = NULL;
-string get_vendor_name()
+static string_t vendor_name = NULL;
+string_t get_vendor_name()
 {
     if (vendor_name != NULL)
         return vendor_name;

@@ -14,7 +14,6 @@
 
 #include "idt.h"
 #include "gdt.h"
-#include "apic.h"
 #include "cpuid.h"
 
 #endif //LUAOS_CPU

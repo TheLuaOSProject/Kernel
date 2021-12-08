@@ -4,7 +4,7 @@
 ---
 
 
---Uncomment if Luarocks path setup properly
+--comment if Luarocks path setup properly
 require("luarocks.loader");
 package.cpath = package.cpath .. ";/usr/local/lib/lua/5.2/?.so";
 local JSON = require("rapidjson");

@@ -24,4 +24,4 @@ GLOBAL HALT
 HALT:
     HLT
     RET
-   
+

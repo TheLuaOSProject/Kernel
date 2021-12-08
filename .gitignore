@@ -11,5 +11,6 @@ qemulog.txt
 luaos.log
 dump.asm
 compile_commands.json
+stivale2.md
 
 .cache/

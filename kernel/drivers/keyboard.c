@@ -58,7 +58,7 @@ void initialise_keyboard(void)
     logger.writeln("DONE");
 }
 
-void keyboard_i(struct interrupt_frame *iframe)
+void keyboard_i(__attribute__((unused)) struct interrupt_frame *iframe)
 {
     logger.writeln("Key pressed!");
     uint8_t key = port_in(0x60);
@@ -90,6 +90,7 @@ void keyboard_i(struct interrupt_frame *iframe)
             break;
     }
     
+    __attribute__((unused))
     char buffer;
 
     if (kb_state.shift && kb_state.caps) {
@@ -102,5 +103,5 @@ void keyboard_i(struct interrupt_frame *iframe)
         buffer = NORMAL_KEYS[key];
     }
     
-    console.print(buffer);
+    // console.print(buffer);
 }

@@ -20,6 +20,8 @@
         (_a_ROUND_UP_ + (_b_ROUND_UP_ - 1)) / _b_ROUND_UP_; \
 })
 
+#define CEIL_DIV(num, div) ((div + num - 1) / div) 
+
 void memset(void        *pointer,
             uintmax_t   value,
             uintmax_t   bytes);

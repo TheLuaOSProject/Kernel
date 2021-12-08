@@ -53,6 +53,8 @@
         STACK_END
 %endmacro
 
+[BITS 64]
+
 GLOBAL LOAD_IDT
 LOAD_IDT:
     LIDT    [RDI]

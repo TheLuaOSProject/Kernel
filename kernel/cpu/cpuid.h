@@ -74,6 +74,6 @@ enum cpuid_feature {
     CPUID_FEATURE_EDX_PBE          = 1 << 31
 };
 
-string get_vendor_name(void);
+string_t get_vendor_name(void);
 
 #endif //LUAOS_CPUID

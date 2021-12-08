@@ -8,25 +8,31 @@
 
 #include "string.h"
 
-static char buffer[128];
+#define BUFFER_SIZE     128
 
-size_t strlen(const string str)
+static char buffer[BUFFER_SIZE];
+
+static void clear_buffer(void)
+{
+    for (int i = 0; i < BUFFER_SIZE; ++i) {
+        buffer[i] = 0;
+    }
+}
+
+size_t strlen(const string_t str)
 {
     size_t len = 0;
-
     char ch = str[0];
-    while (ch != '\0')
-    {
+    while (ch != '\0') {
         ++len;
         ch = str[len];
     }
-    
     return len;
 }
 
-string strcat(string str1, string str2)
+string_t strcat(string_t str1, string_t str2)
 {
-    static char buffer[1024]; //fuck you, I am too tired to try and make this safe
+    clear_buffer();
 
     size_t  str1_len    = strlen(str1),
             str2_len    = strlen(str2);
@@ -42,24 +48,24 @@ string strcat(string str1, string str2)
     return buffer;
 }
 
-__attribute__((unused)) string strcatv(string str1, ...)
+__attribute__((unused)) string_t strcatv(string_t str1, ...)
 {
     va_list argv;
     size_t  argc = VA_ARGS_COUNT(...),
             strc[argc];
-    string strv[argc];
+    string_t strv[argc];
     
     va_start(argv, str1);
     
     for (int i = 0; i < argc; ++i) {
-        strv[i] = va_arg(argv, string);
+        strv[i] = va_arg(argv, string_t);
         strc[i] = strlen(strv[i]);
     }
 
     va_end(argv);
 }
 
-void strcpy(string dest, const string src)
+void strcpy(string_t dest, const string_t src)
 {
     int i = 0;
     do {
@@ -70,7 +76,7 @@ void strcpy(string dest, const string src)
     dest[i] = src[i]; //Null termination
 }
 
-void reverse(string str)
+void reverse(string_t str)
 {
     int c, i, j;
     for (i = 0, j = strlen(str) - 1; i < j; i++, j--) {
@@ -80,15 +86,17 @@ void reverse(string str)
     }
 }
 
-void append(string str, char character)
+void append(string_t str, char character)
 {
     size_t len = strlen(str);
     str[len] = character;
     str[len + 1] = '\0';
 }
 
-string itoa(int64_t value, enum base base)
+string_t itoa(int64_t value, enum base base)
 {
+    clear_buffer();
+
     uint8_t signage = 0,
             i       = 0;
 

@@ -12,6 +12,7 @@
 #include <common.h>
 #include <components.h>
 #include <drivers.h>
+#include <components.h>
 
 
 /**
@@ -23,9 +24,15 @@ void kstart(struct stivale2_struct *bootloader)
     initialise_console(bootloader);
     
     console.set_style(STYLE_BOLD, true);
-    console.printfln("\x1b[32mStarted LuaOS v%, built %", LUAOS_VERSION, LUAOS_BUILD_DATE);
+    console.println("\x1b[32mStarted LuaOS v" LUAOS_VERSION ", built " LUAOS_BUILD_DATE);
     console.printfln("Bootloader brand: %", bootloader->bootloader_brand);
     console.printfln("Bootloader version: %", bootloader->bootloader_version);
+    console.println("Type sizes:");
+    console.printfln("Byte: %",             STRDEC(sizeof(byte_t)));
+    console.printfln("Word: %",             STRDEC(sizeof(word_t)));
+    console.printfln("Double word: %",      STRDEC(sizeof(dword_t)));
+    console.printfln("Quad word: %",        STRDEC(sizeof(qword_t)));
+    console.printfln("Unsigned long: %",    STRDEC(sizeof(unsigned long)));
     console.set_style(RESET_STYLES, true);
     console.println("---------------------------------");
 
@@ -46,22 +53,16 @@ void kstart(struct stivale2_struct *bootloader)
 //    initialise_gdt();
 //    console.println("\x1b[32m[Done]");
 
-    console.println("\x1b[1;93mInitialising memory manager...");
+    console.print("\x1b[1;93mInitialising memory manager... ");
     initialise_pmm(bootloader);
-    console.printfln("Free memory: % bytes free", itoa(physical_memory_manager.get_free_memory(), BASE_10));
- 
-    console.println("\x1b[1;35mTesting memory...");
-    console.println("Allocating 8192 bytes");
-    voidptr mem = physical_memory_manager.alloc(2 << 12);
-    if (mem == NULL) {
-        console.println("\x1b[31mError, alloc returned null!");
-        HANG();
+    console.println("Testing allocation...");
+    console.println("Allocating 8192 bytes...");
+    voidptr_t alloc = physical_memory_manager.memalloc(8192);
+    if (alloc == NULL) {
+        console.println("Failed to allocate 8192 bytes of memory!");
+        HALT();
     }
-    console.println("\x1b[32mSuccess!");
-    console.printfln("Free memory: %", itoa(physical_memory_manager.get_free_memory(), BASE_10));
-    console.println("\x1b[1;35mFreeing...");
-    physical_memory_manager.free(mem, 1024);
-    console.println("\x1b[32mSuccess!");
+    physical_memory_manager.free(alloc);
     console.println("\x1b[32m[Done]");
     
     console.print("\x1b[1;93mInitialising IDT... ");
@@ -69,24 +70,14 @@ void kstart(struct stivale2_struct *bootloader)
     initialise_idt();
     console.println("\x1b[32m[Done]");
 
-    console.println("\x1b[1;93mInitialising framebuffer... ");
-    initialise_screen(bootloader);
-
-    string screen_size[2] = {
-            itoa(screen.screen_size.x, BASE_10),
-            itoa(screen.screen_size.y, BASE_10)
-    };
-    
-    screen.clear_screen(COLOURS_WHITE);
-
-    console.printfln("Screen size: X = %, Y = %", screen_size[0], screen_size[1]);
-    console.println("\x1b[32m[Done]");
+    console.print("\x1b[1;93mInitialising PMM... ");
+    console.set_style(STYLE_BOLD, true);
+    initialise_pmm(bootloader);
     
     console.print("\x1b[1;93mInitialising keyboard inputs... ");
     console.set_style(STYLE_BOLD, true);
     initialise_keyboard();
     console.println("\x1b[32m[Done]");
 
-
-    HANG();
+    HALT();
 }

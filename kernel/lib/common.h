@@ -18,18 +18,14 @@
 #include "bootloader.h"
 #include "lock.h"
 #include "bitmap.h"
-#include "free_list.h"
-/* IMORTANT: KEEP THESE DEFINES ON LINE 16 AND 17   */
-#define LUAOS_VERSION       "1.0.279"
-#define LUAOS_BUILD_DATE    "2021/11/24 at 08:12"
+
+/* IMORTANT: KEEP THESE DEFINES ON LINE 23 AND 24   */
+#define LUAOS_VERSION       "1.0.308"
+#define LUAOS_BUILD_DATE    "2021/12/08 at 09:50"
 /* OR EDIT BUILD.LUA LINE 57!!!                     */
 
 #define DEBUG
 
-/**
- * Halts the computer
- */
-#define HANG() while(1) asm("hlt")
 
 /* va_args_count. https://github.com/donmccaughey/va_args_count
  Copyright (c) 2014, Don McCaughey. All rights reserved.

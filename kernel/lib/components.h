@@ -13,6 +13,6 @@
 #define LUAOS_COMPONENTS
 
 #include "cpu/cpu.h"
-#include "ram/memory.h"
+#include "memory/memory.h"
 
 #endif //LUAOS_COMPONENTS

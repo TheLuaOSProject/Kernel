@@ -4,6 +4,7 @@
         "*.c": "c"
     },
     "cSpell.words": [
-        "Limine"
+        "Limine",
+        "LUAOS"
     ]
 }

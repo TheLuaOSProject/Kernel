@@ -1,0 +1,6 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/Frityet/Documents/LuaOS'
+make: Leaving directory `/Users/Frityet/Documents/LuaOS'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+ 

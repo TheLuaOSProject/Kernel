@@ -43,16 +43,16 @@ enum ansi_escape_codes
     STYLE_STRIKETHROUGH = 18
 };
 
-extern const string ANSI_ESCAPE_CODES[];
+extern const string_t ANSI_ESCAPE_CODES[];
 
-static void kprint(string msg);
-static void kprintln(string msg);
+static void kprint(string_t msg);
+static void kprintln(string_t msg);
 
-static void kprintf(string fmt, ...);
-static void kprintfln(string fmt, ...);
+static void kprintf(string_t fmt, ...);
+static void kprintfln(string_t fmt, ...);
 
-static void kprints(string msg, enum ansi_escape_codes styles[]);
-static void kprintsln(string msg, enum ansi_escape_codes styles[]);
+static void kprints(string_t msg, enum ansi_escape_codes styles[]);
+static void kprintsln(string_t msg, enum ansi_escape_codes styles[]);
 
 static void kset_style(enum ansi_escape_codes code, bool reset);
 static void kset_styles(const enum ansi_escape_codes codes[], bool reset);
@@ -67,13 +67,13 @@ extern struct console {
      * Prints a line into the kernel console
      * @param msg Message to print
      */
-    void    (*println)(string msg);
+    void    (*println)(string_t msg);
     
     /**
      * Prints into the kernel console
      * @param msg Message to print
      */
-    void    (*print)(string msg);
+    void    (*print)(string_t msg);
     
     /**
      * Clears the kernel console
@@ -83,22 +83,22 @@ extern struct console {
     /**
      * Prints a string with the specified format
      */
-    void    (*printf)(string fmt, ...);
+    void    (*printf)(string_t fmt, ...);
 
     /**
     * Prints a line with the specified format
     */
-    void    (*printfln)(string fmt, ...);
+    void    (*printfln)(string_t fmt, ...);
     
     /**
      * Prints with the specified style(s)
      */
-    void    (*prints)(string msg, enum ansi_escape_codes styles[]);
+    void    (*prints)(string_t msg, enum ansi_escape_codes styles[]);
     
     /**
      * Prints a line with the specified style(s)
      */
-     void   (*printsln)(string msg, enum ansi_escape_codes styles[]);
+     void   (*printsln)(string_t msg, enum ansi_escape_codes styles[]);
 
     /**
     * Sets the console style

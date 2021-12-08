@@ -1,3 +1,7 @@
+require("luarocks.loader");
+package.cpath = package.cpath .. ";/usr/local/lib/lua/5.2/?.so";
+local JSON = require("rapidjson");
+
 add_rules("mode.debug", "mode.release");
 
 set_config("plat", "cross")
@@ -33,15 +37,102 @@ target("LuaOS");
     add_headerfiles("kernel/**.h");
     add_includedirs("kernel/", "kernel/lib/");
 
-    --add_asflags("-f elf64", { force = true });
-    add_cflags("-ffreestanding", "-I.", "-std=gnu11", "-fno-stack-protector", "-fno-omit-frame-pointer", "-fpie", "-mno-80387", "-mno-mmx", "-mno-3dnow", "-mno-sse", "-mno-sse2", "-mno-red-zone", "-g", "-ggdb", { force = true });
+    add_asflags("-f elf64", { force = true });
+    add_cflags (
+        "-ffreestanding", 
+        "-I.", 
+        "-std=gnu11", 
+        "-fno-stack-protector", 
+        "-fno-omit-frame-pointer", 
+        "-fpie", 
+        "-mno-80387", 
+        "-mno-mmx", 
+        "-mno-3dnow", 
+        "-mno-sse", 
+        "-mno-sse2", 
+        "-mno-red-zone", 
+        "-g", 
+        "-ggdb", 
+        "-Wall", 
+        "-Wextra", 
+        "-Werror", 
+        { force = true }
+    );
                 
-    add_ldflags("-Tkernel/linker.ld", "-nostdlib", "-zmax-page-size=0x1000", "-static", "-pie", "--no-dynamic-linker", "-ztext", { force = true });
+    add_ldflags (
+        "-Tkernel/linker.ld", 
+        "-nostdlib", 
+        "-zmax-page-size=0x1000", 
+        "-static", 
+        "-pie", 
+        "--no-dynamic-linker", 
+        "-ztext", 
+        { force = true }
+    );
     
     set_objectdir("build/");
     set_targetdir("build/bin");
 
     add_defines("QEMU");
+
+    on_build(function (target)
+        ---@class Log
+        local log = {
+           date = "",
+           build_number = 0,
+           action = "",
+           runtime = ""
+        };
+
+        ---@type Log[]
+        local logs = JSON.load("buildlog.json");
+
+        if logs == nil then
+            logs = {
+                [0] = {
+                    build_number = 0,
+                    date = "nil",
+                    action = "nil"
+                }
+            }
+        end
+
+        logs[#logs + 1] = {
+            build_number = logs[#logs].build_number + 1;
+            date = os.date("%Y/%m/%d at %H:%M"),
+            action = arg[1]
+        };
+
+        JSON.dump(logs, "buildlog.json");
+
+        local bn = logs[#logs].build_number;
+        local bd = logs[#logs].date;
+        print("Build " .. bn);
+        print("Date: " .. bd);
+        print("Action: " .. logs[#logs].action);
+
+        local commonfile_read = io.open("kernel/lib/common.h", "r");
+
+        ---@type string[]
+        local content = {};
+
+        for line in commonfile_read:lines() do
+            table.insert(content, line);
+        end
+
+        commonfile_read:close();
+
+        content[23] = "#define LUAOS_VERSION       \"1.0." .. tostring(bn) .. "\"";
+        content[24] = "#define LUAOS_BUILD_DATE    \"" .. bd .. "\"";
+
+        local commonfile_write = io.open("kernel/lib/common.h", "w");
+
+        for i, v in pairs(content) do
+            commonfile_write:write(v .. "\n");
+        end
+
+        commonfile_write:close();
+    end);
 
     after_link(function (target)
         local liminepath = target:objectdir() .. "/limine/";

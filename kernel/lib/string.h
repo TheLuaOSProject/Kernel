@@ -17,7 +17,7 @@ enum base {
  * @param str string to measure
  * @return length of str
  */
-size_t strlen(string str);
+size_t strlen(string_t str);
 
 /**
  * Concatinates 2 strings
@@ -25,7 +25,7 @@ size_t strlen(string str);
  * @param str2 String 2
  * @return The two strings, combined
  */
-string strcat(string str1, string str2);
+string_t strcat(string_t str1, string_t str2);
 
 /**
  * Concatinates n strings
@@ -33,13 +33,13 @@ string strcat(string str1, string str2);
  * @param ... n Strings
  * @return All of the strings, combined
  */
-__attribute__((unused)) string strcatv(string str1, ...);
+__attribute__((unused)) string_t strcatv(string_t str1, ...);
 
-void strcpy(string dest, string src);
+void strcpy(string_t dest, string_t src);
 
-#define strnum(value) itoa(value, BASE_10) 
-#define strhex(value) itoa(value, BASE_16)
-string itoa(int64_t value, enum base base);
+#define STRDEC(value) itoa(value, BASE_10) 
+#define STRHEX(value) itoa(value, BASE_16)
+string_t itoa(int64_t value, enum base base);
 
 
 #endif //LUAOS_STRING

@@ -18,7 +18,7 @@ void initialise_logger(void)
     logger.writefln = &lwritefln;
 }
 
-void lwrite(string message)
+void lwrite(string_t message)
 {
 #ifdef QEMU
     for (int i = 0; i < strlen(message); ++i) {
@@ -34,15 +34,16 @@ void lwritec(char character)
 #endif
 }
 
-void lwritef(string fmt, ...)
+void lwritef(string_t fmt, ...)
 {
 #ifdef QEMU
     va_list list;
     va_start(list, fmt);
     int i = 0;
-    while(fmt[i] != '\0') {
+    while (fmt[i] != '\0') {
         if (fmt[i] == '%') {
-            lwrite(va_arg(list, string));
+            lwrite(va_arg(list, string_t));
+
             goto end;
         }
         lwritec(fmt[i]);
@@ -55,7 +56,7 @@ void lwritef(string fmt, ...)
 #endif
 }
 
-void lwritefln(string fmt, ...)
+void lwritefln(string_t fmt, ...)
 {
 #ifdef QEMU
     va_list list;
@@ -64,7 +65,7 @@ void lwritefln(string fmt, ...)
     int i = 0;
     while(fmt[i] != '\0') {
         if (fmt[i] == '%')
-            lwrite(va_arg(list, string));
+            lwrite(va_arg(list, string_t));
         else
             lwritec(fmt[i]);
 
@@ -77,7 +78,7 @@ void lwritefln(string fmt, ...)
 #endif
 }
 
-void lwriteln(string message)
+void lwriteln(string_t message)
 {
 #ifdef QEMU
     lwrite(message);

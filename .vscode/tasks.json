@@ -1,0 +1,14 @@
+{
+    "tasks": [
+        {
+            "label": "LuaOS - Run",
+            "type": "shell",
+            "command": "lua ${workspaceRoot}/build.lua run"
+        },
+        {
+            "label": "LuaOS - Build",
+            "type": "shell",
+            "command": "lua ${workspaceRoot}/build.lua build"
+        }
+    ]
+}
