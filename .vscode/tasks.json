@@ -5,8 +5,9 @@
             "type": "shell",
             "command": "xmake",
             "args": [
-                "-rvD"
-            ]
+                // "-rvD"
+            ],
+            "problemMatcher": []
         },
         {
             "label": "LuaOS - Test",
@@ -14,15 +15,22 @@
             "command": "qemu-system-x86_64",
             "dependsOn": "LuaOS - Build",
             "args": [
-                "-M", "q35",
-                "-m", "1G",
-                "-cdrom", "build/bin/LuaOS-x86_64.iso",
+                "-M",
+                "q35",
+                "-m",
+                "1G",
+                "-cdrom",
+                "build/bin/LuaOS-x86_64.iso",
                 "-s",
-                "-machine", "smm=off",
-                "-d", "int",
+                "-machine",
+                "smm=off",
+                "-d",
+                "int",
                 "-no-reboot",
-                "-serial", "file:luaos.log",
-                "-monitor", "stdio"
+                "-serial",
+                "file:luaos.log",
+                "-monitor",
+                "stdio"
             ],
             "problemMatcher": []
         }

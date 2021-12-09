@@ -23,7 +23,7 @@ extern struct pmm {
     void                        (*free)(voidptr_t ptr);
     uint64_t                    (*get_free_memory)(void);
     byte_t                      *bitmap;
-    qword_t                     last_page;
+    quadword_t                     last_page;
     size_t                      bitmap_size;
 } physical_memory_manager;
 
@@ -34,7 +34,7 @@ struct allocation_header {
 
 void initialise_pmm(struct stivale2_struct *bootloader);
 
-static inline struct allocation_header *headerof(voidptr_t ptr)
+UNUSED static inline struct allocation_header *headerof(voidptr_t ptr)
 {
     return ptr - sizeof(struct allocation_header);
 }

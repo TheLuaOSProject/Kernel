@@ -6,11 +6,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
- 
-make: *** No rule to make target `all'.  Stop.
- 
 
-# Make data base, printed on Mon Nov 29 15:36:06 2021
+# Make data base, printed on Thu Dec  9 13:43:50 2021
 
 # Variables
 
@@ -39,16 +36,17 @@ _ = /usr/bin/make
 # makefile
 MAKEFILE_LIST := 
 # environment
- 
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/88/f07nnvk967s_pckv6tp26w9r0000gn/T/vscode-ipc-e8eacd6a-03d4-49f5-98bd-53cc97a75af2.sock
+P9K_SSH = 0
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/88/f07nnvk967s_pckv6tp26w9r0000gn/T/vscode-ipc-bf2ffae8-3c62-486f-a3f2-46faf1d65e14.sock
 # environment
 VSCODE_CWD = /
 # environment
 NO_PROXY = 127.0.0.1
 # environment
-LaunchInstanceID = 616DC331-CD0F-493A-93B3-DAA161273142
+LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
 VSCODE_LOG_STACK = false
 # environment
@@ -56,13 +54,15 @@ ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.AtjQ7NZCkt/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.FfUVmaK69w/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /Users/Frityet/Documents/LuaOS
+# environment
+PKG_CONFIG_PATH = /usr/local/opt/icu4c/lib/pkgconfig
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = undefined
 # environment
@@ -72,11 +72,13 @@ HOME = /Users/Frityet
 # default
 MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/Frityet/Library/Application Support/Code/CachedData/ccbaa2d27e38e5afa3e5c21c1c7bef4657064247
+VSCODE_CODE_CACHE_PATH = /Users/Frityet/Library/Application Support/Code/CachedData/7db1a2b88f7557e0a43fec75b6ba7e50b3e9f77e
 # environment
 LOGNAME = amritbhogal
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+ZSH = /Users/Frityet/.oh-my-zsh
 # environment
 XMAKE_EXE = /Users/Frityet/.local/bin/xmake
 # environment
@@ -84,13 +86,13 @@ VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
-PLATFORMIO_PATH = /Users/Frityet/.platformio/penv/bin:/Users/Frityet/.platformio/penv:/Users/Frityet/.platformio/python3/bin:/Users/Frityet/.local/bin:/Users/Frityet/Documents/Ndless/ndless-sdk/toolchain/install/bin:/Users/Frityet/Documents/Ndless/ndless-sdk/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/Frityet/.cargo/bin:/Users/Frityet/.new_local/bin:/Users/Frityet/.dotnet/tools
+PLATFORMIO_PATH = /Users/Frityet/.platformio/penv/bin:/Users/Frityet/.platformio/penv:/Users/Frityet/.platformio/python3/bin:/Users/Frityet/.yarn/bin:/Users/Frityet/.config/yarn/global/node_modules/.bin:/Users/Frityet/.local/bin:/Users/Frityet/Documents/Ndless/ndless-sdk/toolchain/install/bin:/Users/Frityet/Documents/Ndless/ndless-sdk/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/Frityet/.cargo/bin:/Users/Frityet/.new_local/bin:/Users/Frityet/.dotnet/tools
 # default
 MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
 # environment
-PATH = /Users/Frityet/.local/bin:/Users/Frityet/Documents/Ndless/ndless-sdk/toolchain/install/bin:/Users/Frityet/Documents/Ndless/ndless-sdk/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/Frityet/.cargo/bin:/Users/Frityet/.new_local/bin:/Users/Frityet/.dotnet/tools
+PATH = /Users/Frityet/.yarn/bin:/Users/Frityet/.config/yarn/global/node_modules/.bin:/Users/Frityet/.local/bin:/Users/Frityet/Documents/Ndless/ndless-sdk/toolchain/install/bin:/Users/Frityet/Documents/Ndless/ndless-sdk/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/Frityet/.cargo/bin:/Users/Frityet/.new_local/bin:/Users/Frityet/.dotnet/tools
 # environment
 SHLVL = 1
 # environment
@@ -101,6 +103,8 @@ MAKE_VERSION := 3.81
 USER = amritbhogal
 # makefile
 .DEFAULT_GOAL := 
+# environment
+LESS = -R
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # default
@@ -112,7 +116,7 @@ TMPDIR = /var/folders/88/f07nnvk967s_pckv6tp26w9r0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/Frityet/Library/Application Support/Code/1.62.3-main.sock
+VSCODE_IPC_HOOK = /Users/Frityet/Library/Application Support/Code/1.63.0-main.sock
 # makefile
 MAKEFLAGS = Rrqp
 # environment
@@ -120,7 +124,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x10000002.Electron
+XPC_SERVICE_NAME = com.microsoft.VSCode.11668
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
@@ -129,8 +133,6 @@ XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x10000002.Electron
 XMAKE_ROOTDIR = /Users/Frityet/.local/bin
 # environment
 __CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x52
-# environment
-COMMAND_MODE = unix2003
 # default
 MAKEFILES := 
 # automatic
@@ -138,9 +140,9 @@ MAKEFILES :=
 # environment
 PLATFORMIO_CALLER = vscode
 # environment
-LC_ALL = C
+PAGER = less
 # environment
-SECURITYSESSIONID = 186a8
+LC_ALL = C
 # automatic
 ^F = $(notdir $^)
 # default
@@ -152,9 +154,9 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 352
+VSCODE_PID = 30745
 # variable set hash-table stats:
-# Load=69/1024=7%, Rehash=0, Collisions=3/90=3%
+# Load=72/1024=7%, Rehash=0, Collisions=3/93=3%
 
 # Pattern-specific Variable Values
 
@@ -162,9 +164,9 @@ VSCODE_PID = 352
 
 # Directories
 
-# . (device 16777224, inode 4472000): 20 files, no impossibilities.
+# . (device 16777224, inode 4472000): 19 files, no impossibilities.
 
-# 20 files, no impossibilities in 1 directories.
+# 19 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -236,6 +238,8 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Mon Nov 29 15:36:06 2021
+# Finished Make data base on Thu Dec  9 13:43:50 2021
 
+ 
+make: *** No rule to make target `all'.  Stop.
  

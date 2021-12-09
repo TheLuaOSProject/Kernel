@@ -119,7 +119,6 @@ target("LuaOS");
 
         if os.isdir(liminepath) then
             local out, err = os.iorunv("ping", { "-c1", "github.com" })
-            print(out, err)
             if err ~= "" then has_wifi = false goto NO_WIFI end
             os.rm(liminepath)
             ::NO_WIFI::
@@ -163,20 +162,20 @@ target("LuaOS");
         
         print("Creating bootable media");
         os.iorunv("xorriso", {
-            "-as mkisofs",
-            "-b " .. xorrisofiles.cdbin,
+            "-as",                      "mkisofs",
+            "-b",                       xorrisofiles.cdbin,
             "-no-emul-boot",
-            "-boot-load-size 4",
+            "-boot-load-size",          "4",
             "-boot-info-table",
-            "--efi-boot" .. xorrisofiles.efibin,
+            "--efi-boot",               xorrisofiles.efibin,
             "-efi-boot-part",
             "--efi-boot-image",
             "--protective-msdos-label",
             target:targetdir(),
-            "-o " .. xorrisofiles.export
+            "-o",                       xorrisofiles.export
         })
 
         print("Executing limine")
-        os.runv(liminepath .. "limine-install", { xorrisofiles.export });
+        print(os.iorunv(liminepath .. "limine-install", { xorrisofiles.export }));
     end);
 target_end();

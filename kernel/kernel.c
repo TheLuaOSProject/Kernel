@@ -31,8 +31,8 @@ void kstart(struct stivale2_struct *bootloader)
     console.println(CONSOLE_COLOURS_FOREGROUND_CYAN "Type sizes:");
     console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Byte:"            CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(byte_t)));
     console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Word:"            CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(word_t)));
-    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Double word:"     CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(dword_t)));
-    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Quad word:"       CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(qword_t)));
+    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Double word:"     CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(doubleword_t)));
+    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Quad word:"       CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(quadword_t)));
     console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Unsigned long:"   CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(unsigned long)));
     console.set_style(RESET_STYLES, true);
     console.println(CONSOLE_COLOURS_FOREGROUND_DEFAULT "---------------------------------");
@@ -49,6 +49,8 @@ void kstart(struct stivale2_struct *bootloader)
 
     console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising memory manager... ");
     initialise_pmm(bootloader);
+    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Available memory:" CONSOLE_COLOURS_FOREGROUND_GREEN "% bytes", physical_memory_manager.get_free_memory());
+    HALT();
     console.println("Testing allocation...");
     console.println("Allocating 8192 bytes...");
     voidptr_t alloc = physical_memory_manager.memalloc(8192);
@@ -58,6 +60,7 @@ void kstart(struct stivale2_struct *bootloader)
     }
     physical_memory_manager.free(alloc);
     console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
+
     
     console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising IDT... ");
     initialise_idt();

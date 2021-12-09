@@ -7,15 +7,17 @@
 #include <string.h>
 #include <common.h>
 #include "bitmap.h"
+#include "lock.h"
 
 #include <drivers.h>
-
-
-struct pmm physical_memory_manager;
 
 static voidptr_t memalloc(size_t size);
 static void free(voidptr_t ptr);
 static uint64_t get_free_memory(void);
+
+struct pmm physical_memory_manager;
+
+static lock_t memlock = 0;
 
 void initialise_pmm(struct stivale2_struct *bootloader)
 {
@@ -33,18 +35,18 @@ void initialise_pmm(struct stivale2_struct *bootloader)
     for (size_t i = 0; i < physical_memory_manager.memory_map_entry_count; ++i) {
         struct stivale2_mmap_entry mmap_entry = physical_memory_manager.memory_map[i];
         logger.writef("Memory map entry % ", itoa(i, BASE_10));
-        logger.writefln("of % found!", itoa(physical_memory_manager.memory_map_entry_count, BASE_10));
+        logger.writefln("of % loaded!", itoa(physical_memory_manager.memory_map_entry_count, BASE_10));
         if (mmap_entry.type != STIVALE2_MMAP_USABLE
             && mmap_entry.type != STIVALE2_MMAP_KERNEL_AND_MODULES)
             continue;
         
-        qword_t top = mmap_entry.base + mmap_entry.length;
+        quadword_t top = mmap_entry.base + mmap_entry.length;
         
         if (physical_memory_manager.last_page < top)
             physical_memory_manager.last_page = top;
     }
 
-    physical_memory_manager.bitmap_size = CEIL_DIV(physical_memory_manager.last_page / PAGE_SIZE, 8);
+    physical_memory_manager.bitmap_size = ROUND_DIV(physical_memory_manager.last_page / PAGE_SIZE, 8);
 
     for (size_t i = 0; i < physical_memory_manager.memory_map_entry_count; ++i) {
         struct stivale2_mmap_entry mmap_entry = physical_memory_manager.memory_map[i];
@@ -53,7 +55,7 @@ void initialise_pmm(struct stivale2_struct *bootloader)
             continue;
 
         physical_memory_manager.bitmap = (byte_t *)mmap_entry.base + PHYSICAL_BASE_ADDRESS;
-        uint64_t page_count = CEIL_DIV(physical_memory_manager.bitmap_size, PAGE_SIZE);
+        uint64_t page_count = ROUND_DIV(physical_memory_manager.bitmap_size, PAGE_SIZE);
 
         memset(physical_memory_manager.bitmap, 0xFF, physical_memory_manager.bitmap_size);
 
@@ -73,8 +75,9 @@ void initialise_pmm(struct stivale2_struct *bootloader)
 
         //Mark frames as free
         uint64_t length = mmap_entry.length / PAGE_SIZE;
-        for (size_t i = pagenum; i <= pagenum + length; ++i) {
-            clear_bit(physical_memory_manager.bitmap, i);
+        logger.writefln("Set bitmap bit % to free", STRDEC(i));
+        for (size_t j = pagenum; j <= pagenum + length; ++j) {
+            clear_bit(physical_memory_manager.bitmap, j);
         }
     }
 }
@@ -87,12 +90,12 @@ static voidptr_t memalloc_raw(size_t size)
             ++count;
 
             if (count == size) {
-                qword_t page = i - size + 1;
+                quadword_t page = i - size + 1;
 
-                for (qword_t j = page; j < page + size; ++j) 
+                for (quadword_t j = page; j < page + size; ++j) 
                     set_bit(physical_memory_manager.bitmap, j);
                 
-                qword_t address = page * PAGE_SIZE;
+                quadword_t address = page * PAGE_SIZE;
                 memset((voidptr_t)address + PHYSICAL_BASE_ADDRESS, 0, count * PAGE_SIZE);
 
                 return (voidptr_t)address;
@@ -119,7 +122,7 @@ static void free(voidptr_t ptr)
     if (alloc->data != ptr) {
         console.printfln("\x1b[31m Could not free pointer at %", STRHEX((int64_t)ptr));
     }
-    qword_t page = (qword_t)alloc / PAGE_SIZE;
+    quadword_t page = (quadword_t)alloc / PAGE_SIZE;
     for (uint64_t i = page; i < page + alloc->size; ++i)
         clear_bit(physical_memory_manager.bitmap, i);
 }

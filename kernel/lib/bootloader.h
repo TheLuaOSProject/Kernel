@@ -7,7 +7,6 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stivale2.h>
-#include <common.h>
 
 #define STACK_SIZE          2 << 13
 
