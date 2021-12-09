@@ -28,7 +28,7 @@ void kstart(struct stivale2_struct *bootloader)
     console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "Started LuaOS v" LUAOS_VERSION ", built " LUAOS_BUILD_DATE "!");
     console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Bootloader brand:" CONSOLE_COLOURS_FOREGROUND_GREEN "%", bootloader->bootloader_brand);
     console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Bootloader version:" CONSOLE_COLOURS_FOREGROUND_GREEN "%", bootloader->bootloader_version);
-    console.println("Type sizes:");
+    console.println(CONSOLE_COLOURS_FOREGROUND_CYAN "Type sizes:");
     console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Byte:"            CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(byte_t)));
     console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Word:"            CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(word_t)));
     console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Double word:"     CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(dword_t)));
@@ -37,14 +37,15 @@ void kstart(struct stivale2_struct *bootloader)
     console.set_style(RESET_STYLES, true);
     console.println(CONSOLE_COLOURS_FOREGROUND_DEFAULT "---------------------------------");
 
-    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising logger... ");
-    console.set_style(STYLE_BOLD, true);
-#ifdef QEMU
-    initialise_logger();
-#endif
-    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
+     console.set_style(STYLE_BOLD, true);
 
+#ifdef QEMU
+    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising logger... ");
+    initialise_logger();
+    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
     logger.writeln("Started logger");
+#endif
+
 
     console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising memory manager... ");
     initialise_pmm(bootloader);

@@ -45,7 +45,7 @@ enum ansi_escape_codes
 
 extern const string_t ANSI_ESCAPE_CODES[];
 
-#define CONSOLE_COLOURS_RESET    "\x1b[0m"
+#define CONSOLE_COLOURS_RESET               "\x1b[0m"
 
 #define CONSOLE_COLOURS_FOREGROUND_BLACK    "\x1b[30m"
 #define CONSOLE_COLOURS_FOREGROUND_RED      "\x1b[31m"

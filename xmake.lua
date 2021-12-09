@@ -6,11 +6,6 @@ add_rules("mode.debug", "mode.release");
 
 set_config("plat", "cross")
 
-local function strcat(base, ext)
-    base = base .. ext;
-    return base;
-end
-
 local function startswith(str, pattern)
     return string.sub(str, 1, string.len(pattern)) == pattern;
 end
@@ -65,8 +60,8 @@ target("LuaOS");
         { force = true }
     );
     
-    set_objectdir("build/");
-    set_targetdir("build/bin");
+    set_objectdir("build/obj/");
+    set_targetdir("build/bin/");
 
     add_defines("QEMU");
 
@@ -74,7 +69,10 @@ target("LuaOS");
 
     before_build(function (target)
         -- os.run("xmake project -k compile_commands .vscode/")
-        os.run("lua build.lua build")
+
+        print("Updating common.h")
+
+        os.runv("lua", { "buildlog.lua", "build" })
 
         local commonfile_read = io.open("kernel/lib/common.h", "r");
 
@@ -99,7 +97,7 @@ target("LuaOS");
             end
         end
  
-        local buildnum, err = os.iorunv("lua", { "build.lua", "buildnum" });
+        local buildnum, _ = os.iorunv("lua", { "buildlog.lua", "buildnum" });
 
 
         content[version_ln] = "#define LUAOS_VERSION       \"1.0." .. buildnum .. "\"";
@@ -112,16 +110,15 @@ target("LuaOS");
         end
 
         commonfile_write:close();
-    end);
 
-    after_link(function (target)
+        print("Setting up Limine")
+
         local liminepath = target:objectdir() .. "/limine/";
-        local kernelimg = target:targetdir() .. "/LuaOS";
 
         local has_wifi = true;
 
         if os.isdir(liminepath) then
-            local out, err = os.iorunv("ping", { "github.com" })
+            local out, err = os.iorunv("ping", { "-c1", "github.com" })
             print(out, err)
             if err ~= "" then has_wifi = false goto NO_WIFI end
             os.rm(liminepath)
@@ -129,11 +126,9 @@ target("LuaOS");
         end
 
         if has_wifi then
-            print("Cloning limine...")
-            local gitcmd = "git clone https://github.com/limine-bootloader/limine.git " .. liminepath .. " --branch=v2.0-branch-binary --depth=1";
-            os.iorunv(gitcmd);
-            print("Making limine")
-            os.runv("make", { "-C " .. liminepath });
+            print(os.iorunv("git", { "clone", "https://github.com/limine-bootloader/limine.git", liminepath, "--branch=v2.0-branch-binary", "--depth=1" }))
+            print("Making limine...")
+            os.iorunv("make", { "-C", liminepath });
         end
 
         local liminefiles = { 
@@ -149,6 +144,11 @@ target("LuaOS");
             os.cp(v, target:targetdir());
         end
         
+    end);
+
+    after_link(function (target)
+        local liminepath = target:objectdir() .. "/limine/";
+ 
         local xorrisofiles = {
             cfg     = "limine.cfg",
             sys     = "limine-cd.bin",
@@ -162,14 +162,13 @@ target("LuaOS");
         end
         
         print("Creating bootable media");
-        os.iorunv("xorriso", { 
+        os.iorunv("xorriso", {
             "-as mkisofs",
             "-b " .. xorrisofiles.cdbin,
             "-no-emul-boot",
             "-boot-load-size 4",
             "-boot-info-table",
-            "--efi-boot",
-            xorrisofiles.efibin,
+            "--efi-boot" .. xorrisofiles.efibin,
             "-efi-boot-part",
             "--efi-boot-image",
             "--protective-msdos-label",
