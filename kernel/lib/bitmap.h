@@ -7,18 +7,18 @@
 
 #include "types.h"
 
-inline void clear_bit(uint8_t *bitmap, uintptr_t bit)
+static inline void clear_bit(uint8_t *bitmap, uintptr_t bit)
 {
     bitmap[bit / 8] |= (1 << (7 - bit % 8));
 }
 
-inline bool test_bit(const uint8_t *bitmap, uintptr_t bit)
+static inline bool test_bit(const uint8_t *bitmap, uintptr_t bit)
 {
     if (bitmap[bit / 8] & (1 << (7 - bit % 8))) return false;
     else return true;
 }
 
-inline void set_bit(uint8_t *bitmap, uintptr_t bit)
+static inline void set_bit(uint8_t *bitmap, uintptr_t bit)
 {
     bitmap[bit / 8] |= (1 << (7 - bit % 8));
 }

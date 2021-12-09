@@ -25,60 +25,46 @@ void kstart(struct stivale2_struct *bootloader)
     initialise_console(bootloader);
     
     console.set_style(STYLE_BOLD, true);
-    console.println("\x1b[32mStarted LuaOS v" LUAOS_VERSION ", built " LUAOS_BUILD_DATE);
-    console.printfln("Bootloader brand: %", bootloader->bootloader_brand);
-    console.printfln("Bootloader version: %", bootloader->bootloader_version);
+    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "Started LuaOS v" LUAOS_VERSION ", built " LUAOS_BUILD_DATE "!");
+    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Bootloader brand:" CONSOLE_COLOURS_FOREGROUND_GREEN "%", bootloader->bootloader_brand);
+    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Bootloader version:" CONSOLE_COLOURS_FOREGROUND_GREEN "%", bootloader->bootloader_version);
     console.println("Type sizes:");
-    console.printfln("Byte: %",             STRDEC(sizeof(byte_t)));
-    console.printfln("Word: %",             STRDEC(sizeof(word_t)));
-    console.printfln("Double word: %",      STRDEC(sizeof(dword_t)));
-    console.printfln("Quad word: %",        STRDEC(sizeof(qword_t)));
-    console.printfln("Unsigned long: %",    STRDEC(sizeof(unsigned long)));
+    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Byte:"            CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(byte_t)));
+    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Word:"            CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(word_t)));
+    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Double word:"     CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(dword_t)));
+    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Quad word:"       CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(qword_t)));
+    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Unsigned long:"   CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(unsigned long)));
     console.set_style(RESET_STYLES, true);
-    console.println("---------------------------------");
+    console.println(CONSOLE_COLOURS_FOREGROUND_DEFAULT "---------------------------------");
 
-
-    console.print("\x1b[1;93mInitialising logger... ");
+    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising logger... ");
     console.set_style(STYLE_BOLD, true);
 #ifdef QEMU
     initialise_logger();
 #endif
-    console.println("\x1b[32m[Done]");
+    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
 
     logger.writeln("Started logger");
 
-    //get_vendor_name();
-
-//    console.print("\x1b[1;93mInitialising GDT... ");
-//    console.set_style(STYLE_BOLD, true);
-//    initialise_gdt();
-//    console.println("\x1b[32m[Done]");
-
-    console.print("\x1b[1;93mInitialising memory manager... ");
+    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising memory manager... ");
     initialise_pmm(bootloader);
     console.println("Testing allocation...");
     console.println("Allocating 8192 bytes...");
     voidptr_t alloc = physical_memory_manager.memalloc(8192);
     if (alloc == NULL) {
-        console.println("Failed to allocate 8192 bytes of memory!");
+        console.println(CONSOLE_COLOURS_FOREGROUND_RED "Failed to allocate 8192 bytes of memory!");
         HALT();
     }
     physical_memory_manager.free(alloc);
-    console.println("\x1b[32m[Done]");
+    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
     
-    console.print("\x1b[1;93mInitialising IDT... ");
-    console.set_style(STYLE_BOLD, true);
+    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising IDT... ");
     initialise_idt();
-    console.println("\x1b[32m[Done]");
-
-    console.print("\x1b[1;93mInitialising PMM... ");
-    console.set_style(STYLE_BOLD, true);
-    initialise_pmm(bootloader);
+    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
     
-    console.print("\x1b[1;93mInitialising keyboard inputs... ");
-    console.set_style(STYLE_BOLD, true);
+    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising keyboard inputs... ");
     initialise_keyboard();
-    console.println("\x1b[32m[Done]");
+    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
 
     HALT();
 }

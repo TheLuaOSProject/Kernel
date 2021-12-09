@@ -1,14 +1,30 @@
 {
     "tasks": [
         {
-            "label": "LuaOS - Run",
-            "type": "shell",
-            "command": "lua ${workspaceRoot}/build.lua run"
-        },
-        {
             "label": "LuaOS - Build",
             "type": "shell",
-            "command": "lua ${workspaceRoot}/build.lua build"
+            "command": "xmake",
+            "args": [
+                "-rvD"
+            ]
+        },
+        {
+            "label": "LuaOS - Test",
+            "type": "shell",
+            "command": "qemu-system-x86_64",
+            "dependsOn": "LuaOS - Build",
+            "args": [
+                "-M", "q35",
+                "-m", "1G",
+                "-cdrom", "build/bin/LuaOS-x86_64.iso",
+                "-s",
+                "-machine", "smm=off",
+                "-d", "int",
+                "-no-reboot",
+                "-serial", "file:luaos.log",
+                "-monitor", "stdio"
+            ],
+            "problemMatcher": []
         }
     ]
 }

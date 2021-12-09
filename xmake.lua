@@ -73,6 +73,7 @@ target("LuaOS");
     
 
     before_build(function (target)
+        -- os.run("xmake project -k compile_commands .vscode/")
         os.run("lua build.lua build")
 
         local commonfile_read = io.open("kernel/lib/common.h", "r");
@@ -117,13 +118,23 @@ target("LuaOS");
         local liminepath = target:objectdir() .. "/limine/";
         local kernelimg = target:targetdir() .. "/LuaOS";
 
-        if os.isdir(liminepath) then os.rm(liminepath) end
+        local has_wifi = true;
 
-        print("Cloning limine...")
-        local gitcmd = "git clone https://github.com/limine-bootloader/limine.git " .. liminepath .. " --branch=v2.0-branch-binary --depth=1";
-        os.run(gitcmd);
-        print("Making limine")
-        os.run("make -C " .. liminepath);
+        if os.isdir(liminepath) then
+            local out, err = os.iorunv("ping", { "github.com" })
+            print(out, err)
+            if err ~= "" then has_wifi = false goto NO_WIFI end
+            os.rm(liminepath)
+            ::NO_WIFI::
+        end
+
+        if has_wifi then
+            print("Cloning limine...")
+            local gitcmd = "git clone https://github.com/limine-bootloader/limine.git " .. liminepath .. " --branch=v2.0-branch-binary --depth=1";
+            os.iorunv(gitcmd);
+            print("Making limine")
+            os.runv("make", { "-C " .. liminepath });
+        end
 
         local liminefiles = { 
             cfg     = "kernel/limine.cfg",
@@ -149,46 +160,24 @@ target("LuaOS");
         if os.isfile(xorrisofiles.export) then
             os.rm(xorrisofiles.export);
         end
-
-        local xorrisoargs = "-as mkisofs -b ";
-
-        xorrisoargs = strcat(xorrisoargs, xorrisofiles.cdbin .. " -no-emul-boot -boot-load-size 4 -boot-info-table --efi-boot ");
-        xorrisoargs = strcat(xorrisoargs, xorrisofiles.efibin .. " -efi-boot-part --efi-boot-image --protective-msdos-label ");
-        xorrisoargs = strcat(xorrisoargs, target:targetdir() .. " -o " .. xorrisofiles.export);
         
         print("Creating bootable media");
-        os.run("xorriso " .. xorrisoargs);
+        os.iorunv("xorriso", { 
+            "-as mkisofs",
+            "-b " .. xorrisofiles.cdbin,
+            "-no-emul-boot",
+            "-boot-load-size 4",
+            "-boot-info-table",
+            "--efi-boot",
+            xorrisofiles.efibin,
+            "-efi-boot-part",
+            "--efi-boot-image",
+            "--protective-msdos-label",
+            target:targetdir(),
+            "-o " .. xorrisofiles.export
+        })
 
-        local exec = "./" .. liminepath .. "limine-install " .. xorrisofiles.export;
         print("Executing limine")
-        os.run(exec);
-    end);
-
-    on_run(function(target)
-            import("core.base.process");
-
-            local files = {
-                img = target:targetdir() .. "/LuaOS-x86_64.iso";
-                elf = target:targetdir() .. "/LuaOS";
-            };
-            
-            local qemucmd = "qemu-system-x86_64 -M q35 -m 1G -cdrom " .. files.img .. " -s -machine smm=off -d int -no-reboot -serial file:luaos.log -monitor stdio";
-            print(qemucmd);
-            
-            local qemu = process.open(qemucmd, { stderr = "qemulog.txt" });
-            
-            os.run("sleep 1");
-            
-
-            --local gdb = process.openv (
-            --    "/usr/local/x86_64-elf-gcc/bin/x86_64-elf-gdb",
-            --    {
-            --        "-ex", "target remote localhost:1234",
-            --        "-ex", "file " .. files.elf
-            --    }
-            --);
-
-            qemu:wait();
-            --gdb:wait();
+        os.runv(liminepath .. "limine-install", { xorrisofiles.export });
     end);
 target_end();

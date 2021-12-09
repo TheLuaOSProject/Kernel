@@ -6,6 +6,7 @@
 #include "drivers/logger.h"
 #include <string.h>
 #include <common.h>
+#include "bitmap.h"
 
 #include <drivers.h>
 
