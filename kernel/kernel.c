@@ -46,11 +46,14 @@ void kstart(struct stivale2_struct *bootloader)
     logger.writeln("Started logger");
 #endif
 
+    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising IDT... ");
+    initialise_idt();
+    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
 
     console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising memory manager... ");
     initialise_pmm(bootloader);
-    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Available memory:" CONSOLE_COLOURS_FOREGROUND_GREEN "% bytes", physical_memory_manager.get_free_memory());
-    HALT();
+    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Available memory:" CONSOLE_COLOURS_FOREGROUND_GREEN "% bytes", 
+                     STRDEC(physical_memory_manager.get_free_memory()));
     console.println("Testing allocation...");
     console.println("Allocating 8192 bytes...");
     voidptr_t alloc = physical_memory_manager.memalloc(8192);
@@ -59,11 +62,6 @@ void kstart(struct stivale2_struct *bootloader)
         HALT();
     }
     physical_memory_manager.free(alloc);
-    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
-
-    
-    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising IDT... ");
-    initialise_idt();
     console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
     
     console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising keyboard inputs... ");

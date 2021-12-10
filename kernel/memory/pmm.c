@@ -40,10 +40,10 @@ void initialise_pmm(struct stivale2_struct *bootloader)
             && mmap_entry.type != STIVALE2_MMAP_KERNEL_AND_MODULES)
             continue;
         
-        quadword_t top = mmap_entry.base + mmap_entry.length;
+        quadword_t top_page = mmap_entry.base + mmap_entry.length;
         
-        if (physical_memory_manager.last_page < top)
-            physical_memory_manager.last_page = top;
+        if (physical_memory_manager.last_page < top_page)
+            physical_memory_manager.last_page = top_page;
     }
 
     physical_memory_manager.bitmap_size = ROUND_DIV(physical_memory_manager.last_page / PAGE_SIZE, 8);
@@ -85,6 +85,9 @@ void initialise_pmm(struct stivale2_struct *bootloader)
 static voidptr_t memalloc_raw(size_t size)
 {
     size_t count = 0;
+
+    acquire_lock(&memlock);
+
     for (size_t i = 0; i < physical_memory_manager.bitmap_size * 8; ++i) {
         if (!test_bit(physical_memory_manager.bitmap, i)) {
             ++count;
@@ -98,12 +101,17 @@ static voidptr_t memalloc_raw(size_t size)
                 quadword_t address = page * PAGE_SIZE;
                 memset((voidptr_t)address + PHYSICAL_BASE_ADDRESS, 0, count * PAGE_SIZE);
 
+                release_lock(&memlock);
+
                 return (voidptr_t)address;
             }
         } else {
             count = 0;
         }
     }
+
+    release_lock(&memlock);
+
     return NULL;
 }
 
@@ -118,22 +126,35 @@ static voidptr_t memalloc(size_t size)
 static void free(voidptr_t ptr)
 {
     struct allocation_header *alloc = headerof(ptr);
-
     if (alloc->data != ptr) {
         console.printfln("\x1b[31m Could not free pointer at %", STRHEX((int64_t)ptr));
     }
     quadword_t page = (quadword_t)alloc / PAGE_SIZE;
+
+    acquire_lock(&memlock);
+
     for (uint64_t i = page; i < page + alloc->size; ++i)
         clear_bit(physical_memory_manager.bitmap, i);
+
+    release_lock(&memlock);
 }
 
 static uint64_t get_free_memory(void)
 {
+    logger.writeln("Getting free memory...");
     uint64_t pagecount = 0;
 
+    logger.writefln("BITMAP SIZE: %", STRDEC(physical_memory_manager.bitmap_size));
+    
     for (size_t i = 0; i < physical_memory_manager.bitmap_size * 8; ++i) {
-        ++pagecount;
+        if (!test_bit(physical_memory_manager.bitmap, i)) {
+            ++pagecount;
+        }
     }
+    
+    uint64_t ret = pagecount * PAGE_SIZE;
+    
+    logger.writefln("Total size: %", STRDEC(ret));
 
-    return pagecount * PAGE_SIZE;
+    return ret;
 }
