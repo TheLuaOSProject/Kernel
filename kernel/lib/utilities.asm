@@ -23,5 +23,6 @@ BREAKPOINT:
 GLOBAL HALT
 HALT:
     HLT
+    JMP     HALT
     RET
 

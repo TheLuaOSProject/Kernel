@@ -113,12 +113,11 @@ void general_protection_i(UNUSED struct interrupt_frame *iframe)
 
 void debug_i(UNUSED struct interrupt_frame *iframe)
 {
-    console.println("\x1b[1;34mDEBUG: Interrupt 0x72 called!");
-    return;
+    console.println(CONSOLE_COLOURS_BACKGROUND_RED CONSOLE_COLOURS_FOREGROUND_BLACK "DEBUG: Interrupt 0x72 called!");
 }
 
 void invalid_opcode_i(UNUSED struct interrupt_frame *iframe)
 {
-    console.println("\x1b[1;31mINVALID OPCODE");
+    console.println(CONSOLE_COLOURS_BACKGROUND_RED CONSOLE_COLOURS_FOREGROUND_BLACK "INVALID OPCODE");
     HALT();
 }
