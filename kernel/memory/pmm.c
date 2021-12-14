@@ -21,6 +21,7 @@ static lock_t memlock = 0;
 
 void initialise_pmm(struct stivale2_struct *bootloader)
 {
+    logger.writeln("Initialising PMM");
     struct stivale2_struct_tag_memmap *tag = get_stivale_tag(bootloader, STIVALE2_STRUCT_TAG_MEMMAP_ID);
 
     physical_memory_manager = (struct pmm) {
@@ -47,6 +48,7 @@ void initialise_pmm(struct stivale2_struct *bootloader)
     }
 
     physical_memory_manager.bitmap_size = ROUND_DIV(physical_memory_manager.last_page / PAGE_SIZE, 8);
+    logger.writefln("Bitmap size: %", STRDEC(physical_memory_manager.bitmap_size));
 
     for (size_t i = 0; i < physical_memory_manager.memory_map_entry_count; ++i) {
         struct stivale2_mmap_entry mmap_entry = physical_memory_manager.memory_map[i];
@@ -85,6 +87,8 @@ void initialise_pmm(struct stivale2_struct *bootloader)
 static voidptr_t memalloc_raw(size_t size)
 {
     size_t count = 0;
+    
+    logger.writefln("Allocating % bytes of memory", STRDEC(size));
 
     acquire_lock(&memlock);
 
@@ -111,7 +115,8 @@ static voidptr_t memalloc_raw(size_t size)
     }
 
     release_lock(&memlock);
-
+    
+    logger.writeln("Allocation failed!");
     return NULL;
 }
 
@@ -127,7 +132,8 @@ static void free(voidptr_t ptr)
 {
     struct allocation_header *alloc = headerof(ptr);
     if (alloc->data != ptr) {
-        console.printfln("\x1b[31m Could not free pointer at %", STRHEX((int64_t)ptr));
+        logger.writefln("Could not free pointer at %", STRHEX((int64_t)ptr));
+        return;
     }
     quadword_t page = (quadword_t)alloc / PAGE_SIZE;
 
@@ -143,8 +149,6 @@ static uint64_t get_free_memory(void)
 {
     logger.writeln("Getting free memory...");
     uint64_t pagecount = 0;
-
-    logger.writefln("BITMAP SIZE: %", STRDEC(physical_memory_manager.bitmap_size));
     
     for (size_t i = 0; i < physical_memory_manager.bitmap_size * 8; ++i) {
         if (!test_bit(physical_memory_manager.bitmap, i)) {

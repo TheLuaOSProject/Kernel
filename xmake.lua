@@ -46,8 +46,6 @@ target("LuaOS");
         "-mno-sse4",
         "-mno-sse4a",
         "-mno-avx",
-        "-mno-simd",
-        "-mno-fpu",
         "-mno-red-zone",
         "-g",
         "-ggdb",
@@ -72,8 +70,6 @@ target("LuaOS");
     set_targetdir("build/bin/");
 
     add_defines("QEMU");
-
-    
 
     before_build(function (target)
         -- os.run("xmake project -k compile_commands .vscode/")
@@ -185,5 +181,19 @@ target("LuaOS");
 
         print("Executing limine")
         print(os.iorunv(liminepath .. "limine-install", { xorrisofiles.export }));
+    end);
+
+    on_run(function (target)
+        os.iorunv("qemu-system-x86_64", { 
+            "-M",           "q35",
+            "-m",           "1G",
+            "-cdrom",       target:targetdir() .. "/LuaOS-x86_64.iso",
+            "-s",
+            "-machine",     "smm=off",
+            "-d",           "int",
+            "-no-reboot",
+            "-serial",      "file:luaos.log",
+            "-monitor",     "stdio"
+        });
     end);
 target_end();

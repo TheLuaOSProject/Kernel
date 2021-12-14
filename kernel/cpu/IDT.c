@@ -27,44 +27,50 @@ static struct idt_descriptor    descriptor;
 
 void initialise_idt(void)
 {
-    logger.writeln("IDT INIT");
+    logger.writeln("Initialising IDT");
     memset(interrupt_descriptor_table, 0, sizeof(interrupt_descriptor_table));
-    
+    logger.writeln("Created IDT in memory");
     register_interrupt_handler(0x0,
                                (uint64_t) &ASM_DIV_BY_ZERO,
                                0x8E,
                                0);
-
+    logger.writeln("Registered handler 0x0 (Div by zero)");
+    
     register_interrupt_handler(0x3,
                                (uint64_t) &ASM_BREAKPOINT,
                                0x8E,
                                0);
+    logger.writeln("Registered handler 0x3 (breakpoint)");
 
     register_interrupt_handler(0x72,
                                (uint64_t) &ASM_DEBUG,
                                0x8E,
                                0);
+    logger.writeln("Registered handler 0x72 (Debug)");
 
     register_interrupt_handler(0x8,
                                (uint64_t) &ASM_DOUBLE_FAULT,
                                0x8E,
                                0);
+    logger.writeln("Registered handler 0x8 (Double fault)");
 
     register_interrupt_handler(0xD,
                                (uint64_t) &ASM_GENERAL_PROTECTION,
                                0x8E,
                                0);
+    logger.writeln("Registered handler 0xD (General protection)");
 
     register_interrupt_handler(0x6,
                                (uint64_t)&ASM_INVALID_OPCODE,
                                0x8E,
                                0);
-     
+    logger.writeln("Registered handler 0x6 (Invalid opcode)");
+
     descriptor.limit    = sizeof(interrupt_descriptor_table) - 1;
     descriptor.offset   = (uint64_t)&interrupt_descriptor_table;
 
     LOAD_IDT(&descriptor);
-    logger.writeln("DONE");
+    logger.writeln("Loaded IDT!");
 }
 
 void register_interrupt_handler(uintmax_t   index,
@@ -113,11 +119,19 @@ void general_protection_i(UNUSED struct interrupt_frame *iframe)
 
 void debug_i(UNUSED struct interrupt_frame *iframe)
 {
-    console.println(CONSOLE_COLOURS_BACKGROUND_RED CONSOLE_COLOURS_FOREGROUND_BLACK "DEBUG: Interrupt 0x72 called!");
+    console.println(
+            CONSOLE_COLOURS_BACKGROUND_RED      CONSOLE_COLOURS_FOREGROUND_BLACK 
+            "DEBUG: Interrupt 0x72 called!" 
+            CONSOLE_COLOURS_BACKGROUND_DEFAULT  CONSOLE_COLOURS_FOREGROUND_DEFAULT
+    );
 }
 
 void invalid_opcode_i(UNUSED struct interrupt_frame *iframe)
 {
-    console.println(CONSOLE_COLOURS_BACKGROUND_RED CONSOLE_COLOURS_FOREGROUND_BLACK "INVALID OPCODE");
+    console.println(
+        CONSOLE_COLOURS_BACKGROUND_RED      CONSOLE_COLOURS_FOREGROUND_BLACK 
+        "INVALID OPCODE" 
+        CONSOLE_COLOURS_BACKGROUND_DEFAULT  CONSOLE_COLOURS_FOREGROUND_DEFAULT
+    );
     HALT();
 }

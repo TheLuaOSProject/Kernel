@@ -19,9 +19,9 @@
 #include "bitmap.h"
 #include "types.h"
 
-#define LUAOS_VERSION       "1.0.473"
+#define LUAOS_VERSION       "1.0.484"
 
-#define LUAOS_BUILD_DATE    "2021/12/10 at 12:39"
+#define LUAOS_BUILD_DATE    "2021/12/14 at 12:52"
 
 #define DEBUG
 
@@ -87,7 +87,7 @@
 #define foreach(name, array)    for (int (__ ## array ## _ ## indexer__) = 0, (__ ## array ## _ ## run_once__) = 1; ( __ ## array ## _ ## indexer__) < ARRAY_LENGTH(array) && (__ ## array ## _ ## run_once__); ++(__ ## array ## _ ## indexer__), (__ ## array ## _ ## run_once__) = !(__ ## array ## _ ## run_once__)) \
                                 for (typeof(array[0]) name = array[(__ ## array ## _ ## indexer__)]; (__ ## array ## _ ## run_once__); (__ ## array ## _ ## run_once__) = !(__ ## array ## _ ## run_once__))
 
-
+#define var __auto_type
 
 
 #endif //LUAOS_COMMON

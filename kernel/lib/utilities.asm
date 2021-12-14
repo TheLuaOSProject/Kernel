@@ -8,7 +8,7 @@ DIV_BY_ZERO:
     MOV     EAX, 4
     MOV     EBX, 0
     DIV     EBX
-    RET
+    RET    
     
 GLOBAL DEBUG_INTERRUPT
 DEBUG_INTERRUPT:

@@ -50,16 +50,16 @@ void kstart(struct stivale2_struct *bootloader)
     initialise_idt();
     console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
     
-    console.println(CONSOLE_COLOURS_BACKGROUND_YELLOW "Testing interrupts...");
+    console.println(CONSOLE_COLOURS_FOREGROUND_YELLOW "Testing interrupts...");
     DEBUG_INTERRUPT();
-    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]" CONSOLE_COLOURS_BACKGROUND_DEFAULT);
+    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
 
     console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising memory manager... ");
     initialise_pmm(bootloader);
+//    CRASH();
     console.println("Testing allocation...");
     console.println("Allocating 8192 bytes...");
-    HALT();
-    voidptr_t alloc = physical_memory_manager.memalloc(8192);
+    var alloc = physical_memory_manager.memalloc(8192);
     if (alloc == NULL) {
         console.println(CONSOLE_COLOURS_FOREGROUND_RED "Failed to allocate 8192 bytes of memory!");
         HALT();
@@ -70,6 +70,7 @@ void kstart(struct stivale2_struct *bootloader)
     console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising keyboard inputs... ");
     initialise_keyboard();
     console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
-
+    
+    
     HALT();
 }
