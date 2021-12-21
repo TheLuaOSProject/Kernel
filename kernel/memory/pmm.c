@@ -3,13 +3,11 @@
 //
 
 #include "pmm.h"
-#include "drivers/logger.h"
+#include <drivers/logger.h>
 #include <string.h>
 #include <common.h>
-#include "bitmap.h"
-#include "lock.h"
-
-#include <drivers.h>
+#include <bitmap.h>
+#include <lock.h>
 
 static voidptr_t memalloc(size_t size);
 static void free(voidptr_t ptr);
@@ -37,8 +35,8 @@ void initialise_pmm(struct stivale2_struct *bootloader)
         struct stivale2_mmap_entry mmap_entry = physical_memory_manager.memory_map[i];
         logger.writef("Memory map entry % ", itoa(i, BASE_10));
         logger.writefln("of % loaded!", itoa(physical_memory_manager.memory_map_entry_count, BASE_10));
-        if (mmap_entry.type != STIVALE2_MMAP_USABLE
-            && mmap_entry.type != STIVALE2_MMAP_KERNEL_AND_MODULES)
+        if (mmap_entry.type     != STIVALE2_MMAP_USABLE
+            && mmap_entry.type  != STIVALE2_MMAP_KERNEL_AND_MODULES)
             continue;
         
         quadword_t top_page = mmap_entry.base + mmap_entry.length;
@@ -82,6 +80,7 @@ void initialise_pmm(struct stivale2_struct *bootloader)
             clear_bit(physical_memory_manager.bitmap, j);
         }
     }
+    
 }
 
 static voidptr_t memalloc_raw(size_t size)

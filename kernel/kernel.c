@@ -12,7 +12,6 @@
 #include <common.h>
 #include <components.h>
 #include <drivers.h>
-#include <components.h>
 #include <string.h>
 
 
@@ -20,7 +19,7 @@
  * LuaOS Kernel Entry point
  * @param bootloader Stivale2 utilities
  */
-void kstart(struct stivale2_struct *bootloader)
+void kernel_start(struct stivale2_struct *bootloader)
 {
     initialise_console(bootloader);
     

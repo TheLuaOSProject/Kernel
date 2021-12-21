@@ -30,28 +30,11 @@ target("LuaOS");
 
     add_asflags("-f elf64", { force = true });
     add_cflags (
-        "-ffreestanding",
         "-std=gnu11",
-        "-fpie",
-        "-fno-stack-protector",
-        "-fno-omit-frame-pointer",
-        "-mno-80387",
-        "-mno-mmx",
-        "-mno-3dnow",
-        "-mno-sse",
-        "-mno-sse2",
-        "-mno-sse3",
-        "-mno-sse4.1",
-        "-mno-sse4.2",
-        "-mno-sse4",
-        "-mno-sse4a",
-        "-mno-avx",
-        "-mno-red-zone",
-        "-g",
-        "-ggdb",
-        "-Wall",
-        "-Wextra",
-        "-Werror",
+        "-ffreestanding", "-fpie", "-fno-stack-protector", "-fno-omit-frame-pointer",
+        "-mno-80387", "-mno-mmx", "-mno-3dnow", "-mno-sse", "-mno-sse2", "-mno-sse3", "-mno-sse4.1", "-mno-sse4.2", "-mno-sse4", "-mno-sse4a", "-mno-avx",  "-mno-red-zone",
+        "-g", "-ggdb",
+        "-Wall", "-Wextra", "-Werror",
         { force = true }
     );
                 
