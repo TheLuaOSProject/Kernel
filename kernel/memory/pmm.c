@@ -43,21 +43,22 @@ void initialise_pmm(struct stivale2_struct *bootloader)
     logger_writefln("Bitmap size: %", STRDEC(physical_memory_manager.bitmap_size));
 
     for (size_t i = 0; i < physical_memory_manager.memory_map_entry_count; ++i) {
-        var entry = physical_memory_manager.memory_map[i];
+        struct stivale2_mmap_entry *entry = &physical_memory_manager.memory_map[i];
 
-        if ((entry.type not_eq STIVALE2_MMAP_USABLE and entry.type not_eq STIVALE2_MMAP_BOOTLOADER_RECLAIMABLE) 
-            && entry.length < physical_memory_manager.bitmap_size)
+        if ((entry->type not_eq STIVALE2_MMAP_USABLE and entry->type not_eq STIVALE2_MMAP_BOOTLOADER_RECLAIMABLE) 
+            && entry->length < physical_memory_manager.bitmap_size)
             continue;
         
-        physical_memory_manager.bitmap = (byte_t *)entry.base + PHYSICAL_BASE_ADDRESS;
+        physical_memory_manager.bitmap = (byte_t *)entry->base + PHYSICAL_BASE_ADDRESS;
         size_t page_count = round_division(physical_memory_manager.bitmap_size, PAGE_SIZE);
 
         //Set the value of the bitmap to 0xFF (used or smth like that idk man im tired)
         memset(physical_memory_manager.bitmap, 0xFF, physical_memory_manager.bitmap_size);
         
         uint64_t mul = page_count * PAGE_SIZE;
-        entry.base      += mul;
-        entry.length    -= mul;
+        entry->base         += mul;
+        entry->length       -= mul;
+        logger_writeln("Set bitmap");
         break;
     }
 

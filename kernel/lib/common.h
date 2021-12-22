@@ -19,9 +19,9 @@
 #include "bitmap.h"
 #include "types.h"
 
-#define LUAOS_VERSION       "1.0.498"
+#define LUAOS_VERSION       "1.0.507"
 
-#define LUAOS_BUILD_DATE    "2021/12/21 at 22:52"
+#define LUAOS_BUILD_DATE    "2021/12/22 at 13:33"
 
 #define DEBUG
 
@@ -80,12 +80,6 @@
     VA_ARGS_SELECT_COUNT_VALUE(__VA_ARGS__)
 
 /* END */
-
-#define ARRAY_LENGTH(array) ((sizeof((array)) / sizeof((array)[0])) / ((size_t)(!(sizeof((array)) % sizeof((array)[0])))))
-
-
-#define foreach(name, array)    for (int (__ ## array ## _ ## indexer__) = 0, (__ ## array ## _ ## run_once__) = 1; ( __ ## array ## _ ## indexer__) < ARRAY_LENGTH(array) && (__ ## array ## _ ## run_once__); ++(__ ## array ## _ ## indexer__), (__ ## array ## _ ## run_once__) = !(__ ## array ## _ ## run_once__)) \
-                                for (typeof(array[0]) name = array[(__ ## array ## _ ## indexer__)]; (__ ## array ## _ ## run_once__); (__ ## array ## _ ## run_once__) = !(__ ## array ## _ ## run_once__))
 
 #define var __auto_type
 

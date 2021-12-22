@@ -38,9 +38,6 @@ void kernel_start(struct stivale2_struct *bootloader)
     console_setstyle(STYLE_BOLD);
 
 #ifdef QEMU
-    console_print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising logger... ");
-    initialise_logger();
-    console_println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
     logger_writeln("Started logger");
 #endif
 
@@ -57,12 +54,12 @@ void kernel_start(struct stivale2_struct *bootloader)
 //    CRASH();
     console_println("Testing allocation...");
     console_println("Allocating 8192 bytes...");
-    var alloc = physical_memory_manager.memalloc(8192);
+    var alloc = pmm_memalloc(8192);
     if (alloc == NULL) {
         console_println(CONSOLE_COLOURS_FOREGROUND_RED "Failed to allocate 8192 bytes of memory!");
         HALT();
     }
-    physical_memory_manager.free(alloc);
+    pmm_free(alloc);
     console_println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
     
     console_print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising keyboard inputs... ");

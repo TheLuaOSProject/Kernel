@@ -177,6 +177,7 @@ target("LuaOS");
             "-no-reboot",
             "-serial",      "file:luaos.log",
             "-monitor",     "stdio",
+            "-D",           "qemu.log"
 --             "-S", "-gdb"
         }));
 --         os.runv("gdb")

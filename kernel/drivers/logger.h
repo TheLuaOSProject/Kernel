@@ -24,6 +24,4 @@ void logger_writeln(string_t message);
 void logger_writecln(char character);
 void logger_writefln(string_t fmt, ...);
 
-void initialise_logger(void);
-
 #endif //LUAOS_LOGGER
