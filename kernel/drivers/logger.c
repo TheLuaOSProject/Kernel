@@ -8,26 +8,7 @@
 #include <string.h>
 #include <drivers.h>
 
-struct logger logger;
-
-static void lwrite(string_t message);
-static void lwritec(char character);
-static void lwritef(string_t fmt, ...);
-static void lwriteln(string_t message);
-static void lwritecln(char character);
-static void lwritefln(string_t fmt, ...);
-
-void initialise_logger(void)
-{
-    logger.write    = &lwrite;
-    logger.writec   = &lwritec;
-    logger.writef   = &lwritef;
-    logger.writeln  = &lwriteln;
-    logger.writecln = &lwritecln;
-    logger.writefln = &lwritefln;
-}
-
-void lwrite(string_t message)
+void logger_write(string_t message)
 {
 #ifdef QEMU
     for (size_t i = 0; i < strlen(message); ++i) {
@@ -36,14 +17,14 @@ void lwrite(string_t message)
 #endif
 }
 
-void lwritec(char character)
+void logger_writec(char character)
 {
 #ifdef QEMU
     port_out(LOGGING_PORT, character);
 #endif
 }
 
-void lwritef(string_t fmt, ...)
+void logger_writef(string_t fmt, ...)
 {
 #ifdef QEMU
     va_list list;
@@ -51,11 +32,11 @@ void lwritef(string_t fmt, ...)
     int i = 0;
     while (fmt[i] != '\0') {
         if (fmt[i] == '%') {
-            lwrite(va_arg(list, string_t));
+            logger_write(va_arg(list, string_t));
 
             goto end;
         }
-        lwritec(fmt[i]);
+        logger_writec(fmt[i]);
 
         end:
         ++i;
@@ -65,7 +46,7 @@ void lwritef(string_t fmt, ...)
 #endif
 }
 
-void lwritefln(string_t fmt, ...)
+void logger_writefln(string_t fmt, ...)
 {
 #ifdef QEMU
     va_list list;
@@ -74,31 +55,31 @@ void lwritefln(string_t fmt, ...)
     int i = 0;
     while(fmt[i] != '\0') {
         if (fmt[i] == '%')
-            lwrite(va_arg(list, string_t));
+            logger_write(va_arg(list, string_t));
         else
-            lwritec(fmt[i]);
+            logger_writec(fmt[i]);
 
         ++i;
     }
 
     va_end(list);
 
-    lwritec('\n');
+    logger_writec('\n');
 #endif
 }
 
-void lwriteln(string_t message)
+void logger_writeln(string_t message)
 {
 #ifdef QEMU
-    lwrite(message);
+    logger_write(message);
     port_out(LOGGING_PORT, '\n');
 #endif
 }
 
-void lwritecln(char character)
+void logger_writecln(char character)
 {
 #ifdef QEMU
-    lwritec(character);
+    logger_writec(character);
     port_out(LOGGING_PORT, '\n');
 #endif
 }

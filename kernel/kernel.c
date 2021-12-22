@@ -22,53 +22,52 @@
 void kernel_start(struct stivale2_struct *bootloader)
 {
     initialise_console(bootloader);
-    
-    console.set_style(STYLE_BOLD, true);
-    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "Started LuaOS v" LUAOS_VERSION ", built " LUAOS_BUILD_DATE "!");
-    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Bootloader brand:" CONSOLE_COLOURS_FOREGROUND_GREEN "%", bootloader->bootloader_brand);
-    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Bootloader version:" CONSOLE_COLOURS_FOREGROUND_GREEN "%", bootloader->bootloader_version);
-    console.println(CONSOLE_COLOURS_FOREGROUND_CYAN "Type sizes:");
-    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Byte:"            CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(byte_t)));
-    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Word:"            CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(word_t)));
-    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Double word:"     CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(doubleword_t)));
-    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Quad word:"       CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(quadword_t)));
-    console.printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Unsigned long:"   CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(unsigned long)));
-    console.set_style(RESET_STYLES, true);
-    console.println(CONSOLE_COLOURS_FOREGROUND_DEFAULT "---------------------------------");
 
-     console.set_style(STYLE_BOLD, true);
+    console_setstyle(STYLE_BOLD);
+    console_println(CONSOLE_COLOURS_FOREGROUND_GREEN "Started LuaOS v" LUAOS_VERSION ", built " LUAOS_BUILD_DATE "!");
+    console_printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Bootloader brand:" CONSOLE_COLOURS_FOREGROUND_GREEN "%", bootloader->bootloader_brand);
+    console_printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Bootloader version:" CONSOLE_COLOURS_FOREGROUND_GREEN "%", bootloader->bootloader_version);
+    console_println(CONSOLE_COLOURS_FOREGROUND_CYAN "Type sizes:");
+    console_printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Byte:"            CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(byte_t)));
+    console_printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Word:"            CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(word_t)));
+    console_printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Double word:"     CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(doubleword_t)));
+    console_printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Quad word:"       CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(quadword_t)));
+    console_printfln(CONSOLE_COLOURS_FOREGROUND_YELLOW "Unsigned long:"   CONSOLE_COLOURS_FOREGROUND_GREEN "%",   STRDEC(sizeof(unsigned long)));
+    console_setstyle(RESET_STYLES);
+    console_println(CONSOLE_COLOURS_FOREGROUND_DEFAULT "---------------------------------");
+    console_setstyle(STYLE_BOLD);
 
 #ifdef QEMU
-    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising logger... ");
+    console_print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising logger... ");
     initialise_logger();
-    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
-    logger.writeln("Started logger");
+    console_println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
+    logger_writeln("Started logger");
 #endif
 
-    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising IDT... ");
+    console_print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising IDT... ");
     initialise_idt();
-    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
+    console_println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
     
-    console.println(CONSOLE_COLOURS_FOREGROUND_YELLOW "Testing interrupts...");
+    console_println(CONSOLE_COLOURS_FOREGROUND_YELLOW "Testing interrupts...");
     DEBUG_INTERRUPT();
-    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
+    console_println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
 
-    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising memory manager... ");
+    console_print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising memory manager... ");
     initialise_pmm(bootloader);
 //    CRASH();
-    console.println("Testing allocation...");
-    console.println("Allocating 8192 bytes...");
+    console_println("Testing allocation...");
+    console_println("Allocating 8192 bytes...");
     var alloc = physical_memory_manager.memalloc(8192);
     if (alloc == NULL) {
-        console.println(CONSOLE_COLOURS_FOREGROUND_RED "Failed to allocate 8192 bytes of memory!");
+        console_println(CONSOLE_COLOURS_FOREGROUND_RED "Failed to allocate 8192 bytes of memory!");
         HALT();
     }
     physical_memory_manager.free(alloc);
-    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
+    console_println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
     
-    console.print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising keyboard inputs... ");
+    console_print(CONSOLE_COLOURS_FOREGROUND_YELLOW "Initialising keyboard inputs... ");
     initialise_keyboard();
-    console.println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
+    console_println(CONSOLE_COLOURS_FOREGROUND_GREEN "[Done]");
     
     
     HALT();

@@ -19,9 +19,9 @@
 #include "bitmap.h"
 #include "types.h"
 
-#define LUAOS_VERSION       "1.0.489"
+#define LUAOS_VERSION       "1.0.498"
 
-#define LUAOS_BUILD_DATE    "2021/12/21 at 15:57"
+#define LUAOS_BUILD_DATE    "2021/12/21 at 22:52"
 
 #define DEBUG
 

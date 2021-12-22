@@ -27,50 +27,50 @@ static struct idt_descriptor    descriptor;
 
 void initialise_idt(void)
 {
-    logger.writeln("Initialising IDT");
+    logger_writeln("Initialising IDT");
     memset(interrupt_descriptor_table, 0, sizeof(interrupt_descriptor_table));
-    logger.writeln("Created IDT in memory");
+    logger_writeln("Created IDT in memory");
     register_interrupt_handler(0x0,
                                (uint64_t) &ASM_DIV_BY_ZERO,
                                0x8E,
                                0);
-    logger.writeln("Registered handler 0x0 (Div by zero)");
+    logger_writeln("Registered handler 0x0 (Div by zero)");
     
     register_interrupt_handler(0x3,
                                (uint64_t) &ASM_BREAKPOINT,
                                0x8E,
                                0);
-    logger.writeln("Registered handler 0x3 (breakpoint)");
+    logger_writeln("Registered handler 0x3 (breakpoint)");
 
     register_interrupt_handler(0x72,
                                (uint64_t) &ASM_DEBUG,
                                0x8E,
                                0);
-    logger.writeln("Registered handler 0x72 (Debug)");
+    logger_writeln("Registered handler 0x72 (Debug)");
 
     register_interrupt_handler(0x8,
                                (uint64_t) &ASM_DOUBLE_FAULT,
                                0x8E,
                                0);
-    logger.writeln("Registered handler 0x8 (Double fault)");
+    logger_writeln("Registered handler 0x8 (Double fault)");
 
     register_interrupt_handler(0xD,
                                (uint64_t) &ASM_GENERAL_PROTECTION,
                                0x8E,
                                0);
-    logger.writeln("Registered handler 0xD (General protection)");
+    logger_writeln("Registered handler 0xD (General protection)");
 
     register_interrupt_handler(0x6,
                                (uint64_t)&ASM_INVALID_OPCODE,
                                0x8E,
                                0);
-    logger.writeln("Registered handler 0x6 (Invalid opcode)");
+    logger_writeln("Registered handler 0x6 (Invalid opcode)");
 
     descriptor.limit    = sizeof(interrupt_descriptor_table) - 1;
     descriptor.offset   = (uint64_t)&interrupt_descriptor_table;
 
     LOAD_IDT(&descriptor);
-    logger.writeln("Loaded IDT!");
+    logger_writeln("Loaded IDT!");
 }
 
 void register_interrupt_handler(uintmax_t   index,
@@ -80,7 +80,7 @@ void register_interrupt_handler(uintmax_t   index,
 {
     if (index > 255)
     {
-        console.println("\x1b[31mYou actual fucking dumbass, IDT entries cannot be over 255 you genuine fucking idiot");
+        console_println("\x1b[31mYou actual fucking dumbass, IDT entries cannot be over 255 you genuine fucking idiot");
         return;
     }
     
@@ -95,31 +95,31 @@ void register_interrupt_handler(uintmax_t   index,
 
 void div_by_zero_i(UNUSED struct interrupt_frame *iframe)
 {
-    console.println("\x1b[1;31mERROR: DIVISION BY ZERO");
+    console_println("\x1b[1;31mERROR: DIVISION BY ZERO");
     HALT();
 }
 
 void breakpoint_i(UNUSED struct interrupt_frame *iframe)
 {
-    console.println("\x1b[1;34mDEBUG: BREAKPOINT");
+    console_println("\x1b[1;34mDEBUG: BREAKPOINT");
     HALT();
 }
 
 void double_fault_i(UNUSED struct interrupt_frame *iframe)
 {
-    console.println("\x1b[1;31mERROR: DOUBLE FAULT");
+    console_println("\x1b[1;31mERROR: DOUBLE FAULT");
     HALT();
 }
 
 void general_protection_i(UNUSED struct interrupt_frame *iframe)
 {
-    console.println("\x1b[1;31mERROR");
+    console_println("\x1b[1;31mERROR");
     HALT();
 }
 
 void debug_i(UNUSED struct interrupt_frame *iframe)
 {
-    console.println(
+    console_println(
             CONSOLE_COLOURS_BACKGROUND_RED      CONSOLE_COLOURS_FOREGROUND_BLACK 
             "DEBUG: Interrupt 0x72 called!" 
             CONSOLE_COLOURS_BACKGROUND_DEFAULT  CONSOLE_COLOURS_FOREGROUND_DEFAULT
@@ -128,7 +128,7 @@ void debug_i(UNUSED struct interrupt_frame *iframe)
 
 void invalid_opcode_i(UNUSED struct interrupt_frame *iframe)
 {
-    console.println(
+    console_println(
         CONSOLE_COLOURS_BACKGROUND_RED      CONSOLE_COLOURS_FOREGROUND_BLACK 
         "INVALID OPCODE" 
         CONSOLE_COLOURS_BACKGROUND_DEFAULT  CONSOLE_COLOURS_FOREGROUND_DEFAULT

@@ -163,11 +163,11 @@ target("LuaOS");
         })
 
         print("Executing limine")
-        print(os.iorunv(liminepath .. "limine-install", { xorrisofiles.export }));
+        print(os.execv(liminepath .. "limine-install", { xorrisofiles.export }));
     end);
 
     on_run(function (target)
-        os.iorunv("qemu-system-x86_64", { 
+        print(os.execv("qemu-system-x86_64", { 
             "-M",           "q35",
             "-m",           "1G",
             "-cdrom",       target:targetdir() .. "/LuaOS-x86_64.iso",
@@ -176,7 +176,9 @@ target("LuaOS");
             "-d",           "int",
             "-no-reboot",
             "-serial",      "file:luaos.log",
-            "-monitor",     "stdio"
-        });
+            "-monitor",     "stdio",
+--             "-S", "-gdb"
+        }));
+--         os.runv("gdb")
     end);
 target_end();

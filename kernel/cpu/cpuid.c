@@ -29,26 +29,26 @@ string_t get_vendor_name()
             "=rm" (ecx)
     );
 
-    logger.writeln("Attempting to get CPU vendor name");
-    logger.write("ECX register: ");
+    logger_writeln("Attempting to get CPU vendor name");
+    logger_write("ECX register: ");
     for (int i = 0; i < 4; ++i) {
         fullname[i] = ecx[i];
     }
 
-    logger.write("EDX register: ");
+    logger_write("EDX register: ");
     for (int i = 0; i < 4; ++i) {
         fullname[i + 4] = edx[i];
     }
 
-    logger.write("EBX register: ");
+    logger_write("EBX register: ");
     for (int i = 0; i < 4; ++i) {
         fullname[i + 8] = ebx[i];
     }
 
     fullname[12] = '\0';
 
-    logger.write("Final string: ");
-    logger.writeln(fullname);
+    logger_write("Final string: ");
+    logger_writeln(fullname);
 
     strcpy(vendor_name, fullname);
     return vendor_name;

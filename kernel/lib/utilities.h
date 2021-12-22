@@ -14,11 +14,10 @@
 
 #include "types.h"
 
-#define ROUND_DIV(A, B) ({                                  \
-        typeof(A) _a_ROUND_UP_ = A;                         \
-        typeof(B) _b_ROUND_UP_ = B;                         \
-        (_a_ROUND_UP_ + (_b_ROUND_UP_ - 1)) / _b_ROUND_UP_; \
-})
+static inline uint64_t round_division(uint64_t a, uint64_t b)
+{
+    return (a + (b - 1) / b);
+}
 
 // #define CEIL_DIV(num, div) ((div + num - 1) / div) 
 

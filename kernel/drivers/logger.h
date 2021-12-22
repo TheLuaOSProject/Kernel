@@ -17,23 +17,12 @@
 
 #define LOGGING_PORT    0x3F8
 
-extern struct logger {
-    /**
-     * Writes a message to the log
-     * @param message message to write
-     */
-    void    (*write)(string_t message);
-
-    /**
-     * Writes a character to the log
-     * @param character char to write
-     */
-    void    (*writec)(char character);
-    void    (*writef)(string_t fmt, ...);
-    void    (*writeln)(string_t message);
-    void    (*writecln)(char character);
-    void    (*writefln)(string_t fmt, ...);
-} logger;
+void logger_write(string_t message);
+void logger_writec(char character);
+void logger_writef(string_t fmt, ...);
+void logger_writeln(string_t message);
+void logger_writecln(char character);
+void logger_writefln(string_t fmt, ...);
 
 void initialise_logger(void);
 

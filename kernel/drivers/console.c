@@ -7,24 +7,8 @@
 #include <string.h>
 #include "console.h"
 
-struct console console;
-
 static struct stivale2_struct_tag_terminal *terminal_tag;
 static void (*stivale_print)(char *, size_t);
-
-static void kprint(string_t msg);
-static void kprintln(string_t msg);
-
-static void kprintf(string_t fmt, ...);
-static void kprintfln(string_t fmt, ...);
-
-static void kprints(string_t msg, enum ansi_escape_codes styles[]);
-static void kprintsln(string_t msg, enum ansi_escape_codes styles[]);
-
-static void kset_style(enum ansi_escape_codes code, bool reset);
-static void kset_styles(const enum ansi_escape_codes codes[], bool reset);
-
-static void clear(void);
 
 const string_t ANSI_ESCAPE_CODES[] = {
     "\x1b",     //ESCAPE
@@ -60,32 +44,17 @@ bool initialise_console(struct stivale2_struct *bootloader)
 
 
     stivale_print = (void *)terminal_tag->term_write;
-
-    console.clear      = &clear;
-    console.print      = &kprint;
-    console.println    = &kprintln;
-    console.printf     = &kprintf;
-    console.printfln   = &kprintfln;
-    console.prints     = &kprints;
-    console.printsln   = &kprintsln;
-    console.set_style  = &kset_style;
-    console.set_styles = &kset_styles;
-
-    console.size = POINT(terminal_tag->rows, terminal_tag->cols);
-
-    console.initialised = true;
-
     return true;
 }
 
-static void kprintf(string_t fmt, ...)
+void console_printf(string_t fmt, ...)
 {
     va_list arglist;
     va_start(arglist, fmt);
 
     for (; *fmt != '\0'; fmt++) {
         if (*fmt == '%') {
-            kprint(va_arg(arglist, string_t));
+            console_print(va_arg(arglist, string_t));
             continue;
         }
         stivale_print(fmt, 1);
@@ -94,14 +63,14 @@ static void kprintf(string_t fmt, ...)
     va_end(arglist);
 }
 
-static void kprintfln(string_t fmt, ...)
+void console_printfln(string_t fmt, ...)
 {
     va_list arglist;
     va_start(arglist, fmt);
 
     for (; *fmt != '\0'; fmt++) {
         if(*fmt == '%') {
-            kprint(va_arg(arglist, string_t));
+            console_print(va_arg(arglist, string_t));
             continue;
         }
         stivale_print(fmt, 1);
@@ -111,57 +80,53 @@ static void kprintfln(string_t fmt, ...)
     stivale_print("\n", 1);
 }
 
-static void kprint(string_t msg)
+void console_print(string_t msg)
 {
     stivale_print(msg, strlen(msg));
 }
 
-static void kprintln(string_t msg)
+void console_println(string_t msg)
 {
-    kprint(msg);
+    console_print(msg);
     stivale_print("\n", 1);
 }
 
-static void kprints(string_t msg, enum ansi_escape_codes styles[])
+void console_prints(string_t msg, enum ansi_escape_codes styles[])
 {
-    kset_styles(styles, true);
-    kprint(msg);
+    console_setstyles(styles);
+    console_print(msg);
 }
 
-static void kprintsln(string_t msg, enum ansi_escape_codes styles[])
+void console_printsln(string_t msg, enum ansi_escape_codes styles[])
 {
-    kprints(msg, styles);
+    console_prints(msg, styles);
     stivale_print("\n", 1);
 }
 
-void kset_style(const enum ansi_escape_codes code, bool reset)
+void console_setstyle(const enum ansi_escape_codes code)
 {
-    if (reset) {
-        kprint(ANSI_ESCAPE_CODES[RESET_STYLES]);
-    }
-    
-    kprint(ANSI_ESCAPE_CODES[code]);
+    console_print(ANSI_ESCAPE_CODES[code]);
 }
 
-void kset_styles(UNUSED const enum ansi_escape_codes codes[], UNUSED bool reset)
+void console_setstyles(UNUSED const enum ansi_escape_codes codes[])
 {
     // if (reset) {
-    //     kprint(ANSI_ESCAPE_CODES[RESET_STYLES]);
+    //     console_print(ANSI_ESCAPE_CODES[RESET_STYLES]);
     // }
     
     // size_t codeslen = ARRAY_LENGTH(codes);
 
     // for (int i = 0; i < codeslen; ++i) {
-    //     kprint(ANSI_ESCAPE_CODES[codes[i]]);
+    //     console_print(ANSI_ESCAPE_CODES[codes[i]]);
     // }
 }
 
-static void clear(void)
+void console_clear(void)
 {
     if (screen.initialised) {
         screen.cursor_position = POINT(0, 0);
     }
-    kprint(ANSI_ESCAPE_CODES[CLEAR_ALL]);
+    console_print(ANSI_ESCAPE_CODES[CLEAR_ALL]);
 }
 
 

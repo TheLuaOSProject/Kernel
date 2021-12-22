@@ -67,60 +67,15 @@ extern const string_t ANSI_ESCAPE_CODES[];
 #define CONSOLE_COLOURS_BACKGROUND_WHITE    "\x1b[47m"
 #define CONSOLE_COLOURS_BACKGROUND_DEFAULT  "\x1b[49m"
 
-/**
- * Wrapper over the Stivale2 console interface 
- */
-extern struct console {
-    /**
-     * Prints a line into the kernel console
-     * @param msg Message to print
-     */
-    void    (*println)(string_t msg);
-    
-    /**
-     * Prints into the kernel console
-     * @param msg Message to print
-     */
-    void    (*print)(string_t msg);
-    
-    /**
-     * Clears the kernel console
-     */
-    void    (*clear)(void);
-    
-    /**
-     * Prints a string with the specified format
-     */
-    void    (*printf)(string_t fmt, ...);
-
-    /**
-    * Prints a line with the specified format
-    */
-    void    (*printfln)(string_t fmt, ...);
-    
-    /**
-     * Prints with the specified style(s)
-     */
-    void    (*prints)(string_t msg, enum ansi_escape_codes styles[]);
-    
-    /**
-     * Prints a line with the specified style(s)
-     */
-     void   (*printsln)(string_t msg, enum ansi_escape_codes styles[]);
-
-    /**
-    * Sets the console style
-    */
-    void    (*set_style)(enum ansi_escape_codes style, bool reset);
-     
-    /**
-    * Sets the console styles
-    */
-    void    (*set_styles)(const enum ansi_escape_codes styles[], bool reset);
-
-    point_t size;
-    bool    initialised;
-} console;
+void console_println(string_t msg);
+void console_print(string_t msg);
+void console_clear(void);
+void console_printf(string_t fmt, ...);
+void console_printfln(string_t fmt, ...);
+void console_prints(string_t msg, enum ansi_escape_codes styles[]);
+void console_printsln(string_t msg, enum ansi_escape_codes styles[]);
+void console_setstyle(enum ansi_escape_codes style);
+void console_setstyles(const enum ansi_escape_codes styles[]);
 
 
 /**

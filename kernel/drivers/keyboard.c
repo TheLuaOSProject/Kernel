@@ -50,19 +50,19 @@ extern void ASM_KEYBOARD();
 
 void initialise_keyboard(void)
 {
-    logger.writeln("KEYBOARD INIT");
+    logger_writeln("KEYBOARD INIT");
     register_interrupt_handler(0x21, 
                                (uint64_t)&ASM_KEYBOARD,
                                0x8E,
                                0);
-    logger.writeln("DONE");
+    logger_writeln("DONE");
 }
 
 void keyboard_i(UNUSED struct interrupt_frame *iframe)
 {
-    logger.writeln("Key pressed!");
+    logger_writeln("Key pressed!");
     uint8_t key = port_in(0x60);
-    logger.writefln("Key: %", NORMAL_KEYS[key]);
+    logger_writefln("Key: %", NORMAL_KEYS[key]);
 
     //0x59 = max scan code
     if (key >= 0x59) {
@@ -103,5 +103,5 @@ void keyboard_i(UNUSED struct interrupt_frame *iframe)
         buffer = NORMAL_KEYS[key];
     }
     
-    // console.print(buffer);
+    // console_print(buffer);
 }
