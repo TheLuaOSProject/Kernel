@@ -54,7 +54,7 @@ void kernel_start(struct stivale2_struct *bootloader)
 //    CRASH();
     console_println("Testing allocation...");
     console_println("Allocating 8192 bytes...");
-    var alloc = pmm_memalloc(8192);
+    voidptr_t alloc = pmm_memalloc(8192);
     if (alloc == NULL) {
         console_println(CONSOLE_COLOURS_FOREGROUND_RED "Failed to allocate 8192 bytes of memory!");
         HALT();

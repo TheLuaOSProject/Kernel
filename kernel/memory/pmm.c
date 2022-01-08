@@ -22,10 +22,11 @@ void initialise_pmm(struct stivale2_struct *bootloader)
     physical_memory_manager = (struct pmm) {
         .memory_map             = tag->memmap,
         .memory_map_entry_count = tag->entries,
+        .physical_base_address = ((struct stivale2_struct_tag_hhdm *)get_stivale_tag(bootloader, STIVALE2_STRUCT_TAG_HHDM_ID))->addr
     };
 
     for (size_t i = 0; i < physical_memory_manager.memory_map_entry_count; ++i) {
-        var entry = physical_memory_manager.memory_map[i];
+        struct stivale2_mmap_entry entry = physical_memory_manager.memory_map[i];
 
         logger_writefln("Memory map entry %/% found", STRDEC(i), STRDEC(physical_memory_manager.memory_map_entry_count));
         
@@ -49,7 +50,7 @@ void initialise_pmm(struct stivale2_struct *bootloader)
             && entry->length < physical_memory_manager.bitmap_size)
             continue;
         
-        physical_memory_manager.bitmap = (byte_t *)entry->base + PHYSICAL_BASE_ADDRESS;
+        physical_memory_manager.bitmap = (byte_t *)entry->base + physical_memory_manager.physical_base_address;
         size_t page_count = round_division(physical_memory_manager.bitmap_size, PAGE_SIZE);
 
         //Set the value of the bitmap to 0xFF (used or smth like that idk man im tired)
@@ -63,7 +64,7 @@ void initialise_pmm(struct stivale2_struct *bootloader)
     }
 
     for (size_t i = 0; i < physical_memory_manager.bitmap_size; ++i) {
-        var entry = physical_memory_manager.memory_map[i];
+        struct stivale2_mmap_entry entry = physical_memory_manager.memory_map[i];
         
         uint64_t    base    = entry.base / PAGE_SIZE,
                     len     = entry.length / PAGE_SIZE;
@@ -93,7 +94,7 @@ static voidptr_t memalloc_raw(size_t size)
                     set_bit(physical_memory_manager.bitmap, j);
                 
                 quadword_t address = page * PAGE_SIZE;
-                memset((voidptr_t)address + PHYSICAL_BASE_ADDRESS, 0, count * PAGE_SIZE);
+                memset((voidptr_t)address + physical_memory_manager.physical_base_address, 0, count * PAGE_SIZE);
 
                 release_lock(&memlock);
 

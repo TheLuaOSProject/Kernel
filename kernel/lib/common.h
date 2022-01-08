@@ -19,9 +19,9 @@
 #include "bitmap.h"
 #include "types.h"
 
-#define LUAOS_VERSION       "1.0.507"
+#define LUAOS_VERSION       "1.0.537"
 
-#define LUAOS_BUILD_DATE    "2021/12/22 at 13:33"
+#define LUAOS_BUILD_DATE    "2022/01/07 at 16:56"
 
 #define DEBUG
 
@@ -80,8 +80,6 @@
     VA_ARGS_SELECT_COUNT_VALUE(__VA_ARGS__)
 
 /* END */
-
-#define var __auto_type
 
 
 #endif //LUAOS_COMMON

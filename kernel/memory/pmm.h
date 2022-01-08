@@ -14,7 +14,7 @@
 #include <common.h>
 
 #define PAGE_SIZE               (2 << 11)
-#define PHYSICAL_BASE_ADDRESS   0xFFFF800000000000
+//#define PHYSICAL_BASE_ADDRESS   0xFFFF800000000000
 
 extern struct pmm {
     struct stivale2_mmap_entry  *memory_map;
@@ -22,6 +22,7 @@ extern struct pmm {
     byte_t                      *bitmap;
     quadword_t                  last_page;
     size_t                      bitmap_size;
+    uint64_t                    physical_base_address;
 } physical_memory_manager;
 
 struct allocation_header {
