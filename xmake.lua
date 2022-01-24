@@ -1,43 +1,89 @@
--- require("luarocks.loader");
--- package.cpath = package.cpath .. ";/usr/local/lib/lua/5.2/?.so";
--- local JSON = require("rapidjson");
+---@module xmake
+---@field add_rules         function
+---@field add_requires      function
+---@field set_kind          function
+---@field add_cflags        function
+---@field add_ldflags       function
+---@field add_files         function
+---@field add_headerfiles   function
+---@field add_includedirs   function
+---@field add_files         function
+---@field add_packages      function
+---@field target            function
+---@field target_end        function
+---@field includes          function
+---@field set_project       function
+---@field set_version       function
+---@field set_config        function
+---@field add_defines       function
+---@field toolchain         function
+---@field set_sdkdir        function
+---@field set_bindir        function
+---@field set_toolset       function
+---@field set_toolchains    function
+---@field toolchain_end     function
+---@field set_objectdir     function
+---@field set_targetdir     function
+---@field task              task
+---@field task_end          function
+---@field on_run            function
+---@field import            function
+---@field before_build      function
+---@field package           function
+---@field package_end       function
+---@field set_url           function
+---@field on_install        function
+---@field git               git 
+---@field os                os
 
-add_rules("mode.debug", "mode.release");
+---@class git
+---@field clone function
+---@field pull function
 
+---@class os
+---@field isdir function
+---@field execv function
+
+---@class task
+---@field run       function
+
+--[[
+qemu-system-aarch64 -M virt -cpu cortex-a57 -m 4G -serial stdio -smp 4 -device ramfb -drive if=pflash,format=raw,file=[path/to/sabaton/virt.bin.pad],readonly=on -fw_cfg opt/Sabaton/kernel,file=[path/to/my/stivale2/aarch64/kernel.elf]
+]]
+
+local SOURCE_DIR<const>     = "src/"
+local INCLUDE_DIR<const>    = SOURCE_DIR .. "include/"
+
+local BUILD_DIR<const>      = "build/"
+local OBJECT_DIR<const>     = BUILD_DIR .. "obj/"
+local BINARY_DIR<const>     = BUILD_DIR .. "bin/"
+
+add_rules("mode.debug", "mode.release")
 set_config("plat", "cross")
 
-local function startswith(str, pattern)
-    return string.sub(str, 1, string.len(pattern)) == pattern;
-end
+set_toolchains("clang")
 
-toolchain("cross-toolchain");
-    set_kind("standalone");
-    set_sdkdir("/usr/local/x86_64-elf-gcc/");
-    set_bindir("/usr/local/x86_64-elf-gcc/bin");
+includes("packages.lua", "buildlog.lua")
 
-    set_toolset("c", "x86_64-elf-gcc");
-    set_toolset("ld", "x86_64-elf-ld");
-    set_toolset("as", "nasm");
-toolchain_end();
+local PACKAGES<const> = {
+    "stivale2", 
+    "sabaton"
+}
 
-target("LuaOS");
-    set_kind("binary");
-    set_toolchains("cross-toolchain");
+add_requires(PACKAGES)
 
-    add_files("kernel/**.c", "kernel/**.asm");
-    add_headerfiles("kernel/**.h");
-    add_includedirs("kernel/", "kernel/lib/");
-
-    add_asflags("-f elf64", { force = true });
+target("LuaOS")
+do
     add_cflags (
+        "-target aarch64-none-elf",
         "-std=gnu11",
         "-ffreestanding", "-fpie", "-fno-stack-protector", "-fno-omit-frame-pointer",
         "-mno-80387", "-mno-mmx", "-mno-3dnow", "-mno-sse", "-mno-sse2", "-mno-sse3", "-mno-sse4.1", "-mno-sse4.2", "-mno-sse4", "-mno-sse4a", "-mno-avx",  "-mno-red-zone",
         "-g", "-ggdb",
         "-Wall", "-Wextra", "-Werror",
         { force = true }
-    );
-                
+    )
+
     add_ldflags (
         "-Tkernel/linker.ld",
         "-nostdlib",
@@ -47,141 +93,17 @@ target("LuaOS");
         "--no-dynamic-linker",
         "-ztext",
         { force = true }
-    );
-    
-    set_objectdir("build/obj/");
-    set_targetdir("build/bin/");
+    )
 
-    add_defines("QEMU");
+    add_files(SOURCE_DIR .. "**.c", SOURCE_DIR .. "**.asm")
+    add_headerfiles(SOURCE_DIR .. "**.h")
+    add_includedirs(SOURCE_DIR, INCLUDE_DIR)
 
-    before_build(function (target)
-        -- os.run("xmake project -k compile_commands .vscode/")
+    set_objectdir(OBJECT_DIR)
+    set_targetdir(BINARY_DIR)
 
-        print("Updating common.h")
+    add_packages(PACKAGES)
 
-        os.runv("lua", { "buildlog.lua", "build" })
+end
+target_end()
 
-        local commonfile_read = io.open("kernel/lib/common.h", "r");
-
-        ---@type string[]
-        local content = {};
-
-        for line in commonfile_read:lines() do
-            table.insert(content, line);
-        end
-
-        commonfile_read:close();
-
-        local version_ln, build_ln = 0, 0;
-
-        for key, value in pairs(content) do
-            if startswith(value, "#define LUAOS_VERSION") then
-                version_ln = key;
-            else
-                if startswith(value, "#define LUAOS_BUILD_DATE") then
-                    build_ln = key;
-                end
-            end
-        end
- 
-        local buildnum, _ = os.iorunv("lua", { "buildlog.lua", "buildnum" });
-
-
-        content[version_ln] = "#define LUAOS_VERSION       \"1.0." .. buildnum .. "\"";
-        content[build_ln] = "#define LUAOS_BUILD_DATE    \"" .. os.date("%Y/%m/%d at %H:%M") .. "\"";
-
-        local commonfile_write = io.open("kernel/lib/common.h", "w");
-
-        for _, v in pairs(content) do
-            commonfile_write:write(v .. "\n");
-        end
-
-        commonfile_write:close();
-
-        print("Setting up Limine")
-
-        local liminepath = target:objectdir() .. "/limine/";
-
-        local has_wifi = true;
-
-        if os.isdir(liminepath) then
-            local out, err = os.iorunv("ping", { "-c1", "github.com" })
-            if err ~= "" then has_wifi = false goto NO_WIFI end
-            os.rm(liminepath)
-            ::NO_WIFI::
-        end
-
-        if has_wifi then
-            print(os.iorunv("git", { "clone", "https://github.com/limine-bootloader/limine.git", liminepath, "--branch=v2.0-branch-binary", "--depth=1" }))
-            print("Making limine...")
-            os.iorunv("make", { "-C", liminepath });
-        end
-
-        local liminefiles = { 
-            cfg     = "kernel/limine.cfg",
-            sys     = liminepath .. "limine.sys",
-            cdbin   = liminepath .. "limine-cd.bin",
-            efibin  = liminepath .. "limine-eltorito-efi.bin"
-        };
-        
-        print("Copying files")
-        for _, v in pairs(liminefiles) do
-            print("Copying file " .. v)
-            os.cp(v, target:targetdir());
-        end
-        
-    end);
-
-    after_link(function (target)
-        local liminepath = target:objectdir() .. "/limine/";
- 
-        local xorrisofiles = {
-            cfg     = "limine.cfg",
-            sys     = "limine-cd.bin",
-            cdbin   = "limine-cd.bin",
-            efibin  = "limine-eltorito-efi.bin",
-            export  = target:targetdir() .. "/LuaOS-x86_64.iso"
-        };
-        
-        if os.isfile(xorrisofiles.export) then
-            os.rm(xorrisofiles.export);
-        end
-        
-        print("Creating bootable media");
-        os.iorunv("xorriso", {
-            "-as",                      "mkisofs",
-            "-b",                       xorrisofiles.cdbin,
-            "-no-emul-boot",
-            "-boot-load-size",          "4",
-            "-boot-info-table",
-            "--efi-boot",               xorrisofiles.efibin,
-            "-efi-boot-part",
-            "--efi-boot-image",
-            "--protective-msdos-label",
-            target:targetdir(),
-            "-o",                       xorrisofiles.export
-        })
-
-        print("Executing limine");
-        print(os.execv(liminepath .. "limine-install", { xorrisofiles.export }));
-    end);
-
-    
-
-    on_run(function (target)
-        os.runv("qemu-system-x86_64", { 
-            "-M",           "q35",
-            "-m",           "1G",
-            "-cdrom",       target:targetdir() .. "/LuaOS-x86_64.iso",
---             "-s",           "-S",
-            "-machine",     "smm=off",
-            "-d",           "int",
-            "-no-reboot",
-            "-serial",      "file:luaos.log",
---             "-monitor",     "stdio",
-            "-D",           "qemu.log"
---             "-S", "-gdb"
-        }, { detach = true })
---         os.execv("gdb")
-    end);
-target_end();
