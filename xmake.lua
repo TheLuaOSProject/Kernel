@@ -85,7 +85,7 @@ do
     )
 
     add_ldflags (
-        "-Tkernel/linker.ld",
+        "-Tcfg/linker.ld",
         "-nostdlib",
         "-zmax-page-size=0x1000",
         "-static",
@@ -103,7 +103,6 @@ do
     set_targetdir(BINARY_DIR)
 
     add_packages(PACKAGES)
-
 end
 target_end()
 

@@ -85,6 +85,7 @@
 ---@field on_install        function
 ---@field git               git 
 ---@field os                os
+---@field json              json
 
 ---@class git
 ---@field clone function
@@ -96,8 +97,13 @@
 ---@class task
 ---@field run       function
 
+---@class json
+---@field deserialise function
+
 task("update_buildlog")
 do
-    
+    --import("xmake.core.json")
+    --
+    --json.deserialise()
 end
 task_end()

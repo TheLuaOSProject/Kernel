@@ -1,55 +1,28 @@
----@module xmake
----@field add_rules         function
----@field add_requires      function
----@field set_kind          function
----@field add_cflags        function
----@field add_ldflags       function
----@field add_files         function
----@field add_headerfiles   function
----@field add_includedirs   function
----@field add_files         function
----@field add_packages      function
----@field target            function
----@field target_end        function
----@field includes          function
----@field set_project       function
----@field set_version       function
----@field set_config        function
----@field add_defines       function
----@field toolchain         function
----@field set_sdkdir        function
----@field set_bindir        function
----@field set_toolset       function
----@field set_toolchains    function
----@field toolchain_end     function
----@field set_objectdir     function
----@field set_targetdir     function
----@field task              task
----@field task_end          function
----@field on_run            function
----@field import            function
----@field before_build      function
+---@module xmakepackage
 ---@field package           function
----@field package_end       function
 ---@field set_urls          function
+---@field on_load           function
 ---@field on_install        function
----@field git               git 
----@field os                os
-
----@class git
----@field clone function
----@field pull function
+---@field package_end       function
+---@field add_includedirs   function
+---@field import            function
+---@field os os
 
 ---@class os
----@field isdir
-
----@class task
----@field run       function
+---@field cp function
+---@field vcp function
+---@field mkdir function
 
 package("stivale2")
 do
     set_urls("https://github.com/stivale/stivale.git")
     
+    add_includedirs("")
+    
+    on_install(function (package)
+        os.mkdir(package:installdir())
+        os.cp("stivale2.h", package:installdir())
+    end)
 end
 package_end()
 
@@ -57,8 +30,9 @@ package("sabaton")
 do
     set_urls("https://github.com/FlorenceOS/Sabaton.git")
     
-    --on_install(function (package) 
-    --
-    --end)
+    on_install(function (package)
+        os.execv("zig", "build", "virt")
+        os.cp("zig-out/bin/Sabaton_virt_aarch64.elf.bin", package:installdir() .. "/sabaton.bin")
+    end)
 end
 package_end()
