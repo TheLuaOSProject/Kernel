@@ -35,6 +35,9 @@
 ---@field on_install        function
 ---@field git               git 
 ---@field os                os
+---@field after_link        function
+---@field print             function
+---@field set_languages     function
 
 ---@class git
 ---@field clone function
@@ -54,28 +57,44 @@ qemu-system-aarch64 -M virt -cpu cortex-a57 -m 4G -serial stdio -smp 4 -device r
 local SOURCE_DIR<const>     = "src/"
 local INCLUDE_DIR<const>    = SOURCE_DIR .. "include/"
 
-local BUILD_DIR<const>      = "build/"
-local OBJECT_DIR<const>     = BUILD_DIR .. "obj/"
-local BINARY_DIR<const>     = BUILD_DIR .. "bin/"
+local BUILD_DIR<const>  = "build/"
+local OBJECT_DIR<const> = BUILD_DIR .. "obj/"
+local BINARY_DIR<const> = BUILD_DIR .. "bin/"
+local KERNEL_BIN<const> = BINARY_DIR .. "LuaOS"
+
+
+local PACKAGES<const> = {
+    "stivale2", 
+    --"sabaton"
+}
 
 add_rules("mode.debug", "mode.release")
 set_config("plat", "cross")
 
-set_toolchains("clang")
 
-includes("packages.lua", "buildlog.lua")
+toolchain("clangtc")
+do
+    set_kind("standalone")
+    --set_toolset("c", "clang")
+    set_toolset("cc", "clang")
+    set_toolset("c++", "clang++")
+    set_toolset("ld", "ld.lld")
+    set_toolset("as", "nasm")
+end
+toolchain_end()
 
-local PACKAGES<const> = {
-    "stivale2", 
-    "sabaton"
-}
+includes("packages.lua", "buildlog_task.lua")
 
 add_requires(PACKAGES)
 
+set_languages("c11", "cxx20")
+
 target("LuaOS")
 do
+    set_kind("binary")
+    set_toolchains("clangtc")
     add_cflags (
-        "-target aarch64-none-elf",
+        "--target=aarch64-none-elf",
         "-std=gnu11",
         "-ffreestanding", "-fpie", "-fno-stack-protector", "-fno-omit-frame-pointer",
         "-mno-80387", "-mno-mmx", "-mno-3dnow", "-mno-sse", "-mno-sse2", "-mno-sse3", "-mno-sse4.1", "-mno-sse4.2", "-mno-sse4", "-mno-sse4a", "-mno-avx",  "-mno-red-zone",
@@ -85,7 +104,8 @@ do
     )
 
     add_ldflags (
-        "-Tcfg/linker.ld",
+        --"-arch", "aarch64-elf-eabi",
+        "-T", "cfg/linker.ld",
         "-nostdlib",
         "-zmax-page-size=0x1000",
         "-static",
@@ -103,6 +123,22 @@ do
     set_targetdir(BINARY_DIR)
 
     add_packages(PACKAGES)
+
+    --before_build(function(target) 
+    --    task("update_buildlog")
+    --end)
+    
+    on_run(function(target) 
+        os.execv("qemu-system-aarch64", {
+            "-M",       "virt",
+            "-cpu",     "cortex-a57",
+            "-m",       "4G", 
+            "-serial",  "stdio", 
+            "-smp",     "4", 
+            "-device",  "ramfb", 
+            "-drive",   "if=pflash,format=raw,file=" .. BINARY_DIR .. "Sabaton_virt_aarch64.elf.bin,readonly=on", 
+            "-fw_cfg",  "opt/Sabaton/kernel,file=" .. KERNEL_BIN })
+    end)
 end
 target_end()
 

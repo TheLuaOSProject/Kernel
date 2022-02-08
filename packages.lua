@@ -6,12 +6,13 @@
 ---@field package_end       function
 ---@field add_includedirs   function
 ---@field import            function
----@field os os
+---@field os                os
 
 ---@class os
 ---@field cp function
 ---@field vcp function
 ---@field mkdir function
+---@field runv  function
 
 package("stivale2")
 do
@@ -30,9 +31,9 @@ package("sabaton")
 do
     set_urls("https://github.com/FlorenceOS/Sabaton.git")
     
-    on_install(function (package)
-        os.execv("zig", "build", "virt")
-        os.cp("zig-out/bin/Sabaton_virt_aarch64.elf.bin", package:installdir() .. "/sabaton.bin")
-    end)
+    --on_install(function (package)
+    --    os.runv("zig", { "build", "virt" }, {envs = {AARCH64_EDK_PATH = "nil"}})
+    --    os.cp("zig-out/bin/Sabaton_virt_aarch64.elf.bin", package:installdir() .. "/sabaton.bin")
+    --end)
 end
 package_end()

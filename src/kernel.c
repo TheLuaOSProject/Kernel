@@ -4,8 +4,11 @@
 
 #include <stivale2.h>
 
-int kernel_start(struct stivale2_struct *bootloader)
+#include <common.h>
+
+ATTRIBUTE(noreturn, used)
+int kernel_start(ATTRIBUTE(unused) struct stivale2_struct *bootloader)
 {
-    (void)bootloader;
-    return 0;
+    
+    HALT();
 }

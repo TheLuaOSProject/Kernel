@@ -1,54 +1,5 @@
----
---- Created by Frityet.
---- DateTime: 2021-09-15 4:20 p.m.
----
---comment if Luarocks path setup properly
---require("luarocks.loader");
---package.cpath = package.cpath .. ";/usr/local/lib/lua/5.2/?.so";
---local JSON = require("rapidjson");
---
---if arg[1] == "buildnum" then
---    local logs = JSON.load("buildlog.json")
---    io.write(logs[#logs].build_number)
---    return
---end
---
------@class Log
---local log = {
---    date         = "",
---    build_number = 0,
---    action       = "",
---    runtime      = ""
---};
---
---
------@type Log[]
---local logs = JSON.load("buildlog.json");
---
---if logs == nil then
---    logs = {
---        [0] = {
---            build_number = 0,
---            date = "nil",
---            action = "nil"
---        }
---    }
---end
---logs[#logs + 1] = {
---    build_number = logs[#logs].build_number + 1;
---    date = os.date("%Y/%m/%d at %H:%M"),
---    action = arg[1]
---};
---
---JSON.dump(logs, "buildlog.json")
---
---local bn = logs[#logs].build_number;
---local bd = logs[#logs].date;
---print("Build " .. bn);
---print("Date: " .. bd);
---print("Action: " .. logs[#logs].action);
-
 ---@module xmake
+---@class cmake
 ---@field add_rules         function
 ---@field add_requires      function
 ---@field set_kind          function
@@ -57,7 +8,6 @@
 ---@field add_files         function
 ---@field add_headerfiles   function
 ---@field add_includedirs   function
----@field add_files         function
 ---@field add_packages      function
 ---@field target            function
 ---@field target_end        function
@@ -100,10 +50,55 @@
 ---@class json
 ---@field deserialise function
 
-task("update_buildlog")
+---@class BuildLog
+---@field date string
+---@field buildnumber number
+---@field action string
+
+
+function table:__tostring()
+    local result = "{"
+    for k, v in pairs(self) do
+        -- Check the key type (ignore any numerical keys - assume its an array)
+        if type(k) == "string" then
+            result = result.."[\""..k.."\"]".."="
+        end
+
+        -- Check the value type
+        if type(v) == "table" then
+            result = result..table_to_string(v)
+        elseif type(v) == "boolean" then
+            result = result..tostring(v)
+        else
+            result = result.."\""..v.."\""
+        end
+        result = result..","
+    end
+    -- Remove leading commas from the result
+    if result ~= "" then
+        result = result:sub(1, result:len()-1)
+    end
+    return result.."}"
+end
+
+task("update_buildlog-build")
 do
-    --import("xmake.core.json")
-    --
-    --json.deserialise()
+    --local bl = local_buildlog()
+    --local old = bl[#bl]
+    --bl[#bl + 1] = {
+    --    date = os.time(nil),
+    --    buildnumber = old.buildnumber + 1,
+    --    action = "build"
+    --}
+    --local f = io.open("buildlog.lua", "w")
+    --f:write("return ")
+    --f:write(bl)
+end
+task_end()
+
+task("update_buildlog-run")
+do
+    --local bl = local_buildlog()
+    
 end
 task_end()

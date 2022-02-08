@@ -1,81 +1,77 @@
-ENTRY(kernel_start)
+OUTPUT_FORMAT(elf64-littleaarch64)
+OUTPUT_ARCH(aarch64)
+
+ENTRY(_start)
 
 PHDRS {
-    none   PT_NULL FLAGS(0);
-    text   PT_LOAD FLAGS((1 << 2) | (1 << 0) /* Readable | Executable */);
-    stk    PT_LOAD FLAGS((1 << 2) | (1 << 1) /* Readable | Writeable  */);
-    data   PT_LOAD FLAGS((1 << 2) | (1 << 1) /* Readable | Writeable  */);
-    rodata PT_LOAD FLAGS((1 << 2)            /* Readable */);
+  none   PT_NULL FLAGS(0);
+  text   PT_LOAD FLAGS((1 << 2) | (1 << 0) /* Readable | Executable */);
+  rodata PT_LOAD FLAGS((1 << 2)            /* Readable */);
+  data   PT_LOAD FLAGS((1 << 2) | (1 << 1) /* Readable | Writeable  */);
 }
 
 SECTIONS {
-    .stivale2hdr : { KEEP(*(.stivale2hdr)) }
-    .rela.dyn    : { KEEP(*(.rela*)) }
-    
-    . = 0xFFFFFFFF80100000;
-    
-    __kernel_begin = .;
-    __kernel_text_begin = .;
-    .text . : {
-      *(.text*)
-    }:text
-    . = ALIGN(64K);
-    __kernel_text_end = .;
-    
+  . = 0xFFFFFFFF80100000;
+
+  .stivale2hdr . : {
+    QUAD(kernel_start) /* Entry point */
+    QUAD(__stack_high) /* Stack */
+    QUAD(0) /* Flags */
+    QUAD(__stivale2_tags) /* Tags */
+  }:none
+
+  . = ALIGN(64K);
+
+  .text . : {
+    *(.text*)
+  }:text
+  
+  . = ALIGN(64K);
+
+  .rodata . : {
+    __stivale2_tags = .;
+
+    __framebuffer_tag = .;
+    QUAD(0x3ecc1bc43d0f7971) /* identifier */
+    QUAD(__after_framebuffer_tag) /* next */
+    SHORT(0) /* width */
+    SHORT(0) /* height */
+    SHORT(0) /* bpp */
+    __after_framebuffer_tag = .;
+
+    __smp_tag = .;
+    QUAD(0x1ab015085f3273df) /* identifier */
+    QUAD(__after_smp_tag) /* next */
+    QUAD(0) /* flags */
+    __after_smp_tag = .;
+
+    __terminal_tag = .;
+    QUAD(0xa85d499b1823be72) /* identifier */
+    QUAD(__after_terminal_tag) /* next */
+    QUAD(0) /* flags */
+    __after_terminal_tag = .;
+
+    __mtrr_tag = .;
+    QUAD(0x4c7bb07731282e00) /* identifier */
+    QUAD(__after_mtrr_tag) /* next */
+    __after_mtrr_tag = .;
+
+    /* Terminate linked list */
+    QUAD(0xAAAAAAAAAAAAAAAA)
+    QUAD(0)
+
+    *(.rodata*)
+  }:rodata
+  . = ALIGN(64K);
+
+  .data . : {
+    *(.data*)
+  }:data
+
+  .bss . : {
+    __stack_low = .;
     . += 64K;
-    .stk . : {
-      __bootstrap_stack_bottom = .;
-      KEEP(*(.bss.stk))
-      __bootstrap_stack_top = .;
-    }:stk
-    . = ALIGN(64K);
-    
-    . += 64K;
-    
-    __kernel_rodata_begin = .;
-    .rodata . : {
-      *(.rodata*)
-    
-      /*__debug_info_start = .;
-      KEEP(*(.debug_info))
-      __debug_info_end = .;
-    
-      __debug_abbrev_start = .;
-      KEEP(*(.debug_abbrev))
-      __debug_abbrev_end = .;
-    
-      __debug_str_start = .;
-      KEEP(*(.debug_str))
-      __debug_str_end = .;
-    
-      __debug_line_start = .;
-      KEEP(*(.debug_line))
-      __debug_line_end = .;
-    
-      __debug_ranges_start = .;
-      KEEP(*(.debug_ranges))
-      __debug_ranges_end = .;*/
-    }:rodata
-    . = ALIGN(64K);
-    __kernel_rodata_end = .;
-    
-    __kernel_data_begin = .;
-    .data . : {
-      KEEP(*(.rodata.stivale))
-      *(.data*)
-    }:data
-    
-    .dynamic . : {
-      KEEP(*(.dynamic*));
-    }
-    
-    . = ALIGN(16);
-    
-    .bss . : {
-      *(.bss*)
-    }
-    . = ALIGN(64K);
-    __kernel_data_end = .;
-    
-    __kernel_end = .;
+    __stack_high = .;
+    *(.bss*)
+  }
 }
