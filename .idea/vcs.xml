@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/build/obj/LuaOS/cross/none/release/limine" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/build/obj/LuaOS/macosx/x86_64/release/limine" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/include/limine" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/include/stivale" vcs="Git" />
+  </component>
+</project>

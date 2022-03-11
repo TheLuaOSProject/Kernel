@@ -27,6 +27,7 @@ do
 end
 package_end()
 
+--TODO: Fix when sabaton becomes build only
 package("sabaton")
 do
     set_urls("https://github.com/FlorenceOS/Sabaton.git")

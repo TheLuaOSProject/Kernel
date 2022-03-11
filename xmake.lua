@@ -79,7 +79,7 @@ do
     set_toolset("cc", "clang")
     set_toolset("c++", "clang++")
     set_toolset("ld", "ld.lld")
-    set_toolset("as", "nasm")
+    set_toolset("as", "clang")
 end
 toolchain_end()
 
@@ -114,8 +114,12 @@ do
         "-ztext",
         { force = true }
     )
+    
+    add_asflags(
+        "--target=aarch64-none-elf"
+    )
 
-    add_files(SOURCE_DIR .. "**.c", SOURCE_DIR .. "**.asm")
+    add_files(SOURCE_DIR .. "**.c", SOURCE_DIR .. "**.S")
     add_headerfiles(SOURCE_DIR .. "**.h")
     add_includedirs(SOURCE_DIR, INCLUDE_DIR)
 
@@ -124,20 +128,21 @@ do
 
     add_packages(PACKAGES)
 
-    --before_build(function(target) 
-    --    task("update_buildlog")
-    --end)
+    if is_mode("debug") then
+        add_defines("LUAOS_DEBUG")
+    end
     
     on_run(function(target) 
         os.execv("qemu-system-aarch64", {
             "-M",       "virt",
-            "-cpu",     "cortex-a57",
-            "-m",       "4G", 
-            "-serial",  "stdio", 
+            "-cpu",     "cortex-a72",
+            "-m",       "2G", 
+            "-serial",  "file:luaos.log", 
             "-smp",     "4", 
             "-device",  "ramfb", 
             "-drive",   "if=pflash,format=raw,file=" .. BINARY_DIR .. "Sabaton_virt_aarch64.elf.bin,readonly=on", 
-            "-fw_cfg",  "opt/Sabaton/kernel,file=" .. KERNEL_BIN })
+            "-fw_cfg",  "opt/Sabaton/kernel,file=" .. KERNEL_BIN
+        })
     end)
 end
 target_end()

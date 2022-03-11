@@ -2,13 +2,11 @@
 // Created by Frityet on 2022-01-23.
 //
 
-#include <stivale2.h>
+#include <utilities.h>
 
-#include <common.h>
-
-ATTRIBUTE(noreturn, used)
+ATTRIBUTE(noreturn)
+ATTRIBUTE(used)
 int kernel_start(ATTRIBUTE(unused) struct stivale2_struct *bootloader)
 {
-    
     HALT();
 }

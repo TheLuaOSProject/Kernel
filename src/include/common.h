@@ -5,9 +5,9 @@
 #ifndef LUAOS_COMMON_
 #define LUAOS_COMMON_
 
-#define HALT() while(1) 
+#define asm __asm__
 
-#define ATTRIBUTE(...) __attribute__((__VA_ARGS__))
+#define ATTRIBUTE(_attrib) __attribute__((_attrib))
 
 #ifdef bool
 #undef bool

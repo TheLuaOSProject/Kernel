@@ -1,11 +1,11 @@
 .text
 .globl CRASH
 CRASH:
-    MOV     R0, #0x0
-    DIV     R0, #0x1
+    //MOV     X0, 0x0
+    //DIV     0x0, X0
     RET
 
 .globl HALT
 HALT:
-    HLT
+    HLT     #0x1
     RET

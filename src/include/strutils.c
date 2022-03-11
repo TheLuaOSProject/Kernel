@@ -2,7 +2,7 @@
 // Created by Frityet on 2022-02-08.
 //
 
-#include "string.h"
+#include "strutils.h"
 
 size_t strlen(const char *str)
 {
