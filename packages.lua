@@ -1,19 +1,3 @@
----@module xmakepackage
----@field package           function
----@field set_urls          function
----@field on_load           function
----@field on_install        function
----@field package_end       function
----@field add_includedirs   function
----@field import            function
----@field os                os
-
----@class os
----@field cp function
----@field vcp function
----@field mkdir function
----@field runv  function
-
 package("stivale2")
 do
     set_urls("https://github.com/stivale/stivale.git")
@@ -27,14 +11,22 @@ do
 end
 package_end()
 
---TODO: Fix when sabaton becomes build only
 package("sabaton")
 do
     set_urls("https://github.com/FlorenceOS/Sabaton.git")
     
-    --on_install(function (package)
-    --    os.runv("zig", { "build", "virt" }, {envs = {AARCH64_EDK_PATH = "nil"}})
-    --    os.cp("zig-out/bin/Sabaton_virt_aarch64.elf.bin", package:installdir() .. "/sabaton.bin")
-    --end)
+    on_install(function (package)
+        import("lib.detect.find_tool")
+        
+        local zig = find_tool("zig")
+        try {
+            function ()
+                os.runv(zig.program, { "build", "virt" }, { envs = { AARCH64_EDK_PATH = "" } })
+            end,
+            catch { function (err) end }
+        }
+        
+        os.cp("zig-out/bin/Sabaton_virt_aarch64.elf.bin", package:installdir())
+    end)
 end
 package_end()
