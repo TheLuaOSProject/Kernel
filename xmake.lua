@@ -9,6 +9,8 @@ local PACKAGES<const> = {
     "sabaton"
 }
 
+local SABATON_PATH<const> = "sabaton.elf.bin"
+
 add_rules("mode.debug", "mode.release")
 
 set_config("plat", "cross")

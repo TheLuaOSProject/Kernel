@@ -1,7 +1,12 @@
-#include <stivale2.h>
+#include "common.h"
+#include "types.h"
 
+#include "drivers/ports.h"
+
+
+ATTRIBUTE(noreturn, used)
 int kernel_start(struct stivale2_struct *bootloader)
 {
     (void)bootloader;
-    return 0;
+    port.byte.out(124, 3);
 }
