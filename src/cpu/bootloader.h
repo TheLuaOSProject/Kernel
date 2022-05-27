@@ -1,6 +1,6 @@
 ///
 ///@file bootloader.h
-///@author Amrit Bhogal
+///@author Amrit Bhogal - Original code by @mintsuki
 ///@version 1.0.0 - Amrit Bhogal on 2022-05-26
 ///
 
