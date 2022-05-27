@@ -1,12 +1,15 @@
-//
-// Created by Frityet on 2022-01-23.
-//
+#include "utilities.h"
+#include "cpu/bootloader.h"
+#include "drivers/framebuffer.h"
 
-#include <utilities.h>
-
-ATTRIBUTE(noreturn)
-ATTRIBUTE(used)
-int kernel_start(ATTRIBUTE(unused) struct stivale2_struct *bootloader)
+ATTRIBUTE(noreturn, used)
+int kernel_start(BootloaderInfo_t *bootloader)
 {
+    struct FramebufferInfo fb = {
+        .header = get_bootloader_tag(bootloader, STIVALE2_HEADER_TAG_FRAMEBUFFER_ID),
+        .data = get_bootloader_tag(bootloader, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID)
+    };
+    framebuffer_initalise(fb);
+    
     HALT();
 }

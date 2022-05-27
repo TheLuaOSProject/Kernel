@@ -1,28 +1,12 @@
-//
-// Created by Frityet on 2022-01-31.
-//
+///
+///@file common.h
+///@author Amrit Bhogal
+///@version 1.0.0 - Amrit Bhogal on 2022-05-26
+///
 
-#ifndef LUAOS_COMMON_
-#define LUAOS_COMMON_
+#pragma once
 
-#define asm __asm__
+#define ATTRIBUTE(...) __attribute__((__VA_ARGS__))
 
-#define ATTRIBUTE(_attrib) __attribute__((_attrib))
+#define force_inline ATTRIBUTE(always_inline) inline
 
-#ifdef bool
-#undef bool
-#endif
-#ifdef true
-#undef true
-#endif
-#ifdef false
-#undef false
-#endif
-typedef enum bool {
-    true = 1,
-    false = 0,
-    TRUE = 1,
-    FALSE = 0
-} bool;
-
-#endif //LUAOS_COMMON_

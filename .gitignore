@@ -14,3 +14,7 @@ compile_commands.json
 stivale2.md
 
 .cache/
+
+.idea/
+
+sabaton.elf.bin
