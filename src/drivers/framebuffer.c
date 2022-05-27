@@ -12,7 +12,7 @@
 
 struct Framebuffer framebuffer_initalise(BootloaderInfo_t *bl)
 {
-    struct stivale2_struct_tag_framebuffer *data = get_bootloader_tag(bl, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID);
+    struct stivale2_struct_tag_framebuffer *data = bootloader_find_tag(bl, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID);
     
     return (struct Framebuffer) {
         .size           = { data->framebuffer_width, data->framebuffer_height },
@@ -28,7 +28,7 @@ struct Framebuffer framebuffer_initalise(BootloaderInfo_t *bl)
         },
         
         .bootloader = {
-            .header = get_bootloader_tag(bl, STIVALE2_HEADER_TAG_FRAMEBUFFER_ID),
+            .header = bootloader_find_tag(bl, STIVALE2_HEADER_TAG_FRAMEBUFFER_ID),
             .data   = data
         }
     };
@@ -36,9 +36,16 @@ struct Framebuffer framebuffer_initalise(BootloaderInfo_t *bl)
 
 void framebuffer_draw_pixel(struct Framebuffer *fb, Point_t pos, Colour_t colour)
 {
-    dword loc = pos.x * PIXEL_WIDTH + pos.y * fb->pitch;
-    fb->pixels[loc]         = colour.blue   & 0xFF;
-    fb->pixels[loc + 0x1]   = colour.green  & 0xFF;
-    fb->pixels[loc + 0x2]   = colour.red    & 0xFF;
-    fb->pixels[loc + 0x3]   = colour.alpha  & 0xFF;
+    uint32 *pix = (uint32 *)(fb->pixels + (pos.x * PIXEL_WIDTH + pos.y * fb->pitch));
+    *pix = colour_to_u32(colour);
+}
+
+void framebuffer_draw_rect(struct Framebuffer *fb, Rect_t rect, Colour_t colour)
+{
+    for (uint32 x = rect.position.x; x < rect.position.x + rect.size.x; x++) {
+        for (uint32 y = rect.position.y; y < rect.position.y + rect.size.y; y++) {
+            uint32 *pix = (uint32 *)(fb->pixels + (x * PIXEL_WIDTH + y * fb->pitch));
+            *pix = colour_to_u32(colour);
+        }
+    }
 }

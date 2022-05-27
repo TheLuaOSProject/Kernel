@@ -60,7 +60,9 @@ do
                 "-smp",     "4", 
                 "-device",  "ramfb", 
                 "-drive",   "if=pflash,format=raw,file=" .. SABATON_PATH .. ",readonly=on", 
-                "-fw_cfg",  "opt/Sabaton/kernel,file=" .. target:targetfile()
+                "-fw_cfg",  "opt/Sabaton/kernel,file=" .. target:targetfile(),
+                "-S", "-d", "int",
+                "-s"
         }) 
    end)
 end

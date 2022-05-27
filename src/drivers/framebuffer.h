@@ -10,15 +10,19 @@
 
 #include "common.h"
 
-typedef struct Point { dword x, y; } Point_t;
+#define POINT(_x, _y) (Point_t){ .x = (_x), .y = (_y) }
+typedef struct Point { uint32 x, y; } Point_t;
+
+#define RECT(_x, _y, _w, _h) (Rect_t) { .position = POINT(_x, _y), .size = POINT(_w, _h) } 
+typedef struct Rectangle { Point_t position; Point_t size; } Rect_t;
+    
+#define COLOUR(_r, _g, _b, ...) (Colour_t){ .red = (_r), .green = (_g), .blue = (_b), .alpha = (0xFF __VA_OPT__(- 0xFF + ) __VA_ARGS__) }
 typedef struct Colour { byte red, green, blue, alpha; } Colour_t;
 
 struct Framebuffer {
     Point_t size;
-    word    bits_per_pixel,
-            pitch;
-    byte    memory_model;
-    byte    *pixels;
+    uint16  bits_per_pixel, pitch;
+    byte    memory_model, *pixels;
     
     struct {
         struct  { byte size, shift; } red;
@@ -36,10 +40,9 @@ struct Framebuffer {
 struct Framebuffer framebuffer_initalise(BootloaderInfo_t *bl);
 
 void framebuffer_draw_pixel(struct Framebuffer *fb, Point_t point, Colour_t colour);
+void framebuffer_draw_rect(struct Framebuffer *fb, Rect_t rect, Colour_t colour);
 
-static force_inline dword colour_to_dword(Colour_t col)
+pure static force_inline uint32 colour_to_u32(Colour_t col)
 {
     return (col.alpha << 24) | (col.red << 16) | (col.green << 8) | col.blue;
-//    byte b[4] = { col.red, col.green, col.blue, col.alpha };
-//    return *(dword *)b; //fuck strict aliasing
 }
