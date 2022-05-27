@@ -1,7 +1,7 @@
 OUTPUT_FORMAT(elf64-littleaarch64)
 OUTPUT_ARCH(aarch64)
 
-ENTRY(_start)
+ENTRY(kernel_start)
 
 PHDRS {
   none   PT_NULL FLAGS(0);

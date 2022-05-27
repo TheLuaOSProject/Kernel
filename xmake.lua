@@ -35,7 +35,7 @@ do
         "--target=" .. TARGET, "-ffreestanding",
         "-fpie", "-fno-stack-protector", "-fno-omit-frame-pointer",
         "-mno-80387", "-mno-mmx", "-mno-3dnow", "-mno-sse", "-mno-sse2", "-mno-sse3", "-mno-sse4.1", "-mno-sse4.2", "-mno-sse4", "-mno-sse4a", "-mno-avx",  "-mno-red-zone",
-        "-Wall", "-Wextra", "-Werror", "-Wunused-function", "-Wunused-parameter", "-Wunused-variable", 
+        "-Wall", "-Wextra", "-Werror", "-Wno-unused-function", "-Wno-unused-parameter", "-Wno-unused-variable", 
         "-fms-extensions", "-Wno-microsoft"
     }
     
@@ -60,7 +60,9 @@ do
                 "-smp",     "4", 
                 "-device",  "ramfb", 
                 "-drive",   "if=pflash,format=raw,file=" .. SABATON_PATH .. ",readonly=on", 
-                "-fw_cfg",  "opt/Sabaton/kernel,file=" .. target:targetfile()
+                "-fw_cfg",  "opt/Sabaton/kernel,file=" .. target:targetfile(),
+                "-S", "-d", "int",
+                "-s"
         }) 
    end)
 end
