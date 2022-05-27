@@ -9,6 +9,8 @@
 #include "cpu/bootloader.h"
 
 #include "common.h"
+#include "utilities.h"
+
 
 #define POINT(_x, _y) (Point_t){ .x = (_x), .y = (_y) }
 typedef struct Point { uint32 x, y; } Point_t;
@@ -37,12 +39,40 @@ struct Framebuffer {
 };
 
 
-struct Framebuffer framebuffer_initalise(BootloaderInfo_t *bl);
-
-void framebuffer_draw_pixel(struct Framebuffer *fb, Point_t point, Colour_t colour);
-void framebuffer_draw_rect(struct Framebuffer *fb, Rect_t rect, Colour_t colour);
-
-pure static force_inline uint32 colour_to_u32(Colour_t col)
+static pure struct Framebuffer framebuffer_initalise(const BootloaderInfo_t *bl)
 {
-    return (col.alpha << 24) | (col.red << 16) | (col.green << 8) | col.blue;
+    struct stivale2_struct_tag_framebuffer *data = bootloader_find_tag(bl, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID);
+
+    return (struct Framebuffer) {
+        .size           = { data->framebuffer_width, data->framebuffer_height },
+        .bits_per_pixel = data->framebuffer_bpp,
+        .memory_model   = data->memory_model,
+        .pitch          = data->framebuffer_pitch,
+        .pixels         = (byte *)data->framebuffer_addr,
+
+        .masks = {
+            .red    = { data->red_mask_shift,   data->red_mask_size },
+            .green  = { data->green_mask_shift, data->green_mask_size },
+            .blue   = { data->blue_mask_shift,  data->blue_mask_size },
+        },
+
+        .bootloader = {
+            .header = bootloader_find_tag(bl, STIVALE2_HEADER_TAG_FRAMEBUFFER_ID),
+            .data   = data
+        }
+    };
 }
+
+force_inline pure uint32 colour_to_u32(Colour_t col)
+{ return (col.blue << 24) | (col.green << 16) | (col.red << 8) | col.alpha; }
+
+force_inline void framebuffer_draw_rect(const struct Framebuffer *fb, Rect_t rect, Colour_t colour)
+{ 
+    MEMORY_SET(fb->pixels + ((rect.position.x * 0x4) + (rect.position.y * fb->pitch)), colour_to_u32(colour), rect.size.x * rect.size.y); 
+}
+
+force_inline void framebuffer_set_background(const struct Framebuffer *fb, Colour_t colour)
+{ framebuffer_draw_rect(fb, (Rect_t){ { 0, 0 }, fb->size }, colour); }
+
+force_inline void framebuffer_draw_pixel(const struct Framebuffer *fb, Point_t pos, Colour_t colour)
+{ *(fb->pixels + (pos.x * 0x4 + pos.y * fb->pitch)) = colour_to_u32(colour); }

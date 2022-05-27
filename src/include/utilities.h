@@ -7,6 +7,9 @@
 #pragma once
 
 #include "common.h"
+#include "types.h"
 
 ATTRIBUTE(noreturn)
-extern void HALT(void);
+extern void HALT(void),
+            MEMORY_COPY(void *dst, void *src, uint64 nmemb),
+            MEMORY_SET(void *dst, uint64 val, uint64 nmemb);

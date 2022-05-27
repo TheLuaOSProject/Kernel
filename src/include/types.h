@@ -28,3 +28,11 @@ typedef __int128_t  int128;
 
 typedef uintptr_t   pointer_t;
 typedef intptr_t    spointer_t;
+
+#ifdef bool
+#undef bool
+#undef true
+#undef false
+#endif 
+
+typedef enum Bool: _Bool { true = 1, false = 0 } bool;

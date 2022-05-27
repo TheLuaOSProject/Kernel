@@ -8,5 +8,5 @@
 
 #define ATTRIBUTE(...) __attribute__((__VA_ARGS__))
 
-#define force_inline ATTRIBUTE(always_inline) inline
+#define force_inline ATTRIBUTE(always_inline) static inline
 #define pure ATTRIBUTE(pure)
