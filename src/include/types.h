@@ -25,5 +25,3 @@ typedef __int128_t  soword;
 
 typedef uintptr_t   pointer_t;
 typedef intptr_t    spointer_t;
-
-
