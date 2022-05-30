@@ -39,7 +39,7 @@ struct Framebuffer {
 };
 
 
-static pure struct Framebuffer framebuffer_initalise(const BootloaderInfo_t *bl)
+static inline struct Framebuffer Framebuffer_initalise(const BootloaderInfo_t *bl)
 {
     struct stivale2_struct_tag_framebuffer *data = bootloader_find_tag(bl, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID);
 
@@ -63,16 +63,22 @@ static pure struct Framebuffer framebuffer_initalise(const BootloaderInfo_t *bl)
     };
 }
 
-force_inline pure uint32 colour_to_u32(Colour_t col)
+static inline uint32 colour_to_u32(Colour_t col)
 { return (col.blue << 24) | (col.green << 16) | (col.red << 8) | col.alpha; }
 
-force_inline void framebuffer_draw_rect(const struct Framebuffer *fb, Rect_t rect, Colour_t colour)
+static void Framebuffer_draw_rect(const struct Framebuffer *fb, Rect_t rect, Colour_t colour)
 { 
-    MEMORY_SET(fb->pixels + ((rect.position.x * 0x4) + (rect.position.y * fb->pitch)), colour_to_u32(colour), rect.size.x * rect.size.y); 
+//    MEMORY_SET(fb->pixels + ((rect.position.x * 0x4) + (rect.position.y * fb->pitch)), colour_to_u32(colour), rect.size.x * rect.size.y); 
+
+    for (uint32 x = rect.position.x; x < rect.position.x + rect.size.x; x++) {
+        for (uint32 y = rect.position.y; y < rect.position.y + rect.size.y; y++) {
+            fb->pixels[x * 0x4 + y * fb->pitch] = colour_to_u32(colour);
+        }
+    }
 }
 
-force_inline void framebuffer_set_background(const struct Framebuffer *fb, Colour_t colour)
-{ framebuffer_draw_rect(fb, (Rect_t){ { 0, 0 }, fb->size }, colour); }
+static inline void Framebuffer_set_background(const struct Framebuffer *fb, Colour_t colour)
+{ Framebuffer_draw_rect(fb, (Rect_t){ { 0, 0 }, fb->size }, colour); }
 
-force_inline void framebuffer_draw_pixel(const struct Framebuffer *fb, Point_t pos, Colour_t colour)
-{ *(fb->pixels + (pos.x * 0x4 + pos.y * fb->pitch)) = colour_to_u32(colour); }
+static inline void Framebuffer_draw_pixel(const struct Framebuffer *fb, Point_t pos, Colour_t colour)
+{ fb->pixels [pos.x * 0x4 + pos.y * fb->pitch] = colour_to_u32(colour); }
