@@ -9,8 +9,6 @@ local PACKAGES<const> = {
     "sabaton"
 }
 
-local SABATON_PATH<const> = "sabaton.elf.bin"
-
 add_rules("mode.debug", "mode.release")
 
 set_config("plat", "cross")
@@ -59,9 +57,10 @@ do
                 "-serial",  "file:luaos.log", 
                 "-smp",     "4", 
                 "-device",  "ramfb", 
-                "-drive",   "if=pflash,format=raw,file=" .. SABATON_PATH .. ",readonly=on", 
-                "-fw_cfg",  "opt/Sabaton/kernel,file=" .. target:targetfile(),
-                "-S", "-d", "int",
+                "-drive",   "if=pflash,format=raw,file=" .. target:pkg("sabaton"):installdir() .. "/Sabaton_virt_aarch64.elf.bin" .. ",readonly=on", 
+                "-fw_cfg",  "opt/Sabaton/kernel,file=" .. target:targetfile(), 
+--                 "-S", 
+                "-d", "int",
                 "-s"
         }) 
    end)
