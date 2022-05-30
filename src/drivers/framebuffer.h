@@ -63,16 +63,15 @@ static inline struct Framebuffer Framebuffer_initalise(const BootloaderInfo_t *b
     };
 }
 
-static inline uint32 colour_to_u32(Colour_t col)
-{ return (col.blue << 24) | (col.green << 16) | (col.red << 8) | col.alpha; }
-
 static void Framebuffer_draw_rect(const struct Framebuffer *fb, Rect_t rect, Colour_t colour)
-{ 
-//    MEMORY_SET(fb->pixels + ((rect.position.x * 0x4) + (rect.position.y * fb->pitch)), colour_to_u32(colour), rect.size.x * rect.size.y); 
-
+{
     for (uint32 x = rect.position.x; x < rect.position.x + rect.size.x; x++) {
         for (uint32 y = rect.position.y; y < rect.position.y + rect.size.y; y++) {
-            fb->pixels[x * 0x4 + y * fb->pitch] = colour_to_u32(colour);
+            byte *draw = fb->pixels + (x * 0x4 + y * fb->pitch);
+            draw[0] = colour.red & 0xFF;
+            draw[1] = colour.green & 0xFF;
+            draw[2] = colour.blue & 0xFF;
+            draw[3] = colour.alpha & 0xFF;
         }
     }
 }
@@ -81,4 +80,10 @@ static inline void Framebuffer_set_background(const struct Framebuffer *fb, Colo
 { Framebuffer_draw_rect(fb, (Rect_t){ { 0, 0 }, fb->size }, colour); }
 
 static inline void Framebuffer_draw_pixel(const struct Framebuffer *fb, Point_t pos, Colour_t colour)
-{ fb->pixels [pos.x * 0x4 + pos.y * fb->pitch] = colour_to_u32(colour); }
+{ 
+    byte *draw = fb->pixels + (pos.x * 0x4 + pos.y * fb->pitch);
+    draw[0] = colour.red & 0xFF;
+    draw[1] = colour.green & 0xFF;
+    draw[2] = colour.blue & 0xFF;
+    draw[3] = colour.alpha & 0xFF;
+}

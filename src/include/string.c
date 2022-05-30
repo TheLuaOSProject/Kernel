@@ -6,33 +6,28 @@
 
 #include "string.h"
 
-uint32 string_length(const char *str)
+uint64 string_length(const char *str)
 {
-    uint32 i = 0;
+    uint64 i = 0;
     while (*str++) i++;
     return i;
 }
 
-void string_concat(string dst, const char *src, uint32 len)
+string string_concat(string s1, string s2)
 {
-    if (dst.length + len > dst.max) return;
+    static char strbuf[1024];
+    string s = {
+        .buffer = strbuf,
+        .length = s1.length + s2.length
+    };
     
-    for (uint32 i = 0; i < len; i++, dst.length++)
-        dst.buffer[dst.length + i] = src[i];
+    uint64 i;
+    for (i = 0; i < s1.length; i++)
+        strbuf[i] = s1.buffer[i];
+    for (uint64 j = 0; j < s2.length; j++)
+        strbuf[i + j] = s2.buffer[j];
     
-    dst.buffer[dst.length] = '\0';
+    strbuf[s.length] = '\0';
+    
+    return s;
 }
-
-void string_copy(string dst, const char *src, uint32 len)
-{
-    if (len > dst.max) return;
-    
-    dst.length = len;
-    for (uint32 i = 0; i < len; i++)
-        dst.buffer[i] = src[i];
-
-    dst.buffer[dst.length] = '\0';
-    
-}
-
-

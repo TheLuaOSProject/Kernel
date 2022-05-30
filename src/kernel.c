@@ -10,7 +10,8 @@ void kernel_start(BootloaderInfo_t *bootloader)
     QEMU_LOG(&qlog, "Launched kernel!");
     
     struct Framebuffer fb = Framebuffer_initalise(bootloader);
-    
+    QEMU_LOG(&qlog, "Initalised framebuffer!");
+
     Framebuffer_set_background(&fb, COLOUR(0xFF, 0xFF, 0xFF));
     
     uint32 x = fb.size.x / 2, y = fb.size.y / 2;

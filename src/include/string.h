@@ -11,20 +11,18 @@
 #include "common.h"
 
 typedef struct String {
-    const uint32    max;
-    uint32          length;
-    char            *buffer;
+    uint64      length;
+    const char  *buffer;
 } string;
 
-uint32 string_length(const char *str);
+uint64 string_length(const char *str);
 
 static inline string str(const char *str)
 {
-    uint32 i = string_length(str);
+    uint64 i = string_length(str);
     return (string) {
         .length = i,
-        .max = i,
-        .buffer = (char *)str
+        .buffer = str
     };
 }
 
@@ -32,10 +30,8 @@ static inline string strl(const char *str, uint32 len)
 {
     return (string) {
         .length = len,
-        .max    = len,
-        .buffer = (char *)str
+        .buffer = str
     };
 }
 
-void string_concat(string dst, const char *src, uint32 len);
-void string_copy(string dst, const char *src, uint32 len);
+string string_concat(string s1, string s2);
