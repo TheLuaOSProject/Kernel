@@ -10,12 +10,12 @@
 HALT:
     B   HALT
 
-//void  MEMORY_COPY(void *dst, void *src, uint64 nmemb);
+//void  MEMORY_COPY(void *dst, void *source, uint64 nmemb);
 .global MEMORY_COPY
 .type   MEMORY_COPY, @function
 MEMORY_COPY:
     CBZ     X2,  1f         //Compares X2 with 0, and if true, jumps to .END
-    LDRB    W10, [X0], #1   //Loads the byte from src into register W10, and increments src
+    LDRB    W10, [X0], #1   //Loads the byte from source into register W10, and increments source
     STRB    W10, [X1], #1   //Stores the byte from W10 into dst, and increments dst 
     SUBS    X2, X2, #1      //Decrement the counter
     B       MEMORY_COPY     //Redo!

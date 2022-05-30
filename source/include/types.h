@@ -35,4 +35,6 @@ typedef intptr_t    spointer_t;
 #undef false
 #endif 
 
-typedef enum Bool: _Bool { true = 1, false = 0 } bool;
+typedef enum Bool: _Bool { true = 1, false = 0 } bool; 
+
+struct Memory { uint64 bytecount; byte data[]; };
