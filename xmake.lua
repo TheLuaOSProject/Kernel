@@ -1,6 +1,4 @@
---[[
-qemu-system-aarch64 -M virt -cpu cortex-a57 -m 4G -serial stdio -smp 4 -device ramfb -drive if=pflash,format=raw,file=[path/to/sabaton/virt.bin.pad],readonly=on -fw_cfg opt/Sabaton/kernel,file=[path/to/my/stivale2/aarch64/kernel.elf]
-]]
+
 
 includes("packages.lua")
 
@@ -9,11 +7,15 @@ local PACKAGES<const> = {
     "sabaton"
 }
 
+local SABATON_PATH<const> = "sabaton.elf.bin"
+local TARGET<const> = "aarch64-none-elf"
+local LINKER_SCRIPT<const> = "config/linker.ld"
+
+
 add_rules("mode.debug", "mode.release")
 
 set_config("plat", "cross")
 set_config("arch", "aarch64")
-local TARGET<const> = "aarch64-none-elf"
 
 set_languages("gnulatest", "gnuxxlatest")
 
@@ -22,12 +24,14 @@ add_requires(PACKAGES)
 target("LuaOS")
 do
     set_kind("binary")
+    add_rules("utils.bin2c", { extensions = { ".psf" } })
     
     add_packages(PACKAGES)
     
-    add_files("src/**.c", "src/**.asm")
-    add_includedirs("src/", "src/include/")
+    add_files("source/**.c", "source/**.asm")
+    add_includedirs("source/", "source/include/")
  
+    add_files("resources/**.psf")
     
     add_cflags {
         "--target=" .. TARGET, "-ffreestanding",
@@ -42,7 +46,7 @@ do
     }
    
     add_ldflags (
-        "--script", "config/linker.ld",
+        "--script", LINKER_SCRIPT,
         "-nostdlib",
         { force = true }
     )
@@ -57,9 +61,9 @@ do
                 "-serial",  "file:luaos.log", 
                 "-smp",     "4", 
                 "-device",  "ramfb", 
-                "-drive",   "if=pflash,format=raw,file=" .. target:pkg("sabaton"):installdir() .. "/Sabaton_virt_aarch64.elf.bin" .. ",readonly=on", 
-                "-fw_cfg",  "opt/Sabaton/kernel,file=" .. target:targetfile(), 
---                 "-S", 
+                "-drive",   "if=pflash,format=raw,file=" .. SABATON_PATH .. ",readonly=on", 
+                "-fw_cfg",  "opt/Sabaton/kernel,file=" .. target:targetfile(),
+                "-S", 
                 "-d", "int",
                 "-s"
         }) 
