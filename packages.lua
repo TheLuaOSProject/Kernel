@@ -14,7 +14,7 @@ package_end()
 package("sabaton")
 do
     set_urls("https://github.com/FlorenceOS/Sabaton.git")
-    
+	add_deps("zig 0.9.x")    
     on_install(function (package)
         import("lib.detect.find_tool")
         
