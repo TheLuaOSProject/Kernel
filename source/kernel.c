@@ -3,6 +3,8 @@
 #include "drivers/framebuffer.h"
 #include "drivers/qemu_log.h"
 
+#include "array.h"
+
 ATTRIBUTE(noreturn, used)
 void kernel_start(BootloaderInfo_t *bootloader)
 {

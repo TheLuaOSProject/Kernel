@@ -82,3 +82,5 @@ static inline void Framebuffer_set_background(const struct Framebuffer *fb, Colo
 
 static inline void Framebuffer_draw_pixel(const struct Framebuffer *fb, Point_t pos, Colour_t colour)
 { fb->pixels [pos.x * 0x4 + pos.y * fb->pitch] = colour_to_u32(colour); }
+
+void Framebuffer_draw_character(const struct Framebuffer *fb, char c);

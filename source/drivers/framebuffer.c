@@ -6,4 +6,7 @@
 
 #include "framebuffer.h"
 
-#define PIXEL_WIDTH 0x4
+void Framebuffer_draw_character(const struct Framebuffer *fb, char c)
+{
+
+}

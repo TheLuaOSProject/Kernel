@@ -9,7 +9,7 @@ local PACKAGES<const> = {
 
 local SABATON_PATH<const> = "sabaton.elf.bin"
 local TARGET<const> = "aarch64-none-elf"
-local LINKER_SCRIPT<const> = "cfg/linker.ld"
+local LINKER_SCRIPT<const> = "config/linker.ld"
 
 
 add_rules("mode.debug", "mode.release")
@@ -28,10 +28,10 @@ do
     
     add_packages(PACKAGES)
     
-    add_files("src/**.c", "src/**.asm")
-    add_includedirs("src/", "src/include/")
+    add_files("source/**.c", "source/**.asm")
+    add_includedirs("source/", "source/include/")
  
-    add_files("res/**.psf")
+    add_files("resources/**.psf")
     
     add_cflags {
         "--target=" .. TARGET, "-ffreestanding",

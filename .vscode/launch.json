@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "lldb",
+            "request": "attach",
+            "program": "${workspaceFolder}/build/macosx/aarch64/debug/Bountybot",
+            "pid": "${command:pickMyProcess}",
+            "waitFor": true,
+            "stopOnEntry": true,
+            "console": "internalConsole",
+            "sourceLanguages": ["c"],
+            "terminal": "console"
+            // , "preLaunchTask": "QEMU"
+        }
+    ]
+}
