@@ -18,4 +18,4 @@ xmake config --mode=debug --toolchain=clang --cc=$CC --ld=ld.lld --as=$CC
 
 with `$CC` being your c complier.
 
-Once this is ran, you can then just run `xmake`, which will build the the kernal.
+Once this is ran, you can then just run `xmake`, which will build the the kernel.
