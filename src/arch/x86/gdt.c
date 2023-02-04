@@ -20,6 +20,7 @@
 #include "kern/arch/x86/gdt.h"
 
 static struct GlobalDescriptorTable gdt;
+static struct GDTRegister gdtr = {.base = (qword)&gdt, .limit = sizeof(gdt) - 1};
 
 void gdt_init(void)
 {
@@ -34,4 +35,6 @@ void gdt_init(void)
     gdt.descriptors[8] = 0x00aff3000000ffff; // usermode 64-bit data
 
     gdt.task_state_segment.tss[0x66] = 0x13;
+
+    asm volatile("LGDT %0" :: "m"(gdtr));
 }

@@ -35,7 +35,7 @@ static struct IDTRegister idtr = {
     .base = (uint64_t)idt,
 };
 
-static void init()
+void idt_init()
 {
     info("initialising interrupts...\n");
 
@@ -45,6 +45,8 @@ static void init()
     idt_register_int(0xD, int_general_protection);
     idt_register_int(0x1, int_debug);
     idt_register_int(0x6, int_invalid_opcode);
+
+    asm volatile("LIDT %0" :: "m"(idtr));
 
     info("done");
 }

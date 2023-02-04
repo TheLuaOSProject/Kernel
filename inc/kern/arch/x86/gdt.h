@@ -32,7 +32,7 @@ struct GlobalDescriptorTable {
 
 struct GDTRegister {
     word limit;
-    dword base;
+    qword base;
 } packed;
 
 void gdt_init(void);

@@ -19,13 +19,18 @@
 
 #import <limine.h>
 
-#include "kern/io/console.h"
 #include "kern/io/log.h"
+#include "kern/arch/x86/gdt.h"
+#include "kern/arch/x86/interrupts.h"
 
 void kernel_start()
 {
+    gdt_init();
+    idt_init();
+
     info("started the luaOS kernel!");
     info("2 + 2 = {}", 4);
 
+    asm("ud2");
     halt();
 }
