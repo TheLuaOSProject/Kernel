@@ -85,7 +85,7 @@ extern/limine:
 	git clone https://github.com/limine-bootloader/limine.git --branch=v4.x-branch-binary --depth=1 $@
 	$(MAKE) -C $@
 
-build/bin/luaos.iso: extern/limine build/bin/luck.elf
+build/bin/luaos.iso: extern/limine build/bin/luck.elf res/limine.cfg
 	mkdir -p $(dir $@)/iso
 	cp build/bin/luck.elf res/limine.cfg extern/limine/limine-cd.bin extern/limine/limine.sys extern/limine/limine-cd-efi.bin $(dir $@)/iso
 	xorriso -as mkisofs\
