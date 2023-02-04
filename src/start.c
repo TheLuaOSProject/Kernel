@@ -29,7 +29,7 @@ void kernel_start()
     idt_init();
 
     info("started the luaOS kernel!");
-    info("2 + 2 = {}", 4);
+    info("2 + 2 = {:~^15}", 4);
 
     asm("ud2");
     halt();

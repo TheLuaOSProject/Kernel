@@ -52,7 +52,6 @@ typedef struct {
 
     bool use_alt_form;
 
-    char fill_char;
     unsigned int width;
 
     char type;
@@ -101,6 +100,7 @@ scan:;
     spec.type = ' ';
     
     if (current() == ':') {
+        next();
         if (
             current() != '<' && current() != '>' && current() != '^' // fill
             && current() != '+' && current() != '-' && current() != ' ' // sign
@@ -118,15 +118,15 @@ scan:;
             spec.align = current();
             next();
         } else if (spec.fill != ' ') {
-            panic("spec.fill de facto implies spec.align");
+            panic("spec.fill implies spec.align");
         }
         if (current() == '#') {
             spec.use_alt_form = true;
             next();
         }
         if (current() == '0') {
-            spec.align = '0';
-            spec.fill = '=';
+            spec.align = '^';
+            spec.fill = '0';
             next();
         }
         if (current() >= '0' && current() <= '9') {
@@ -179,7 +179,7 @@ static void log_do_append_number(char** _buf, unsigned long long num, int base, 
 static void log_emit(format_specifier_t fi, char* buf) {
     if (string_length(buf) < fi.width) {
         int wi_b = string_length(buf);
-        int dis_b = wi_b - fi.width;
+        int dis_b = fi.width - wi_b;
         int half_b = dis_b / 2;
         int half2_b = dis_b - half_b;
         if (fi.align == '>') {
