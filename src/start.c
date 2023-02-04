@@ -17,11 +17,11 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import <limine.h>
+#include <limine.h>
 
-#include "kern/io/log.h"
-#include "kern/arch/x86/gdt.h"
-#include "kern/arch/x86/interrupts.h"
+#include "luck/io/log.h"
+#include "luck/arch/x86_64/gdt.h"
+#include "luck/arch/x86_64/interrupts.h"
 
 void kernel_start()
 {

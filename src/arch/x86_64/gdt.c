@@ -17,7 +17,7 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kern/arch/x86/gdt.h"
+#include "luck/arch/x86_64/gdt.h"
 
 static struct GlobalDescriptorTable gdt;
 static struct GDTRegister gdtr = {.base = (qword)&gdt, .limit = sizeof(gdt) - 1};

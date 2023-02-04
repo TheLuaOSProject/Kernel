@@ -17,6 +17,8 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include "common.h"
 
 ASSUME_NONNULL_BEGIN

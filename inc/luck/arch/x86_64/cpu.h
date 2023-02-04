@@ -17,28 +17,12 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "luck/io/port.h"
+#pragma once
 
-byte port_in_byte(word port)
-{
-    byte data;
-    asm volatile("INB %1, %0" : "=a"(data) : "Nd"(port));
-    return data;
-}
+#include "common.h"
 
-void port_out_byte(word port, byte data)
-{
-    asm volatile("OUTB %0, %1" : : "a"(data), "Nd"(port));
-}
-
-word port_in_word(word port)
-{
-    word data;
-    asm volatile("INW %1, %0" : "=a"(data) : "Nd"(port));
-    return data;
-}
-
-void port_out_word(word port, word data)
-{
-    asm volatile("OUTW %0, %1" : : "a"(data), "Nd"(port));
-}
+typedef struct {
+    qword rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15;
+    qword rip, rflags;
+    qword cs, ss, ds, es, fs, gs;
+} CPUContext;

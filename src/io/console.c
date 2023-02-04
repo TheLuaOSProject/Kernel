@@ -20,7 +20,7 @@
 #include <limine.h>
 #include <string.h>
 
-#include "kern/io/console.h"
+#include "luck/io/console.h"
 
 static const volatile struct limine_terminal_request terminal_request = {
     .id = LIMINE_TERMINAL_REQUEST

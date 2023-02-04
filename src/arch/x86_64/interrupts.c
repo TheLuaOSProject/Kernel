@@ -17,22 +17,23 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kern/arch/x86/interrupts.h"
+#include "luck/arch/x86_64/interrupts.h"
+#include "luck/arch/x86_64/cpu.h"
 
-#include "kern/io/log.h"
+#include "luck/io/log.h"
 
-attribute(interrupt) void int_div_by_zero(void*);
-attribute(interrupt) void int_breakpoint(void*);
-attribute(interrupt) void int_double_fault(void*);
-attribute(interrupt) void int_general_protection(void*);
-attribute(interrupt) void int_debug(void*);
-attribute(interrupt) void int_invalid_opcode(void*);
+attribute(interrupt) void int_div_by_zero(void *);
+attribute(interrupt) void int_breakpoint(void *);
+attribute(interrupt) void int_double_fault(void *);
+attribute(interrupt) void int_general_protection(void *);
+attribute(interrupt) void int_debug(void *);
+attribute(interrupt) void int_invalid_opcode(void *);
 
 
 static struct IDTEntry idt[256];
 static struct IDTRegister idtr = {
     .limit = sizeof(struct IDTEntry) * 256 - 1,
-    .base = (uint64_t)idt,
+    .base = (qword)idt,
 };
 
 void idt_init()
@@ -51,21 +52,21 @@ void idt_init()
     info("done");
 }
 
-void idt_register_int(byte int_no, attribute(interrupt) void(*routine)(void*))
+void idt_register_int(byte int_no, attribute(interrupt) void(*routine)(void *))
 {
     if (int_no > 255) {
-        err("Interrupt number is too large");
+        error("Interrupt number {} is too large", int_no);
         return;
     }
 
     if (routine == nullptr) {
-        err("Interrupt routine is NULL");
+        error("Interrupt routine {} is NULL", (uintptr_t)routine);
         return;
     }
 
-    uint64_t handler = (uint64_t)routine;
+    qword handler = (qword)routine;
     idt[int_no] = (struct IDTEntry) {
-        .offset_low = (uint16_t)handler,
+        .offset_low = (dword)handler,
         .selector = 0x28,
         .interrupt_stack_table = 0,
         .flags = 0x8E,

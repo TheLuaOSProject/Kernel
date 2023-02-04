@@ -1,4 +1,4 @@
-/**
+/*nonnull *nonnull 
  * Copyright (C) 2023 Amrit Bhogal, pitust
  *
  * This file is part of LuaOS.
@@ -20,21 +20,21 @@
 #pragma once
 
 #include "common.h"
-#include "kern/macro_util.h"
+#include "luck/macro_util.h"
 
 ASSUME_NONNULL_BEGIN
 
 void _log_level_info(void);
-void _log_level_warn(void);
-void _log_level_err(void);
+void _log_level_warning(void);
+void _log_level_error(void);
 void _log_level_panic(void);
 
-void _log_level_common_end(const char* nonnull* nonnull fmtref);
-noreturn void _log_level_panic_end(const char* nonnull* nonnull fmtref);
+void _log_level_common_end(const char *nonnull *nonnull fmtref);
+noreturn void _log_level_panic_end(const char *nonnull *nonnull fmtref);
 
 #define _log_level_info_end _log_level_common_end
-#define _log_level_warn_end _log_level_common_end
-#define _log_level_err_end _log_level_common_end
+#define _log_level_warning_end _log_level_common_end
+#define _log_level_error_end _log_level_common_end
 
 #define _log__formatters(X) \
     X(char, char) \
@@ -50,7 +50,7 @@ noreturn void _log_level_panic_end(const char* nonnull* nonnull fmtref);
     X(unsignedptr, unsigned long) \
     X(unsigned64, unsigned long long) \
 
-#define _log__defines(name, type) void _log_##name(const char*nonnull *nonnull fmtref, type value);
+#define _log__defines(name, type) void _log_##name(const char *nonnull *nonnull fmtref, type value);
 _log__formatters(_log__defines)
 #undef _log__defines
 
@@ -67,8 +67,8 @@ _log__formatters(_log__defines)
     } while (0)
 
 #define info(fmt, ...) log(info, fmt __VA_OPT__(,) __VA_ARGS__)
-#define warn(fmt, ...) log(warn, fmt __VA_OPT__(,) __VA_ARGS__)
-#define err(fmt, ...) log(err, fmt __VA_OPT__(,) __VA_ARGS__)
+#define warning(fmt, ...) log(warning, fmt __VA_OPT__(,) __VA_ARGS__)
+#define error(fmt, ...) log(error, fmt __VA_OPT__(,) __VA_ARGS__)
 #define panic(fmt, ...) log(panic, fmt __VA_OPT__(,) __VA_ARGS__)
 
 ASSUME_NONNULL_END

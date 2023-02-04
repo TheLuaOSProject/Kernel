@@ -20,9 +20,9 @@
 #include <stdatomic.h>
 #include <string.h>
 
-#include "kern/io/log.h"
-#include "kern/io/console.h"
-#include "kern/io/port.h"
+#include "luck/io/log.h"
+#include "luck/io/console.h"
+#include "luck/io/port.h"
 #include "common.h"
 
 static atomic_bool console = true;
@@ -38,7 +38,7 @@ static void output_char(char c) {
         port_out_byte(0x3f8, c);
     }
 }
-static void output_string(const char* s) {
+static void output_string(const char *s) {
     while (*s) output_char(*s++);
 }
 
@@ -52,14 +52,15 @@ typedef struct {
 
     bool use_alt_form;
 
+    char fill_char;
     unsigned int width;
 
     char type;
-} format_specifier_t;
+} FormatSpecifier;
 
-static format_specifier_t parse_fmt(const char** fmtref) {
+static int parse_fmt(const char **fmtref, FormatSpecifier *spec) {
 #define current() (**fmtref)
-#define next() (*fmtref)++;
+#define next() (*fmtref)++
 
     while (current()) {
         if (current() == '{') {
@@ -76,31 +77,33 @@ static format_specifier_t parse_fmt(const char** fmtref) {
                 output_char('}');
                 next();
             } else {
-                panic("expected '}}' after '}}', found '{}'", current());
+                output_string("(fmt error: expected '}}' after '}}', found '{}')");
+                return 1;
             }
         } else {
             output_char(current());
             next();
         }
     }
-    panic("unexpected end of input, expected another input line!");
+
+    output_string("(fmt error: expected '}}' after '}}', found EOF)");
+    return 2;
 scan:;
-    format_specifier_t spec;
-    spec.fill = ' ';
-    spec.align = '>';
 
-    spec.sign = '-';
+    spec->fill = ' ';
+    spec->align = '>';
 
-    spec.group = false;
+    spec->sign = '-';
 
-    spec.use_alt_form = false;
+    spec->group = false;
 
-    spec.width = 0;
+    spec->use_alt_form = false;
 
-    spec.type = ' ';
+    spec->width = 0;
+
+    spec->type = ' ';
     
     if (current() == ':') {
-        next();
         if (
             current() != '<' && current() != '>' && current() != '^' // fill
             && current() != '+' && current() != '-' && current() != ' ' // sign
@@ -111,22 +114,23 @@ scan:;
             && current() != 'b' && current() != 'c' && current() != 'd' && current() != 'o' && current() != 'x' && current() != 'X' // type
         ) {
             // fill character
-            spec.fill = current();
+            spec->fill = current();
             next();
         }
         if (current() == '<' || current() == '>' || current() == '^') {
-            spec.align = current();
+            spec->align = current();
             next();
-        } else if (spec.fill != ' ') {
-            panic("spec.fill implies spec.align");
+        } else if (spec->fill != ' ') {
+            output_string("(fmt error: spec.fill de facto implies spec.align)");
+            return 3;
         }
         if (current() == '#') {
-            spec.use_alt_form = true;
+            spec->use_alt_form = true;
             next();
         }
         if (current() == '0') {
-            spec.align = '^';
-            spec.fill = '0';
+            spec->align = '0';
+            spec->fill = '=';
             next();
         }
         if (current() >= '0' && current() <= '9') {
@@ -136,38 +140,42 @@ scan:;
                 width += current() - '0';
                 next();
             }
-            spec.width = width;
+            spec->width = width;
         }
         if (current() == '_') {
-            spec.group = true;
+            spec->group = true;
             next();
         }
         if (
             current() == 'b' || current() == 'c' || current() == 'd' || current() == 'o'|| current() == 'x' || current() == 'X'
         ) {
-            spec.type = current();
+            spec->type = current();
         }
     }
     if (current() != '}') {
-        panic("expected '}}', found '{}'", current());
+        output_string("(fmt error: expected '}}', found '");
+        output_char(current());
+        output_string("')");
+        return 4;
     }
     next();
 
 #undef current
-    return spec;
+    return 0;
 }
 
-void _log_level_info(void) { output_string("\x1b[32minfo\x1b[0m "); }
-void _log_level_err(void) { output_string("\x1b[31merr\x1b[0m "); }
-void _log_level_panic(void) { output_string("\x1b[31mpanic\x1b[0m "); }
-void _log_level_common_end(const char** fmtref) { output_string(*fmtref); output_char('\n'); }
-void _log_level_panic_end(const char** fmtref) {
+void _log_level_info(void) { output_string("\x1b[32m[INFO]\x1b[0m "); }
+void _log_level_warning(void) { output_string("\x1b[33m[WARNING]\x1b[0m "); }
+void _log_level_error(void) { output_string("\x1b[31m[ERROR]\x1b[0m "); }
+void _log_level_panic(void) { output_string("\x1b[31m[FATAL]\x1b[0m "); }
+void _log_level_common_end(const char **fmtref) { output_string(*fmtref); output_char('\n'); }
+void _log_level_panic_end(const char **fmtref) {
     output_string(*fmtref);
     output_char('\n');
     halt();
 }
 
-static void log_do_append_number(char** _buf, unsigned long long num, int base, bool upcase) {
+static void log_do_append_number(char **_buf, unsigned long long num, int base, bool upcase) {
 #define buf (*_buf)
     if (!num) *--buf = '0';
     while (num) {
@@ -176,10 +184,10 @@ static void log_do_append_number(char** _buf, unsigned long long num, int base, 
     }
 #undef buf
 }
-static void log_emit(format_specifier_t fi, char* buf) {
+static void log_emit(FormatSpecifier fi, char* buf) {
     if (string_length(buf) < fi.width) {
         int wi_b = string_length(buf);
-        int dis_b = fi.width - wi_b;
+        int dis_b = wi_b - fi.width;
         int half_b = dis_b / 2;
         int half2_b = dis_b - half_b;
         if (fi.align == '>') {
@@ -199,7 +207,7 @@ static void log_emit(format_specifier_t fi, char* buf) {
         output_string(buf);
     }
 }
-static int log_num_base(format_specifier_t fi) {
+static int log_num_base(FormatSpecifier fi) {
     if (fi.type == ' ' || fi.type == 'd') return 10;
     if (fi.type == 'b') return 2;
     if (fi.type == 'c') panic("log_num_base() expects you to check for 'c' yourself!");
@@ -207,7 +215,7 @@ static int log_num_base(format_specifier_t fi) {
     if (fi.type == 'x' || fi.type == 'X') return 16;
     panic("invalid type fi.type {}", fi.type);
 }
-static void log_num_u(format_specifier_t fi, unsigned long long num) {
+static void log_num_u(FormatSpecifier fi, unsigned long long num) {
     char _buf[64];
     char* buf = _buf + 64;
     *--buf = 0;
@@ -224,7 +232,7 @@ static void log_num_u(format_specifier_t fi, unsigned long long num) {
 
     log_emit(fi, buf);
 }
-static void log_num_s(format_specifier_t fi, long long num) {
+static void log_num_s(FormatSpecifier fi, long long num) {
     char _buf[64];
     char* buf = _buf + 64;
     *--buf = 0;
@@ -247,23 +255,68 @@ static void log_num_s(format_specifier_t fi, long long num) {
     log_emit(fi, buf);
 }
 
-void _log_signed8(const char** fmtref, signed char num) { log_num_s(parse_fmt(fmtref), num); }
-void _log_signed16(const char** fmtref, short num) { log_num_s(parse_fmt(fmtref), num); }
-void _log_signed32(const char** fmtref, int num) { log_num_s(parse_fmt(fmtref), num); }
-void _log_signedptr(const char** fmtref, long num) { log_num_s(parse_fmt(fmtref), num); }
-void _log_signed64(const char** fmtref, long long num) { log_num_s(parse_fmt(fmtref), num); }
-void _log_unsigned8(const char** fmtref, unsigned char num) { log_num_u(parse_fmt(fmtref), num); }
-void _log_unsigned16(const char** fmtref, unsigned short num) { log_num_u(parse_fmt(fmtref), num); }
-void _log_unsigned32(const char** fmtref, unsigned int num) { log_num_u(parse_fmt(fmtref), num); }
-void _log_unsignedptr(const char** fmtref, unsigned long num) { log_num_u(parse_fmt(fmtref), num); }
-void _log_unsigned64(const char** fmtref, unsigned long long num) { log_num_u(parse_fmt(fmtref), num); }
-void _log_char(const char** fmtref, char c) {
-    format_specifier_t fi = parse_fmt(fmtref);
+void _log_signed8(const char **fmtref, signed char num) {
+    FormatSpecifier fs;
+    parse_fmt(fmtref, &fs);
+    log_num_s(fs, num);
+}
+void _log_signed16(const char **fmtref, short num) {
+    FormatSpecifier fs;
+    parse_fmt(fmtref, &fs);
+    log_num_s(fs, num);
+}
+void _log_signed32(const char **fmtref, int num) {
+    FormatSpecifier fs;
+    parse_fmt(fmtref, &fs);
+    log_num_s(fs, num);
+}
+void _log_signedptr(const char **fmtref, long num) {
+    FormatSpecifier fs;
+    parse_fmt(fmtref, &fs);
+    log_num_s(fs, num);
+}
+void _log_signed64(const char **fmtref, long long num) {
+    FormatSpecifier fs;
+    parse_fmt(fmtref, &fs);
+    log_num_s(fs, num);
+}
+void _log_unsigned8(const char **fmtref, unsigned char num) {
+    FormatSpecifier fs;
+    parse_fmt(fmtref, &fs);
+    log_num_u(fs, num);
+}
+void _log_unsigned16(const char **fmtref, unsigned short num) {
+    FormatSpecifier fs;
+    parse_fmt(fmtref, &fs);
+    log_num_u(fs, num);
+}
+void _log_unsigned32(const char **fmtref, unsigned int num) {
+    FormatSpecifier fs;
+    parse_fmt(fmtref, &fs);
+    log_num_u(fs, num);
+}
+void _log_unsignedptr(const char **fmtref, unsigned long num) {
+    FormatSpecifier fs;
+    parse_fmt(fmtref, &fs);
+    log_num_u(fs, num);
+}
+void _log_unsigned64(const char **fmtref, unsigned long long num) {
+    FormatSpecifier fs;
+    parse_fmt(fmtref, &fs);
+    log_num_u(fs, num);
+}
+void _log_char(const char **fmtref, char c) {
+    FormatSpecifier fi;
+    parse_fmt(fmtref, &fi);
 
     char _buf[64];
-    char* buf = _buf + 64;
+    char *buf = _buf + 64;
     if (fi.type != 'c' && fi.type != ' ') {
-        panic("expected 'c' or nothing as fi.type, found {}", fi.type);
+        //TODO: Add proper reporting
+
+        *--buf = 0;
+        return;
+//        panic("expected 'c' or nothing as fi.type, found {}", fi.type);
     }
     *--buf = 0;
     *--buf = c;
