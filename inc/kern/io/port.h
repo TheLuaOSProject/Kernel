@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023 Amrit Bhogal
+ * Copyright (C) 2023 Amrit Bhogal, pitust
  *
  * This file is part of LuaOS.
  *
@@ -23,18 +23,10 @@
 
 ASSUME_NONNULL_BEGIN
 
-declare_module {
-    void (*write)(const char *str, size_t len);
-    void (*write_char)(char c);
+byte port_in_byte(word port);
+void port_out_byte(word port, byte data);
 
-    void (*print)(const char *str);
-    void (*printf)(const char *str, ...);
-
-    void (*success)(const char *str);
-    void (*info)(const char *str);
-    void (*warning)(const char *str);
-    void (*error)(const char *str);
-    void (*fatal)(const char *str);
-} console;
+word port_in_word(word port);
+void port_out_word(word port, word data);
 
 ASSUME_NONNULL_END

@@ -21,26 +21,20 @@
 
 ASSUME_NONNULL_BEGIN
 
-struct IDTEntry {
-    word offset_low, selector;
-    byte interrupt_stack_table, flags;
-    word offset_middle;
-    dword offset_high, reserved;
+struct TSSDescriptor {
+    byte tss[0x6b];
+} attribute(aligned(4096));
+
+struct GlobalDescriptorTable {
+    uint64_t descriptors[11];
+    struct TSSDescriptor task_state_segment;
 };
 
-struct IDTRegister {
+struct GDTRegister {
     word limit;
-    qword base;
+    dword base;
 } packed;
 
-declare_module {
-    struct IDTEntry     descriptor_table[256];
-    void *nullable      service_routines[256];
-    struct IDTRegister  iregister;
-
-    void (*initalise)(void);
-    void (*register_interrupt)(byte interrupt, void *routine, byte flags);
-    void (*load)(void);
-} interrupts;
+void gdt_init(void);
 
 ASSUME_NONNULL_END

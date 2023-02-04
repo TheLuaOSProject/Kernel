@@ -17,28 +17,21 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kern/io/port.h"
+#include "kern/arch/x86/gdt.h"
 
-byte port_in_byte(word port)
-{
-    byte data;
-    asm volatile("INB %1, %0" : "=a"(data) : "Nd"(port));
-    return data;
-}
+static struct GlobalDescriptorTable gdt;
 
-void port_out_byte(word port, byte data)
+void gdt_init(void)
 {
-    asm volatile("OUTB %0, %1" : : "a"(data), "Nd"(port));
-}
+    gdt.descriptors[0] = 0x0000000000000000; // null
+    gdt.descriptors[1] = 0x00009a000000ffff; // 16-bit code
+    gdt.descriptors[2] = 0x000093000000ffff; // 16-bit data
+    gdt.descriptors[3] = 0x00cf9a000000ffff; // 32-bit code
+    gdt.descriptors[4] = 0x00cf93000000ffff; // 32-bit data
+    gdt.descriptors[5] = 0x00af9b000000ffff; // 64-bit code
+    gdt.descriptors[6] = 0x00af93000000ffff; // 64-bit data
+    gdt.descriptors[7] = 0x00affb000000ffff; // usermode 64-bit code
+    gdt.descriptors[8] = 0x00aff3000000ffff; // usermode 64-bit data
 
-word port_in_word(word port)
-{
-    word data;
-    asm volatile("INW %1, %0" : "=a"(data) : "Nd"(port));
-    return data;
-}
-
-void port_out_word(word port, word data)
-{
-    asm volatile("OUTW %0, %1" : : "a"(data), "Nd"(port));
+    gdt.task_state_segment.tss[0x66] = 0x13;
 }

@@ -17,26 +17,10 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "console.h"
-
 #include <limine.h>
+#include <string.h>
 
-#include "string.h"
-
-void    write(const char *str, size_t len), write_char(char c), print(const char *str), printf(const char *str, ...),
-        success(const char *str), info(const char *str), warning(const char *str), error(const char *str), fatal(const char *str);
-
-define_module(console) {
-    .write      = write,
-    .write_char = write_char,
-    .print      = print,
-    .printf     = printf,
-    .success    = success,
-    .info       = info,
-    .warning    = warning,
-    .error      = error,
-    .fatal      = fatal
-};
+#include "kern/io/console.h"
 
 static const volatile struct limine_terminal_request terminal_request = {
     .id = LIMINE_TERMINAL_REQUEST
@@ -54,84 +38,15 @@ static void initalise_terminal()
     terminal = terminal_request.response->terminals[0];
 }
 
-void write(const char *str, size_t len)
-{
-    initalise_terminal();
-
-    terminal_request.response->write(terminal, str, len);
-}
-
-void write_char(char c)
-{
-    initalise_terminal();
-
-    terminal_request.response->write(terminal, &c, 1);
-}
-
-void print(const char *str)
+void console_write(const char* str)
 {
     initalise_terminal();
 
     terminal_request.response->write(terminal, str, string_length(str));
 }
-
-void printf(const char *str, ...)
+void console_write_char(char c)
 {
     initalise_terminal();
 
-    (void)str;
-
-    // va_list args;
-    // va_start(args, str);
-    // terminal_request.response->vprintf(terminal, str, args);
-    // va_end(args);
-
-    return;
+    terminal_request.response->write(terminal, &c, 1);
 }
-
-void success(const char *str)
-{
-    initalise_terminal();
-
-    print("\x1b[32m[SUCCESS]\x1b[0m ");
-    print(str);
-    print("\n");
-}
-
-void info(const char *str)
-{
-    initalise_terminal();
-
-    print("[INFO] ");
-    print(str);
-    print("\n");
-}
-
-void warning(const char *str)
-{
-    initalise_terminal();
-
-    print("\x1b[33m[WARNING]\x1b[0m ");
-    print(str);
-    print("\n");
-}
-
-void error(const char *str)
-{
-    initalise_terminal();
-
-    print("\x1b[31m[ERROR]\x1b[0m ");
-    print(str);
-    print("\n");
-}
-
-void fatal(const char *str)
-{
-    initalise_terminal();
-
-    print("\x1b[31m[FATAL]\x1b[0m ");
-    print(str);
-    print("\n");
-    halt();
-}
-

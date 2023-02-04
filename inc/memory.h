@@ -17,22 +17,31 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "common.h"
+#pragma once
 
-ASSUME_NONNULL_BEGIN
+#include <common.h>
 
-#define QEMU_LOG_PORT 0x3F8
+static size_t memory_copy(void *dest, const void *src, size_t n)
+{
+    for (size_t i = 0; i < n; i++) {
+        ((char *)dest)[i] = ((char *)src)[i];
+    }
+    return n;
+}
 
-declare_module {
-    void (*write)(const char *str, size_t len);
-    void (*print)(const char *str);
-    void (*printf)(const char *str, ...);
+static size_t memory_set(void *dest, int c, size_t n)
+{
+    for (size_t i = 0; i < n; i++) {
+        ((char *)dest)[i] = c;
+    }
+    return n;
+}
 
-    void (*success)(const char *str);
-    void (*info)(const char *str);
-    void (*warning)(const char *str);
-    void (*error)(const char *str);
-    void (*fatal)(const char *str);
-} log;
-
-ASSUME_NONNULL_END
+static int memory_compare(const void *s1, const void *s2, size_t n)
+{
+    for (size_t i = 0; i < n; i++) {
+        if (((char *)s1)[i] < ((char *)s2)[i]) return -1;
+        if (((char *)s1)[i] > ((char *)s2)[i]) return 1;
+    }
+    return 0;
+}

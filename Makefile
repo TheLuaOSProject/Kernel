@@ -40,9 +40,9 @@ override CFLAGS +=       	\
     -mcmodel=kernel      	\
     -MMD                 	\
 	-target x86_64-elf	 	\
-	-isystem extern/include	\
-	-Isrc/					\
-	-Isrc/include/			\
+	-isystem extern/limine	\
+	-Iinc               	\
+	-Wno-unused-function    \
 
 override LDFLAGS +=         \
     -nostdlib               \
@@ -65,9 +65,13 @@ override QEMUFLAGS := -m 2G -monitor stdio -serial file:luaos.log
 .PHONY: all
 all: build/bin/luaos.iso
 
-.PHONY: run
-run: extern/ovmf-x64 build/bin/luaos.iso
+.PHONY: uefi
+uefi: extern/ovmf-x64 build/bin/luaos.iso
 	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d
+
+.PHONY: bios
+bios: build/bin/luaos.iso
+	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d
 
 extern/ovmf-x64:
 	mkdir -p $@
@@ -97,18 +101,18 @@ build/bin/luaos.iso: extern/limine build/bin/luck.elf
 
 build/bin/luck.elf: $(COBJS) $(ASOBJS)
 	@printf "\x1b[35mLinking $@\n\x1b[0m"
-	mkdir -p $(dir $@)
-	$(LD) $(LDFLAGS) -o $@ $^
+	@mkdir -p $(dir $@)
+	@$(LD) $(LDFLAGS) -o $@ $^
 
 build/obj/%.c.o: %.c
-	@printf "\x1b[32mCompiling $^\n\x1b[0m"
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $^ -o $@
+	@printf "\x1b[32mCompiling $<\n\x1b[0m"
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 build/obj/%.asm.o: %.asm
 	@printf "\x1b[32mAssembling $^\n\x1b[0m"
-	mkdir -p $(dir $@)
-	nasm $(NASMFLAGS) $^ -o $@
+	@mkdir -p $(dir $@)
+	@nasm $(NASMFLAGS) $^ -o $@
 
 
 .PHONY: clean
@@ -121,3 +125,5 @@ cleanall: clean
 extern/include/limine.h:
 	mkdir -p extern/include/
 	curl https://raw.githubusercontent.com/limine-bootloader/limine/trunk/limine.h -o $@
+
+-include $(CFILES:%.c=build/obj/%.d)

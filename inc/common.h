@@ -27,7 +27,6 @@
 
 #define attribute(...) __attribute__((__VA_ARGS__))
 
-#define nullptr null
 #define inline attribute(always_inline) static inline
 
 #define pragma(...) _Pragma(#__VA_ARGS__)
@@ -38,9 +37,6 @@
 #define nullable _Nullable
 #define nonnull _Nonnull
 #define packed  attribute(packed)
-
-#define define_module(x) typeof(x) x =
-#define declare_module extern struct
 
 typedef uint8_t byte;
 typedef uint16_t word;
@@ -56,6 +52,9 @@ typedef int64_t sqword;
 
 inline noreturn void halt()
 {
-    while(true) asm volatile("CLI\nHLT");
+    while(true) asm volatile(
+        "CLI\n"
+        "HLT\n"
+    );
     __builtin_unreachable();
 }

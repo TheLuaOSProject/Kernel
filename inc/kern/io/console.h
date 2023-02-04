@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023 Amrit Bhogal
+ * Copyright (C) 2023 Amrit Bhogal, pitust
  *
  * This file is part of LuaOS.
  *
@@ -17,36 +17,13 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include "common.h"
 
 ASSUME_NONNULL_BEGIN
 
-struct GDTDescriptor {
-    word limit, base_low;
-    byte base_middle, access, granularity, base_high;
-};
-
-struct TSSDescriptor {
-    word length, base_low;
-    byte base_middle, flag0, flag1, base_high;
-    dword base_upper, reserved;
-};
-
-struct GlobalDescriptorTable {
-    struct GDTDescriptor descriptors[11];
-    struct TSSDescriptor task_state_segment;
-};
-
-struct GDTRegister {
-    word limit;
-    dword base;
-} packed;
-
-declare_module {
-    struct GlobalDescriptorTable    table;
-    struct GDTRegister              gdtregister;
-
-    void (*initalise)(void);
-} global_descriptor_table;
+void console_write(const char *str);
+void console_write_char(char c);
 
 ASSUME_NONNULL_END

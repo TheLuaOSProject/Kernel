@@ -19,20 +19,13 @@
 
 #import <limine.h>
 
-#include "io/console.h"
-#include "io/log.h"
-
-#include "cpu/interrupts.h"
+#include "kern/io/console.h"
+#include "kern/io/log.h"
 
 void kernel_start()
 {
-    console.print("\x1b[32mStarted the LuaOS kernel\x1b[0m\n");
-    log.write("\nKernel start", 1);
-
-    console.info("Initialising interrupts");
-    interrupts.initalise();
-    console.success("Done");
-
+    info("started the luaOS kernel!");
+    info("2 + 2 = {}", 4);
 
     halt();
 }

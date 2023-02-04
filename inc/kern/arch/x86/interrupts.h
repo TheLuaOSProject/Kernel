@@ -21,12 +21,23 @@
 
 ASSUME_NONNULL_BEGIN
 
-declare_module {
-    byte (*get_byte)(word port);
-    void (*write_byte)(word port, byte data);
+struct IDTEntry {
+    word offset_low, selector;
+    byte interrupt_stack_table, flags;
+    word offset_middle;
+    dword offset_high, reserved;
+};
 
-    word (*get_word)(word port);
-    void (*write_word)(word port, word data);
-} port;
+struct IDTRegister {
+    word limit;
+    qword base;
+} packed;
+
+struct IRQContext {
+
+};
+
+void idt_init(void);
+void idt_register_int(byte int_no, attribute(interrupt) void(*routine)(void*));
 
 ASSUME_NONNULL_END
