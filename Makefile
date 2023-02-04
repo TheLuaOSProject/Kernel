@@ -67,11 +67,14 @@ all: build/bin/luaos.iso
 
 .PHONY: uefi
 uefi: extern/ovmf-x64 build/bin/luaos.iso
-	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d
+	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d -s
 
 .PHONY: bios
 bios: build/bin/luaos.iso
-	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d
+	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d -s
+
+debug:
+	x86_64-elf-gdb build/bin/luck.elf -ex "target remote :1234"
 
 extern/ovmf-x64:
 	mkdir -p $@
