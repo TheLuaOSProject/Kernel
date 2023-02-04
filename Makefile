@@ -71,25 +71,24 @@ extern/ovmf-x64:
 	cd $@ && curl -o OVMF-X64.zip https://efi.akeo.ie/OVMF/OVMF-X64.zip && 7z x OVMF-X64.zip
 
 extern/limine:
-	git clone https://github.com/limine-bootloader/limine.git --branch=v4.x-branch-binary --depth=1
-	make -C limine
+	git clone https://github.com/limine-bootloader/limine.git --branch=v4.x-branch-binary --depth=1 $@
+	$(MAKE) -C $@
 
 build/bin/luaos.iso: build/bin/luck.elf extern/limine
 	mkdir -p $(dir $@)
-	cp res/limine.cfg extern/limine/limine-cd.bin extern/limine/limine-eltorito-efi.bin extern/limine/limine.sys extern/limine/limine-cd.bin extern/limine/limine-eltorito-efi.bin extern/limine/limine.sys $(dir $@)
+	cp res/limine.cfg extern/limine/limine-cd.bin extern/limine/limine.sys extern/limine/limine-cd-efi.bin $(dir $@)
 	xorriso -as mkisofs\
 			-b limine-cd.bin\
 			-no-emul-boot\
 			-boot-load-size 4\
 			-boot-info-table\
-			-efi-boot\
-			limine-eltorito-efi.bin\
+			--efi-boot limine-cd-efi.bin\
 			-efi-boot-part\
 			--efi-boot-image\
 			--protective-msdos-label\
 			$(dir $@) -o $@
 
-	$2/limine-deploy $2
+	extern/limine/limine-deploy $@
 
 
 build/bin/luck.elf: $(OBJ)
