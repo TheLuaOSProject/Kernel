@@ -21,26 +21,28 @@ override LD := ld.lld
 CFLAGS ?= -g -O2 -pipe -Wall -Wextra
 NASMFLAGS ?= -F dwarf -g
 
-override CFLAGS +=       \
-    -std=gnu2x           \
-    -ffreestanding       \
-    -fno-stack-protector \
-    -fno-stack-check     \
-    -fno-lto             \
-    -fno-pie             \
-    -fno-pic             \
-    -m64                 \
-    -march=x86-64        \
-    -mabi=sysv           \
-    -mno-80387           \
-    -mno-mmx             \
-    -mno-sse             \
-    -mno-sse2            \
-    -mno-red-zone        \
-    -mcmodel=kernel      \
-    -MMD                 \
-	-target x86_64-elf	 \
-	-isystem extern/include
+override CFLAGS +=       	\
+    -std=gnu2x           	\
+    -ffreestanding       	\
+    -fno-stack-protector 	\
+    -fno-stack-check     	\
+    -fno-lto             	\
+    -fno-pie             	\
+    -fno-pic             	\
+    -m64                 	\
+    -march=x86-64        	\
+    -mabi=sysv           	\
+    -mno-80387           	\
+    -mno-mmx             	\
+    -mno-sse             	\
+    -mno-sse2            	\
+    -mno-red-zone        	\
+    -mcmodel=kernel      	\
+    -MMD                 	\
+	-target x86_64-elf	 	\
+	-isystem extern/include	\
+	-Isrc/					\
+	-Isrc/include/			\
 
 override LDFLAGS +=         \
     -nostdlib               \
