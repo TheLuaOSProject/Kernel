@@ -17,18 +17,16 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import <limine.h>
+#include "common.h"
 
-#include "io/console.h"
-#include "io/log.h"
+ASSUME_NONNULL_BEGIN
 
+declare_module {
+    byte (*get_byte)(word port);
+    void (*write_byte)(word port, byte data);
 
+    word (*get_word)(word port);
+    void (*write_word)(word port, word data);
+} port;
 
-void kernel_start()
-{
-    console.print("Started the LuaOS kernel\n");
-    log.write("\n", 1);
-
-
-    halt();
-}
+ASSUME_NONNULL_END

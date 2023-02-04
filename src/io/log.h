@@ -17,18 +17,16 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import <limine.h>
+#include "common.h"
 
-#include "io/console.h"
-#include "io/log.h"
+ASSUME_NONNULL_BEGIN
 
+#define QEMU_LOG_PORT 0x3F8
 
+declare_module {
+    void (*write)(const char *str, size_t len);
+    void (*print)(const char *str);
+    void (*printf)(const char *str, ...);
+} log;
 
-void kernel_start()
-{
-    console.print("Started the LuaOS kernel\n");
-    log.write("\n", 1);
-
-
-    halt();
-}
+ASSUME_NONNULL_END

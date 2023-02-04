@@ -18,7 +18,7 @@
 override CC := clang
 override LD := ld.lld
 
-CFLAGS ?= -g -O2 -pipe -Wall -Wextra
+CFLAGS ?= -g -O2 -pipe -Wall -Wextra -Werror
 NASMFLAGS ?= -F dwarf -g
 
 override CFLAGS +=       	\
@@ -55,17 +55,19 @@ override LDFLAGS +=         \
 override ASFLAGS += -f elf64
 
 override CFILES := $(shell find ./src -type f -name '*.c')
-override ASFILES := $(shell find . -type f -name 'src/*.asm')
+override ASFILES := $(shell find ./src -type f -name '*.asm')
 
 override COBJS := $(addprefix build/obj/,$(CFILES:.c=.o))
 override ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.o))
+
+override QEMUFLAGS := -m 2G -monitor stdio -serial file:luaos.log
 
 .PHONY: all
 all: build/bin/luaos.iso
 
 .PHONY: run
 run: extern/ovmf-x64 build/bin/luaos.iso
-	qemu-system-x86_64 -M q35 -m 2G -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d
+	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d
 
 extern/ovmf-x64:
 	mkdir -p $@
@@ -77,8 +79,8 @@ extern/limine:
 	$(MAKE) -C $@
 
 build/bin/luaos.iso: extern/limine build/bin/luck.elf
-	mkdir -p $(dir $@)
-	cp res/limine.cfg extern/limine/limine-cd.bin extern/limine/limine.sys extern/limine/limine-cd-efi.bin $(dir $@)
+	mkdir -p $(dir $@)/iso
+	cp build/bin/luck.elf res/limine.cfg extern/limine/limine-cd.bin extern/limine/limine.sys extern/limine/limine-cd-efi.bin $(dir $@)/iso
 	xorriso -as mkisofs\
 			-b limine-cd.bin\
 			-no-emul-boot\
@@ -88,25 +90,33 @@ build/bin/luaos.iso: extern/limine build/bin/luck.elf
 			-efi-boot-part\
 			--efi-boot-image\
 			--protective-msdos-label\
-			$(dir $@) -o $@
+			$(dir $@)/iso -o $@
+	rm -rf $(dir $@)/iso
 
 	extern/limine/limine-deploy $@
 
 build/bin/luck.elf: $(COBJS) $(ASOBJS)
+	@printf "\x1b[35mLinking $@\n\x1b[0m"
 	mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 
-$(COBJS): $(CFILES) extern/include/limine.h
+build/obj/%.o: %.c
+	@printf "\x1b[32mCompiling $^\n\x1b[0m"
 	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@
 
-$(ASOBJS): $(ASFILES)
+build/obj/%.o: %.asm
+	@printf "\x1b[32mAssembling $^\n\x1b[0m"
 	mkdir -p $(dir $@)
-	nasm $(NASMFLAGS) $< -o $@
+	nasm $(NASMFLAGS) $^ -o $@
+
 
 .PHONY: clean
 clean:
 	rm -rf build
+
+cleanall: clean
+	rm -rf extern
 
 extern/include/limine.h:
 	mkdir -p extern/include/
