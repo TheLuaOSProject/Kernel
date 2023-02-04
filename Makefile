@@ -40,7 +40,7 @@ override CFLAGS +=       \
     -mcmodel=kernel      \
     -MMD                 \
 	-target x86_64-elf	 \
-	-isystem include
+	-isystem extern/include
 
 override LDFLAGS +=         \
     -nostdlib               \
