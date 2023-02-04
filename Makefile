@@ -52,11 +52,11 @@ override LDFLAGS +=         \
 
 override ASFLAGS += -f elf64
 
-override CFILES := $(shell find . -type f -name '*.c')
-override ASFILES := $(shell find . -type f -name '*.asm')
+override CFILES := $(shell find ./src -type f -name '*.c')
+override ASFILES := $(shell find . -type f -name 'src/*.asm')
 
-#prepend build/obj
-override OBJ := $(addprefix build/obj/,$(CFILES:.c=.o) $(ASFILES:.asm=.o))
+override COBJS := $(addprefix build/obj/,$(CFILES:.c=.o))
+override ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.o))
 
 .PHONY: all
 all: build/bin/luaos.iso
@@ -70,10 +70,11 @@ extern/ovmf-x64:
 	cd $@ && curl -o OVMF-X64.zip https://efi.akeo.ie/OVMF/OVMF-X64.zip && 7z x OVMF-X64.zip
 
 extern/limine:
+	mkdir -p $@
 	git clone https://github.com/limine-bootloader/limine.git --branch=v4.x-branch-binary --depth=1 $@
 	$(MAKE) -C $@
 
-build/bin/luaos.iso: build/bin/luck.elf extern/limine
+build/bin/luaos.iso: extern/limine build/bin/luck.elf
 	mkdir -p $(dir $@)
 	cp res/limine.cfg extern/limine/limine-cd.bin extern/limine/limine.sys extern/limine/limine-cd-efi.bin $(dir $@)
 	xorriso -as mkisofs\
@@ -89,23 +90,22 @@ build/bin/luaos.iso: build/bin/luck.elf extern/limine
 
 	extern/limine/limine-deploy $@
 
-
-build/bin/luck.elf: $(OBJ)
+build/bin/luck.elf: $(COBJS) $(ASOBJS)
 	mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 
-%.o: %.c extern/include/
+$(COBJS): $(CFILES) extern/include/limine.h
 	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o build/bin/$@
+	$(CC) $(CFLAGS) -c $< -o $@
 
-%.o: %.asm
+$(ASOBJS): $(ASFILES)
 	mkdir -p $(dir $@)
-	nasm $(NASMFLAGS) $< -o build/bin/$@
+	nasm $(NASMFLAGS) $< -o $@
 
 .PHONY: clean
 clean:
 	rm -rf build
 
 extern/include/limine.h:
-	mkdir -p include/extern
+	mkdir -p extern/include/
 	curl https://raw.githubusercontent.com/limine-bootloader/limine/trunk/limine.h -o $@
