@@ -40,8 +40,7 @@ override CFLAGS +=       \
     -mcmodel=kernel      \
     -MMD                 \
 	-target x86_64-elf	 \
-    -I.					 \
-	-I./include
+	-isystem include
 
 override LDFLAGS +=         \
     -nostdlib               \
@@ -64,7 +63,7 @@ all: build/bin/luaos.iso
 
 .PHONY: run
 run: extern/ovmf-x64 build/bin/luaos.iso
-	qemu-system-x86_64 -M q35 -m 2G -bios $1/OVMF.fd -cdrom build/bin/luaos.iso -boot d
+	qemu-system-x86_64 -M q35 -m 2G -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d
 
 extern/ovmf-x64:
 	mkdir -p $@
@@ -95,18 +94,18 @@ build/bin/luck.elf: $(OBJ)
 	mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 
-build/obj/%.o: %.c include/limine.h
+%.o: %.c extern/include/
 	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o build/bin/$@
 
-build/obj/%.o: %.asm
+%.o: %.asm
 	mkdir -p $(dir $@)
-	nasm $(NASMFLAGS) $< -o $@
+	nasm $(NASMFLAGS) $< -o build/bin/$@
 
 .PHONY: clean
 clean:
 	rm -rf build
 
-include/limine.h:
-	mkdir -p include
+extern/include/limine.h:
+	mkdir -p include/extern
 	curl https://raw.githubusercontent.com/limine-bootloader/limine/trunk/limine.h -o $@
