@@ -34,8 +34,9 @@ struct IDTRegister {
 } packed;
 
 declare_module {
-    struct IDTEntry descriptor_table[256];
-    void *nullable  service_routines[256];
+    struct IDTEntry     descriptor_table[256];
+    void *nullable      service_routines[256];
+    struct IDTRegister  iregister;
 
     void (*initalise)(void);
     void (*register_interrupt)(byte interrupt, void *routine, byte flags);

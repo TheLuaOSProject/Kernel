@@ -19,7 +19,7 @@ override CC := clang
 override LD := ld.lld
 
 CFLAGS ?= -g -O2 -pipe -Wall -Wextra -Werror -Wno-unused
-NASMFLAGS ?= -F dwarf -g
+NASMFLAGS ?= -F dwarf -g -f elf64
 
 override CFLAGS +=       	\
     -std=gnu2x           	\
@@ -57,8 +57,8 @@ override ASFLAGS += -f elf64
 override CFILES := $(shell find ./src -type f -name '*.c')
 override ASFILES := $(shell find ./src -type f -name '*.asm')
 
-override COBJS := $(addprefix build/obj/,$(CFILES:.c=.o))
-override ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.o))
+override COBJS := $(addprefix build/obj/,$(CFILES:.c=.c.o))
+override ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.asm.o))
 
 override QEMUFLAGS := -m 2G -monitor stdio -serial file:luaos.log
 
@@ -100,12 +100,12 @@ build/bin/luck.elf: $(COBJS) $(ASOBJS)
 	mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 
-build/obj/%.o: %.c
+build/obj/%.c.o: %.c
 	@printf "\x1b[32mCompiling $^\n\x1b[0m"
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $^ -o $@
 
-build/obj/%.o: %.asm
+build/obj/%.asm.o: %.asm
 	@printf "\x1b[32mAssembling $^\n\x1b[0m"
 	mkdir -p $(dir $@)
 	nasm $(NASMFLAGS) $^ -o $@

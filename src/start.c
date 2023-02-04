@@ -29,7 +29,10 @@ void kernel_start()
     console.print("\x1b[32mStarted the LuaOS kernel\x1b[0m\n");
     log.write("\nKernel start", 1);
 
+    console.info("Initialising interrupts");
     interrupts.initalise();
+    console.success("Done");
+
 
     halt();
 }

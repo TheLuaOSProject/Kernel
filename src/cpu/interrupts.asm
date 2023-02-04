@@ -1,3 +1,5 @@
+[BITS 64]
+
 %macro INTERRUPT 1
 [EXTERN %1_handler]
 [GLOBAL int_%1]
@@ -42,13 +44,6 @@ int_%1:
     IRETQ
 
 %endmacro
-
-[BITS 64]
-[GLOBAL load_idt]
-load_idt:
-    LIDT [RDI]
-    STI
-    RET
 
 INTERRUPT div_by_zero
 INTERRUPT breakpoint

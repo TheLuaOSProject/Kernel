@@ -20,6 +20,7 @@
 #include "interrupts.h"
 
 #include "io/log.h"
+#include "io/console.h"
 
 static void init(), register_int(byte int_no, void *routine, byte flags), load(void);
 
@@ -30,17 +31,30 @@ extern void int_div_by_zero(),
             int_debug(),
             int_invalid_opcode();
 
-extern void load_idt();
-
 define_module(interrupts) {
     .initalise = init,
     .register_interrupt = register_int,
-    .load = load
+    .load = load,
+    .iregister = {
+        .limit = sizeof(struct IDTEntry) * 256 - 1,
+        .base = (uint64_t)&interrupts.descriptor_table
+    },
 };
 
 static void init()
 {
     log.print("Initialising interrupts\n");
+
+    register_int(0x0, int_div_by_zero, 0x8E);
+    register_int(0x3, int_breakpoint, 0x8E);
+    register_int(0x8, int_double_fault, 0x8E);
+    register_int(0xD, int_general_protection, 0x8E);
+    register_int(0x1, int_debug, 0x8E);
+    register_int(0x6, int_invalid_opcode, 0x8E);
+
+    load();
+
+    log.info("Done");
 }
 
 static void register_int(byte int_no, void *routine, byte flags)
@@ -55,11 +69,6 @@ static void register_int(byte int_no, void *routine, byte flags)
         return;
     }
 
-    if (flags > 7) {
-        log.error("Interrupt flags are too large");
-        return;
-    }
-
     uint64_t handler = (uint64_t)routine;
     interrupts.descriptor_table[int_no] = (struct IDTEntry) {
         .offset_low = (uint16_t)handler,
@@ -70,17 +79,45 @@ static void register_int(byte int_no, void *routine, byte flags)
         .offset_high = handler >> 32,
         .reserved = 0
     };
+    log.info("Registered interrupt");
 }
 
 static void load()
 {
-    log.info("Registering interrupt \"div_by_zero\"");
-    register_int(0, &int_div_by_zero, 0);
+    log.info("Loading interrupts");
+    asm volatile ("LIDT %0" :: "m"(interrupts.iregister));
 }
 
-//handler
-
+// I should have frames, and maybe a more efficent method than this?
 void div_by_zero_handler()
 {
     log.error("Divide by zero");
+}
+
+void breakpoint_handler()
+{
+    log.error("Breakpoint");
+    console.info("DEBUG: Breakpoint");
+}
+
+void double_fault_handler()
+{
+    log.fatal("Double fault");
+    console.fatal("Double fault");
+}
+
+void general_protection_handler()
+{
+    log.error("General protection fault");
+    console.error("General protection fault");
+}
+
+void debug_handler()
+{
+    log.error("Debug");
+}
+
+void invalid_opcode_handler()
+{
+    log.error("Invalid opcode");
 }
