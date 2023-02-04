@@ -19,38 +19,38 @@
 
 #include "port.h"
 
-static byte port_get_byte(word port);
-static void port_write_byte(word port, byte data);
-static word port_get_word(word port);
-static void port_write_word(word port, word data);
+static byte get_byte(word port);
+static void write_byte(word port, byte data);
+static word get_word(word port);
+static void write_word(word port, word data);
 
 define_module(port) {
-    .get_byte = port_get_byte,
-    .write_byte = port_write_byte,
-    .get_word = port_get_word,
-    .write_word = port_write_word
+    .get_byte   = get_byte,
+    .write_byte = write_byte,
+    .get_word   = get_word,
+    .write_word = write_word
 };
 
-static byte port_get_byte(word port)
+static byte get_byte(word port)
 {
     byte data;
     asm volatile("INB %1, %0" : "=a"(data) : "Nd"(port));
     return data;
 }
 
-static void port_write_byte(word port, byte data)
+static void write_byte(word port, byte data)
 {
     asm volatile("OUTB %0, %1" : : "a"(data), "Nd"(port));
 }
 
-static word port_get_word(word port)
+static word get_word(word port)
 {
     word data;
     asm volatile("INW %1, %0" : "=a"(data) : "Nd"(port));
     return data;
 }
 
-static void port_write_word(word port, word data)
+static void write_word(word port, word data)
 {
     asm volatile("OUTW %0, %1" : : "a"(data), "Nd"(port));
 }

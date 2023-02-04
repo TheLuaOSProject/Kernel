@@ -25,17 +25,22 @@
 #include <stdatomic.h>
 #include <stdnoreturn.h>
 
-#define nullptr null
-#define inline __attribute__((always_inline)) static inline
+#define attribute(...) __attribute__((__VA_ARGS__))
 
-#define ASSUME_NONNULL_BEGIN _Pragma("clang assume_nonnull begin")
-#define ASSUME_NONNULL_END _Pragma("clang assume_nonnull end")
+#define nullptr null
+#define inline attribute(always_inline) static inline
+
+#define pragma(...) _Pragma(#__VA_ARGS__)
+
+#define ASSUME_NONNULL_BEGIN    pragma(clang assume_nonnull begin)
+#define ASSUME_NONNULL_END      pragma(clang assume_nonnull end)
 
 #define nullable _Nullable
 #define nonnull _Nonnull
+#define packed  attribute(packed)
 
 #define define_module(x) typeof(x) x =
-#define declare_module extern const struct
+#define declare_module extern struct
 
 typedef uint8_t byte;
 typedef uint16_t word;

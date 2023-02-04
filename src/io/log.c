@@ -23,24 +23,30 @@
 
 #include "port.h"
 
-static void log_write(const char *str, size_t len), log_print(const char *str), log_printf(const char *str, ...);
+static void write(const char *str, size_t len), print(const char *str), printf(const char *str, ...),
+            success(const char *str), info(const char *str), warning(const char *str), error(const char *str), fatal(const char *str);
 
 define_module(log) {
-    .write = log_write,
-    .print = log_print,
-    .printf = log_printf
+    .write  = write,
+    .print  = print,
+    .printf = printf,
+    .success= success,
+    .info   = info,
+    .warning= warning,
+    .error  = error,
+    .fatal  = fatal,
 };
 
-static void log_write(const char *str, size_t len)
+static void write(const char *str, size_t len)
 {
     for (size_t i = 0; i < len; i++)
         port.write_byte(QEMU_LOG_PORT, str[i]);
 }
 
-static void log_print(const char *str)
-{ log_write(str, string_length(str)); }
+static void print(const char *str)
+{ write(str, string_length(str)); }
 
-static void log_printf(const char *str, ...)
+static void printf(const char *str, ...)
 {
     (void)str;
     return;
@@ -50,4 +56,39 @@ static void log_printf(const char *str, ...)
     // va_end(args);
     // log_print(buf);
     // free(buf);
+}
+
+static void success(const char *str)
+{
+    print("[SUCCESS] ");
+    print(str);
+    print("\n");
+}
+
+static void info(const char *str)
+{
+    print("[INFO] ");
+    print(str);
+    print("\n");
+}
+
+static void warning(const char *str)
+{
+    print("[WARNING] ");
+    print(str);
+    print("\n");
+}
+
+static void error(const char *str)
+{
+    print("[ERROR] ");
+    print(str);
+    print("\n");
+}
+
+static void fatal(const char *str)
+{
+    print("[FATAL] ");
+    print(str);
+    print("\n");
 }

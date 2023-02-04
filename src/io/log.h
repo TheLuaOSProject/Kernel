@@ -27,6 +27,12 @@ declare_module {
     void (*write)(const char *str, size_t len);
     void (*print)(const char *str);
     void (*printf)(const char *str, ...);
+
+    void (*success)(const char *str);
+    void (*info)(const char *str);
+    void (*warning)(const char *str);
+    void (*error)(const char *str);
+    void (*fatal)(const char *str);
 } log;
 
 ASSUME_NONNULL_END

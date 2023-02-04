@@ -17,24 +17,19 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#import <limine.h>
 
-#include "common.h"
+#include "io/console.h"
+#include "io/log.h"
 
-ASSUME_NONNULL_BEGIN
+#include "cpu/interrupts.h"
 
-declare_module {
-    void (*write)(const char *str, size_t len);
-    void (*write_char)(char c);
+void kernel_start()
+{
+    console.print("\x1b[32mStarted the LuaOS kernel\x1b[0m\n");
+    log.write("\nKernel start", 1);
 
-    void (*print)(const char *str);
-    void (*printf)(const char *str, ...);
+    interrupts.initalise();
 
-    void (*success)(const char *str);
-    void (*info)(const char *str);
-    void (*warning)(const char *str);
-    void (*error)(const char *str);
-    void (*fatal)(const char *str);
-} console;
-
-ASSUME_NONNULL_END
+    halt();
+}

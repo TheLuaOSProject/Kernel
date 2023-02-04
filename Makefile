@@ -18,7 +18,7 @@
 override CC := clang
 override LD := ld.lld
 
-CFLAGS ?= -g -O2 -pipe -Wall -Wextra -Werror
+CFLAGS ?= -g -O2 -pipe -Wall -Wextra -Werror -Wno-unused
 NASMFLAGS ?= -F dwarf -g
 
 override CFLAGS +=       	\

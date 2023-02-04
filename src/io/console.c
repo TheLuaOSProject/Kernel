@@ -23,13 +23,19 @@
 
 #include "string.h"
 
-void console_write(const char *str, size_t len), console_write_char(char c), console_print(const char *str), console_printf(const char *str, ...);
+void    write(const char *str, size_t len), write_char(char c), print(const char *str), printf(const char *str, ...),
+        success(const char *str), info(const char *str), warning(const char *str), error(const char *str), fatal(const char *str);
 
 define_module(console) {
-    .write = console_write,
-    .write_char = console_write_char,
-    .print = console_print,
-    .printf = console_printf
+    .write      = write,
+    .write_char = write_char,
+    .print      = print,
+    .printf     = printf,
+    .success    = success,
+    .info       = info,
+    .warning    = warning,
+    .error      = error,
+    .fatal      = fatal
 };
 
 static const volatile struct limine_terminal_request terminal_request = {
@@ -48,28 +54,28 @@ static void initalise_terminal()
     terminal = terminal_request.response->terminals[0];
 }
 
-void console_write(const char *str, size_t len)
+void write(const char *str, size_t len)
 {
     initalise_terminal();
 
     terminal_request.response->write(terminal, str, len);
 }
 
-void console_write_char(char c)
+void write_char(char c)
 {
     initalise_terminal();
 
     terminal_request.response->write(terminal, &c, 1);
 }
 
-void console_print(const char *str)
+void print(const char *str)
 {
     initalise_terminal();
 
     terminal_request.response->write(terminal, str, string_length(str));
 }
 
-void console_printf(const char *str, ...)
+void printf(const char *str, ...)
 {
     initalise_terminal();
 
@@ -83,4 +89,49 @@ void console_printf(const char *str, ...)
     return;
 }
 
+void success(const char *str)
+{
+    initalise_terminal();
+
+    print("\x1b[32m[SUCCESS]\x1b[0m ");
+    print(str);
+    print("\n");
+}
+
+void info(const char *str)
+{
+    initalise_terminal();
+
+    print("[INFO] ");
+    print(str);
+    print("\n");
+}
+
+void warning(const char *str)
+{
+    initalise_terminal();
+
+    print("\x1b[33m[WARNING]\x1b[0m ");
+    print(str);
+    print("\n");
+}
+
+void error(const char *str)
+{
+    initalise_terminal();
+
+    print("\x1b[31m[ERROR]\x1b[0m ");
+    print(str);
+    print("\n");
+}
+
+void fatal(const char *str)
+{
+    initalise_terminal();
+
+    print("\x1b[31m[FATAL]\x1b[0m ");
+    print(str);
+    print("\n");
+    halt();
+}
 

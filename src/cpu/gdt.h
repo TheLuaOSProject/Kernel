@@ -17,24 +17,36 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
 #include "common.h"
 
 ASSUME_NONNULL_BEGIN
 
+struct GDTDescriptor {
+    word limit, base_low;
+    byte base_middle, access, granularity, base_high;
+};
+
+struct TSSDescriptor {
+    word length, base_low;
+    byte base_middle, flag0, flag1, base_high;
+    dword base_upper, reserved;
+};
+
+struct GlobalDescriptorTable {
+    struct GDTDescriptor descriptors[11];
+    struct TSSDescriptor task_state_segment;
+};
+
+struct GDTRegister {
+    word limit;
+    dword base;
+} packed;
+
 declare_module {
-    void (*write)(const char *str, size_t len);
-    void (*write_char)(char c);
+    struct GlobalDescriptorTable    table;
+    struct GDTRegister              gdtregister;
 
-    void (*print)(const char *str);
-    void (*printf)(const char *str, ...);
-
-    void (*success)(const char *str);
-    void (*info)(const char *str);
-    void (*warning)(const char *str);
-    void (*error)(const char *str);
-    void (*fatal)(const char *str);
-} console;
+    void (*initalise)(void);
+} global_descriptor_table;
 
 ASSUME_NONNULL_END

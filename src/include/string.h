@@ -30,4 +30,44 @@ static size_t string_length(const char *str)
     return len;
 }
 
+static int string_compare(const char *str1, const char *str2)
+{
+    size_t len1 = string_length(str1);
+    size_t len2 = string_length(str2);
+    size_t len = len1 < len2 ? len1 : len2;
+    for (size_t i = 0; i < len; i++) {
+        if (str1[i] < str2[i]) return -1;
+        if (str1[i] > str2[i]) return 1;
+    }
+    if (len1 < len2) return -1;
+    if (len1 > len2) return 1;
+    return 0;
+}
+
+static void string_copy_n(char *dest, const char *src, size_t n)
+{
+    for (size_t i = 0; i < n; i++) {
+        dest[i] = src[i];
+    }
+    dest[n] = '\0';
+}
+
+static void string_copy(char *dest, const char *src)
+{
+    size_t len = string_length(src);
+    string_copy_n(dest, src, len);
+}
+
+static void string_concatenate_n(char *dest, const char *src, size_t n)
+{
+    size_t len = string_length(dest);
+    string_copy_n(dest + len, src, n);
+}
+
+static void string_concatenate(char *dest, const char *src)
+{
+    size_t len = string_length(src);
+    string_concatenate_n(dest, src, len);
+}
+
 ASSUME_NONNULL_END
