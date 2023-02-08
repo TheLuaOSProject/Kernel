@@ -17,7 +17,7 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "kern/io/log.h"
+#include "luck/io/log.h"
 #include <limine.h>
 
 static volatile struct limine_hhdm_request hhdm_request = {LIMINE_HHDM_REQUEST, 0, nullptr};

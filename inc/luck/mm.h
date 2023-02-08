@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023 Amrit Bhogal
+ * Copyright (C) 2023 pitust
  *
  * This file is part of LuaOS.
  *
@@ -17,26 +17,23 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <limine.h>
+#pragma once
 
-#include "luck/mm.h"
-#include "luck/magazines.h"
-#include "luck/io/log.h"
-#include "luck/arch/x86_64/gdt.h"
-#include "luck/arch/x86_64/interrupts.h"
+#include <common.h>
 
-void kernel_start()
-{
-    gdt_init();
-    idt_init();
-    mag_init();
-    kalloc_init();
+/// page allocation ///
+enum PageType {
+    kPageTable,
+    kRegular
+};
 
-    info("started the luaOS kernel!");
-    info("2 + 2 = {:~^15}", 4);
-    // info("kernel_start: {}", (void*)kernel_start);
-    info("cool addr: {:#x}", (qword)(void*)kalloc(69));
+qword page_alloc(enum PageType pty);
 
-    asm("ud2");
-    halt();
-}
+/// mapping pages ///
+void pmap_map(qword addr, qword phys);
+void pmap_map_rwx(qword addr, qword phys);
+
+/// kalloc ///
+void kalloc_init(void);
+void* kalloc(qword size);
+void kfree(void* ptr, qword size);
