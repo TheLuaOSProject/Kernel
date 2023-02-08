@@ -149,7 +149,8 @@ scan:;
         if (
             current() == 'b' || current() == 'c' || current() == 'd' || current() == 'o'|| current() == 'x' || current() == 'X'
         ) {
-            spec->type = current();
+            spec.type = current();
+            next();
         }
     }
     if (current() != '}') {
