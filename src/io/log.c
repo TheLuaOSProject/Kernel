@@ -104,6 +104,8 @@ scan:;
     spec->type = ' ';
     
     if (current() == ':') {
+        next();
+
         if (
             current() != '<' && current() != '>' && current() != '^' // fill
             && current() != '+' && current() != '-' && current() != ' ' // sign
