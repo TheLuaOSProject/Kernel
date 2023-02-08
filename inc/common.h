@@ -48,8 +48,6 @@ typedef int16_t sword;
 typedef int32_t sdword;
 typedef int64_t sqword;
 
-
-
 inline noreturn void halt()
 {
     while(true) asm volatile(
@@ -58,3 +56,9 @@ inline noreturn void halt()
     );
     __builtin_unreachable();
 }
+
+qword _limine__virt_to_phys(qword virt);
+qword _limine__phys_to_virt(qword phys);
+
+#define phys(value) _limine__virt_to_phys((qword)(value))
+#define virt(value, ...) (__VA_OPT__((__VA_ARGS__*)) (qword) _limine__phys_to_virt(value))
