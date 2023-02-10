@@ -87,7 +87,7 @@ extern/limine:
 
 build/bin/luaos.iso: extern/limine build/bin/luck.elf res/limine.cfg
 	mkdir -p $(dir $@)/iso
-	cp build/bin/luck.elf res/limine.cfg res/font.bin extern/limine/limine-cd.bin extern/limine/limine.sys extern/limine/limine-cd-efi.bin $(dir $@)/iso
+	cp build/bin/luck.elf res/powered-by-lua.bmp res/limine.cfg res/font.bin extern/limine/limine-cd.bin extern/limine/limine.sys extern/limine/limine-cd-efi.bin $(dir $@)/iso
 	xorriso -as mkisofs\
 			-b limine-cd.bin\
 			-no-emul-boot\

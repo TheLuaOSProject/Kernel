@@ -24,12 +24,12 @@
 
 NONNULL_BEGIN
 
-void _log_level_success(void);
-void _log_level_info(void);
-void _log_level_debug(void);
-void _log_level_warning(void);
-void _log_level_error(void);
-void _log_level_panic(void);
+void _log_level_success(const char *prefix);
+void _log_level_info(const char *prefix);
+void _log_level_debug(const char *prefix);
+void _log_level_warning(const char *prefix);
+void _log_level_error(const char *prefix);
+void _log_level_panic(const char *prefix);
 
 void _log_level_common_end(const char *nonnull *nonnull fmtref);
 noreturn void _log_level_panic_end(const char *nonnull *nonnull fmtref);
@@ -53,7 +53,7 @@ noreturn void _log_level_panic_end(const char *nonnull *nonnull fmtref);
     X(unsigned32, unsigned int) \
     X(unsignedptr, unsigned long) \
     X(unsigned64, unsigned long long) \
-    X(voidptr, void*) \
+    X(voidptr, void *) \
 
 #define _log__defines(name, type) void _log_##name(const char *nonnull *nonnull fmtref, type value);
 _log__formatters(_log__defines)
@@ -65,17 +65,17 @@ _log__formatters(_log__defines)
     { __auto_type _argument = (argument); _Generic(_argument _log__formatters(_log__eachtype_cb), char *: _log_string)(&_fmt, _argument); }
 
 #define log(level, fmt, ...) do { \
-        _log_level_##level(); \
+        _log_level_##level(__FILE__":"stringify(__LINE__)); \
         const char* _fmt = (fmt); \
         foreach(_log__one, _ __VA_OPT__(,) __VA_ARGS__) \
         _log_level_##level##_end(&_fmt); \
     } while (0)
 
-#define success(fmt, ...) log(success, fmt __VA_OPT__(,) __VA_ARGS__)
-#define info(fmt, ...) log(info, fmt __VA_OPT__(,) __VA_ARGS__)
-#define debug(fmt, ...) log(debug, fmt __VA_OPT__(,) __VA_ARGS__)
-#define warning(fmt, ...) log(warning, fmt __VA_OPT__(,) __VA_ARGS__)
-#define error(fmt, ...) log(error, fmt __VA_OPT__(,) __VA_ARGS__)
-#define panic(fmt, ...) log(panic, fmt __VA_OPT__(,) __VA_ARGS__)
+#define success(fmt, ...)   log(success, fmt __VA_OPT__(,) __VA_ARGS__)
+#define info(fmt, ...)      log(info, fmt __VA_OPT__(,) __VA_ARGS__)
+#define debug(fmt, ...)     log(debug, fmt __VA_OPT__(,) __VA_ARGS__)
+#define warning(fmt, ...)   log(warning, fmt __VA_OPT__(,) __VA_ARGS__)
+#define error(fmt, ...)     log(error, fmt __VA_OPT__(,) __VA_ARGS__)
+#define panic(fmt, ...)     log(panic, fmt __VA_OPT__(,) __VA_ARGS__)
 
 NONNULL_END

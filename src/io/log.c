@@ -167,13 +167,20 @@ scan:;
     return 0;
 }
 
-void _log_level_success(void) { output_string("\x1b[32m[SUCCESS]\x1b[0m "); }
-void _log_level_info(void) { output_string("\x1b[34m[INFO]\x1b[0m "); }
-void _log_level_debug(void) { output_string("\x1b[2;37m[DEBUG]\x1b[0m "); }
-void _log_level_warning(void) { output_string("\x1b[33m[WARNING]\x1b[0m "); }
-void _log_level_error(void) { output_string("\x1b[31m[ERROR]\x1b[0m "); }
-void _log_level_panic(void) { output_string("\x1b[31m[FATAL]\x1b[0m "); }
-void _log_level_common_end(const char **fmtref) { output_string(*fmtref); output_char('\n'); }
+void _log_level_success(const char *prefix)
+{ output_string("\x1b[32m[SUCCESS - "); output_string(prefix); output_string("]\x1b[0m\t"); }
+void _log_level_info(const char *prefix)
+{ output_string("\x1b[34m[INFO - "); output_string(prefix); output_string("]\x1b[0m "); }
+void _log_level_debug(const char *prefix)
+{ output_string("\x1b[2;37m[DEBUG - "); output_string(prefix); output_string("]\x1b[0m "); }
+void _log_level_warning(const char *prefix)
+{ output_string("\x1b[33m[WARNING - "); output_string(prefix); output_string("]\x1b[0m "); }
+void _log_level_error(const char *prefix)
+{ output_string("\x1b[31m[ERROR - "); output_string(prefix); output_string("]\x1b[0m "); }
+void _log_level_panic(const char *prefix)
+{ output_string("\x1b[31m[FATAL - "); output_string(prefix); output_string("]\x1b[0m "); }
+void _log_level_common_end(const char **fmtref)
+{ output_string(*fmtref); output_char('\n'); }
 void _log_level_panic_end(const char **fmtref) {
     output_string(*fmtref);
     output_char('\n');
@@ -345,4 +352,9 @@ void _log_string(attribute(unused) const char **fmt, const char *str)
 }
 
 void _log_voidptr(const char **fmtref, void *ptr)
-{ _log_unsignedptr(fmtref, (uintptr_t)ptr); }
+{
+    FormatSpecifier fs;
+    parse_fmt(fmtref, &fs);
+    log_emit(fs, "0x");
+    log_num_u(fs, (unsigned long)ptr);
+}

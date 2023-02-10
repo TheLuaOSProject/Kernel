@@ -17,3 +17,11 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
+
+#include "common.h"
+
+NONNULL_BEGIN
+
+
+
+NONNULL_END
