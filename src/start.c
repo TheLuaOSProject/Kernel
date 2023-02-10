@@ -65,6 +65,7 @@ void kernel_start()
     struct MADT *madt = madt_init(xsdt);
     if (madt == nullptr) panic("Could not find MADT");
 
+    size_t core_c = 0;
     for (struct MADTEntryHeader *entry = (struct MADTEntryHeader *)madt->entries;
          (uintptr_t)entry < (uintptr_t)(madt->entries + madt->descriptor.length - sizeof(struct MADT));
          entry = (struct MADTEntryHeader *)((byte *)entry + (entry)->length)) {
@@ -73,7 +74,7 @@ void kernel_start()
         switch(entry->id) {
             case MADT_ENTRY_ID_LAPIC: {
                 struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *)entry;
-                success("  Found LAPIC");
+                success("  Found LAPIC at core {} (address: {})", core_c++, (void *)lapic);
                 debug("    Processor ID: {}", lapic->processor_id);
                 debug("    APIC ID: {}", lapic->apic_id);
                 debug("    Flags: {}", lapic->flags);
@@ -81,7 +82,6 @@ void kernel_start()
             }
         }
     }
-
     success("Done");
 
     success("Initalisation complete");

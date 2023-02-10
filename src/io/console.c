@@ -38,7 +38,7 @@ static void initalise_terminal()
     terminal = terminal_request.response->terminals[0];
 }
 
-void console_write(const char* str)
+void console_write(const char *str)
 {
     initalise_terminal();
 

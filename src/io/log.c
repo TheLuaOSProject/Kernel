@@ -29,17 +29,53 @@ static atomic_bool console = true;
 static atomic_bool e9 = false;
 static atomic_bool serial = true;
 
-
-static void output_char(char c) {
-    if (atomic_load(&console)) console_write_char(c);
-    if (atomic_load(&e9)) port_out_byte(0xe9, c);
+static void output_char_serial(char c) {
     if (atomic_load(&serial)) {
         while ((port_in_byte(0x3fd) & 0x20) == 0) asm("pause");
         port_out_byte(0x3f8, c);
     }
 }
+
+static void output_string_serial(const char *s) {
+    //Remove all ansi escape sequences then output to serial
+
+    char buf[1024];
+    char *bufptr = buf;
+    char c;
+    while ((c = *s) != '\0') {
+        if (c == '\x1b') {
+            while (*s != 'm') s++;
+            s++;
+        } else {
+            *bufptr++ = *s++;
+        }
+    }
+    *bufptr = '\0';
+
+    for (size_t i = 0; i < string_length(buf); i++) {
+        output_char_serial(buf[i]);
+    }
+}
+
+static void output_char_console(char c) {
+    if (atomic_load(&console)) console_write_char(c);
+    if (atomic_load(&e9)) port_out_byte(0xe9, c);
+}
+static void output_string_console(const char *s) {
+    char c;
+    while ((c = *s) != '\0') {
+        output_char_console(*s++);
+    }
+}
+
+static void output_char(char c) {
+    output_char_console(c);
+    output_char_serial(c);
+}
+
 static void output_string(const char *s) {
-    while (*s) output_char(*s++);
+    output_string_console(s);
+    output_string_serial(s);
 }
 
 typedef struct {
@@ -168,19 +204,58 @@ scan:;
 }
 
 void _log_level_success(const char *prefix)
-{ output_string("\x1b[32m[SUCCESS - "); output_string(prefix); output_string("]\x1b[0m\t"); }
+{
+    output_string_console("\x1b[32m");
+    output_string("[SUCCESS] (");
+    output_string(prefix);
+    output_string(") ");
+    output_string_console("\x1b[0m");
+}
 void _log_level_info(const char *prefix)
-{ output_string("\x1b[34m[INFO - "); output_string(prefix); output_string("]\x1b[0m "); }
+{
+    output_string_console("\x1b[32m");
+    output_string("[INFO] (");
+    output_string(prefix);
+    output_string(") ");
+    output_string_console("\x1b[0m");
+}
 void _log_level_debug(const char *prefix)
-{ output_string("\x1b[2;37m[DEBUG - "); output_string(prefix); output_string("]\x1b[0m "); }
+{
+    output_string_console("\x1b[36m");
+    output_string("[DEBUG] (");
+    output_string(prefix);
+    output_string(") ");
+    output_string_console("\x1b[0m");
+}
 void _log_level_warning(const char *prefix)
-{ output_string("\x1b[33m[WARNING - "); output_string(prefix); output_string("]\x1b[0m "); }
+{
+    output_string_console("\x1b[33m");
+    output_string("[WARNING] (");
+    output_string(prefix);
+    output_string(") ");
+    output_string_console("\x1b[0m");
+}
 void _log_level_error(const char *prefix)
-{ output_string("\x1b[31m[ERROR - "); output_string(prefix); output_string("]\x1b[0m "); }
+{
+    output_string_console("\x1b[31m");
+    output_string("[ERROR] (");
+    output_string(prefix);
+    output_string(") ");
+    output_string_console("\x1b[0m");
+}
 void _log_level_panic(const char *prefix)
-{ output_string("\x1b[31m[FATAL - "); output_string(prefix); output_string("]\x1b[0m "); }
+{
+    output_string_console("\x1b[31m");
+    output_string("[PANIC] (");
+    output_string(prefix);
+    output_string(") ");
+    output_string_console("\x1b[0m");
+}
 void _log_level_common_end(const char **fmtref)
-{ output_string(*fmtref); output_char('\n'); }
+{
+    output_string(*fmtref);
+    output_char('\n');
+}
 void _log_level_panic_end(const char **fmtref) {
     output_string(*fmtref);
     output_char('\n');
