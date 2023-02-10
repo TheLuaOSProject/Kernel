@@ -24,7 +24,7 @@ CFLAGS ?= -g -Og -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-mi
 NASMFLAGS ?= -F dwarf -g -f elf64
 
 override CFLAGS +=       	\
-    -std=gnu2x           	\
+    -std=gnu17           	\
     -ffreestanding       	\
     -fno-stack-protector 	\
     -fno-stack-check     	\
@@ -65,7 +65,7 @@ override ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.asm.o))
 override QEMUFLAGS := -smp 2 -m 2G -monitor stdio -serial file:luaos.log
 
 .PHONY: all
-all: build/bin/luaos.iso
+all: build/bin/luaos.iso extern/ovmf-x64
 
 .PHONY: uefi
 uefi: extern/ovmf-x64 build/bin/luaos.iso
@@ -110,7 +110,7 @@ build/bin/luck.elf: $(COBJS) $(ASOBJS)
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 
-build/obj/%.c.o: %.c
+build/obj/%.c.o: %.c extern/limine
 	@printf "\x1b[32mCompiling $<\n\x1b[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -127,9 +127,5 @@ clean:
 
 cleanall: clean
 	rm -rf extern
-
-extern/include/limine.h:
-	mkdir -p extern/include/
-	curl https://raw.githubusercontent.com/limine-bootloader/limine/trunk/limine.h -o $@
 
 -include $(CFILES:%.c=build/obj/%.d)

@@ -21,6 +21,7 @@
 
 #include "common.h"
 #include "macro_util.h"
+#include "string.h"
 
 NONNULL_BEGIN
 
@@ -65,7 +66,7 @@ _log__formatters(_log__defines)
     { __auto_type _argument = (argument); _Generic(_argument _log__formatters(_log__eachtype_cb), char *: _log_string)(&_fmt, _argument); }
 
 #define log(level, fmt, ...) do { \
-        _log_level_##level(__FILE__":"stringify(__LINE__)); \
+        _log_level_##level(string_concatenate((char [512]){__FILE__":"stringify(__LINE__)" - "}, __PRETTY_FUNCTION__)); \
         const char* _fmt = (fmt); \
         foreach(_log__one, _ __VA_OPT__(,) __VA_ARGS__) \
         _log_level_##level##_end(&_fmt); \

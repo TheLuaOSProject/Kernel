@@ -21,19 +21,17 @@
 
 #include "luck/io/log.h"
 
-#include "luck/memory/manager.h"
-#include "luck/memory/magazines.h"
 #include "luck/arch/x86_64/gdt.h"
 #include "luck/arch/x86_64/idt.h"
-#include "luck/arch/x86_64/rsdp.h"
 #include "luck/arch/x86_64/madt.h"
+#include "luck/arch/x86_64/rsdp.h"
 #include "luck/arch/x86_64/xsdt.h"
+#include "luck/memory/magazines.h"
+#include "luck/memory/manager.h"
 
-
-
-void kernel_start()
+attribute(used) noreturn void kernel_start()
 {
-    warning("Stage 1: Initalisation");
+    success("\nStarted LuaOS");
     info("{} + {} = {}", 2, 2, 2 + 2);
     info("Hello, {}", "World!");
 
@@ -46,35 +44,43 @@ void kernel_start()
     success("Done");
 
     info("Initialising memory");
-    info("  Magazines...");
-    magazine_init();
-    success("  Done");
+    {
+        info("  Magazines...");
+        magazine_init();
+        success("  Done");
 
-    info("  Kernel memory allocator...");
-    kalloc_init();
-    success("  Done");
+        info("  Kernel memory allocator...");
+        kalloc_init();
+        success("  Done");
+    }
     success("Done");
 
     info("Initialising APIC");
     struct RSDP *rsdp = rsdp_init();
-    if (rsdp == nullptr) panic("Could not find RSDP");
+    if (rsdp == nullptr)
+        panic("Could not find RSDP");
 
+    // TODO: RSDT support, technically implemented but no API, only XSDT
     struct XSDT *xsdt = xsdt_init(rsdp);
-    if (xsdt == nullptr) panic("Could not find XSDT");
+    if (xsdt == nullptr)
+        panic("Could not find XSDT");
 
     struct MADT *madt = madt_init(xsdt);
-    if (madt == nullptr) panic("Could not find MADT");
+    if (madt == nullptr)
+        panic("Could not find MADT");
 
     size_t core_c = 0;
+
     for (struct MADTEntryHeader *entry = (struct MADTEntryHeader *)madt->entries;
          (uintptr_t)entry < (uintptr_t)(madt->entries + madt->descriptor.length - sizeof(struct MADT));
          entry = (struct MADTEntryHeader *)((byte *)entry + (entry)->length)) {
 
         debug("  Found entry with ID {}", entry->id);
-        switch(entry->id) {
+        switch (entry->id) {
             case MADT_ENTRY_ID_LAPIC: {
-                struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *)entry;
-                success("  Found LAPIC at core {} (address: {})", core_c++, (void *)lapic);
+                struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *) entry;
+                success("  Found LAPIC at core {} (address: {})", core_c++,
+                        (void *) lapic);
                 debug("    Processor ID: {}", lapic->processor_id);
                 debug("    APIC ID: {}", lapic->apic_id);
                 debug("    Flags: {}", lapic->flags);

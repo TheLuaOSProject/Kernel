@@ -58,16 +58,17 @@ static void string_copy(char *dest, const char *src)
     string_copy_n(dest, src, len);
 }
 
-static void string_concatenate_n(char *dest, const char *src, size_t n)
+static char *string_concatenate_n(char *dest, const char *src, size_t n)
 {
     size_t len = string_length(dest);
     string_copy_n(dest + len, src, n);
+    return dest;
 }
 
-static void string_concatenate(char *dest, const char *src)
+static char *string_concatenate(char *dest, const char *src)
 {
     size_t len = string_length(src);
-    string_concatenate_n(dest, src, len);
+    return string_concatenate_n(dest, src, len);
 }
 
 //struct FormatSpecifier {
