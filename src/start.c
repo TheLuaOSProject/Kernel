@@ -68,17 +68,17 @@ void kernel_start()
     for (struct MADTEntryHeader *entry = (struct MADTEntryHeader *)madt->entries;
          (uintptr_t)entry < (uintptr_t)(madt->entries + madt->descriptor.length - sizeof(struct MADT));
          entry = (struct MADTEntryHeader *)((byte *)entry + (entry)->length)) {
+
         debug("  Found entry with ID {}", entry->id);
-
         switch(entry->id) {
-        case MADT_ENTRY_ID_LAPIC:;
-
-            struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *)entry;
-            success("  Found LAPIC");
-            debug("    Processor ID: {}", lapic->processor_id);
-            debug("    APIC ID: {}", lapic->apic_id);
-            debug("    Flags: {}", lapic->flags);
-            break;
+            case MADT_ENTRY_ID_LAPIC: {
+                struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *)entry;
+                success("  Found LAPIC");
+                debug("    Processor ID: {}", lapic->processor_id);
+                debug("    APIC ID: {}", lapic->apic_id);
+                debug("    Flags: {}", lapic->flags);
+                break;
+            }
         }
     }
 

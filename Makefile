@@ -18,7 +18,9 @@
 override CC := clang
 override LD := ld.lld
 
-CFLAGS ?= -g -O2 -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-microsoft
+GDB = x86_64-elf-gdb
+
+CFLAGS ?= -g -Og -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-microsoft
 NASMFLAGS ?= -F dwarf -g -f elf64
 
 override CFLAGS +=       	\
@@ -74,7 +76,8 @@ bios: build/bin/luaos.iso
 	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d -s
 
 debug:
-	x86_64-elf-gdb build/bin/luck.elf -ex "target remote :1234"
+	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d -s -S
+
 
 extern/ovmf-x64:
 	mkdir -p $@

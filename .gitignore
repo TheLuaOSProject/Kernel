@@ -5,5 +5,3 @@ compile_commands.json
 .cache/
 luaos.log
 .gdb_history
-.idea/
-
