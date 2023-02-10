@@ -70,7 +70,7 @@ void idt_register_int(byte int_no, attribute(interrupt) void(*routine)(void *))
         .offset_high = handler >> 32,
         .reserved = 0
     };
-    info("Registered interrupt {}", int_no);
+    debug("  Registered interrupt {}", int_no);
 }
 
 // I should have frames, and maybe a more efficent method than this?
