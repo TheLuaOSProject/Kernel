@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-ASSUME_NONNULL_BEGIN
+NONNULL_BEGIN
 
 byte port_in_byte(word port);
 void port_out_byte(word port, byte data);
@@ -29,4 +29,4 @@ void port_out_byte(word port, byte data);
 word port_in_word(word port);
 void port_out_word(word port, word data);
 
-ASSUME_NONNULL_END
+NONNULL_END

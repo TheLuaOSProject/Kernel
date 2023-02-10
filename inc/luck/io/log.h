@@ -20,10 +20,11 @@
 #pragma once
 
 #include "common.h"
-#include "luck/macro_util.h"
+#include "macro_util.h"
 
-ASSUME_NONNULL_BEGIN
+NONNULL_BEGIN
 
+void _log_level_success(void);
 void _log_level_info(void);
 void _log_level_warning(void);
 void _log_level_error(void);
@@ -32,13 +33,14 @@ void _log_level_panic(void);
 void _log_level_common_end(const char *nonnull *nonnull fmtref);
 noreturn void _log_level_panic_end(const char *nonnull *nonnull fmtref);
 
+#define _log_level_success_end _log_level_common_end
 #define _log_level_info_end _log_level_common_end
 #define _log_level_warning_end _log_level_common_end
 #define _log_level_error_end _log_level_common_end
 
 #define _log__formatters(X) \
     X(char, char) \
-    X(string, const char*) \
+    X(string, const char *) \
     X(signed8, signed char) \
     X(signed16, short) \
     X(signed32, int) \
@@ -58,7 +60,7 @@ _log__formatters(_log__defines)
 #define _log__eachtype_cb(name, type) , type: _log_##name
 
 #define _log__one(_, argument) \
-    { __auto_type _argument = (argument); _Generic(_argument _log__formatters(_log__eachtype_cb))(&_fmt, _argument); }
+    { __auto_type _argument = (argument); _Generic(_argument _log__formatters(_log__eachtype_cb), char *: _log_string)(&_fmt, _argument); }
 
 #define log(level, fmt, ...) do { \
         _log_level_##level(); \
@@ -67,9 +69,10 @@ _log__formatters(_log__defines)
         _log_level_##level##_end(&_fmt); \
     } while (0)
 
+#define success(fmt, ...) log(success, fmt __VA_OPT__(,) __VA_ARGS__)
 #define info(fmt, ...) log(info, fmt __VA_OPT__(,) __VA_ARGS__)
 #define warning(fmt, ...) log(warning, fmt __VA_OPT__(,) __VA_ARGS__)
 #define error(fmt, ...) log(error, fmt __VA_OPT__(,) __VA_ARGS__)
 #define panic(fmt, ...) log(panic, fmt __VA_OPT__(,) __VA_ARGS__)
 
-ASSUME_NONNULL_END
+NONNULL_END

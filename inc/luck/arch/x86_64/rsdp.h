@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023 Amrit Bhogal, pitust
+ * Copyright (C) 2023 Amrit Bhogal
  *
  * This file is part of LuaOS.
  *
@@ -21,9 +21,24 @@
 
 #include "common.h"
 
+#include "sdt.h"
+
 NONNULL_BEGIN
 
-void console_write(const char *str);
-void console_write_char(char c);
+struct RSDP {
+    //1.0
+    char signature[8];
+    byte checksum;
+    char oem_id[6];
+    byte revision;
+    dword rsdt_address;
+
+    //2.0
+    dword length;
+    qword xsdt_address;
+    byte extended_checksum, reserved[3];
+} attribute(packed);
+
+struct RSDP *nullable get_rsdp();
 
 NONNULL_END

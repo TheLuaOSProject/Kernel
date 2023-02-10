@@ -31,12 +31,11 @@
 
 #define pragma(...) _Pragma(#__VA_ARGS__)
 
-#define ASSUME_NONNULL_BEGIN    pragma(clang assume_nonnull begin)
-#define ASSUME_NONNULL_END      pragma(clang assume_nonnull end)
+#define NONNULL_BEGIN    pragma(clang assume_nonnull begin)
+#define NONNULL_END      pragma(clang assume_nonnull end)
 
 #define nullable _Nullable
 #define nonnull _Nonnull
-#define packed  attribute(packed)
 
 typedef uint8_t byte;
 typedef uint16_t word;
@@ -47,6 +46,9 @@ typedef int8_t sbyte;
 typedef int16_t sword;
 typedef int32_t sdword;
 typedef int64_t sqword;
+
+typedef uintptr_t   ptr;
+typedef intptr_t    sptr;
 
 inline noreturn void halt()
 {

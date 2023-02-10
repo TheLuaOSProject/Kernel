@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023 Amrit Bhogal, pitust
+ * Copyright (C) 2023 Amrit Bhogal
  *
  * This file is part of LuaOS.
  *
@@ -16,14 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #pragma once
 
 #include "common.h"
+#include "sdt.h"
 
 NONNULL_BEGIN
 
-void console_write(const char *str);
-void console_write_char(char c);
+struct MADTEntryHeader {
+    byte id, length;
+} attribute(packed);
+
+struct MADT {
+    struct SDTHeader descriptor;
+
+    dword controller_address, flags;
+
+    /// @warning THIS IS MISLEADING! ENTRIES ARE VARIABLE LENGTH! DO NOT TRY AND INDEX
+    struct MADTEntryHeader entries[];
+} attribute(packed);
+
+struct MADTEntry_LAPIC {
+    struct MADTEntryHeader header;
+
+    byte processor_id, apic_id;
+    dword flags;
+} attribute(packed);
+
+struct MADTEntry_IOAPIC {
+    /*TODO*/
+};
+
+void madt_init();
 
 NONNULL_END

@@ -18,12 +18,12 @@
  */
 
 #include <limine.h>
-
 #include "common.h"
-#include "luck/mm.h"
-#include "luck/magazines.h"
-#include "luck/io/log.h"
 #include "memory.h"
+
+#include "luck/memory/manager.h"
+#include "luck/memory/magazines.h"
+#include "luck/io/log.h"
 
 #define kalloc_sizes \
     16, 32, 48, 64, 80, 112, 144, 176, 224, 272, 336, 416, 512, 624, 752, 912, 1104, 1328, \
@@ -67,8 +67,8 @@ raw_slabs(page, convert_pg, {
     panic("we ran out of fresh pages to allocate!");
 });
 
-static magazine_t* page_mag = nullptr;
-static magazine_t* kalloc_mags[32] = {nullptr};
+static Magazine* page_mag = nullptr;
+static Magazine* kalloc_mags[32] = {nullptr};
 static qword kalloc_heads[32] = {0};
 
 static qword kalloc_inner(void* ctx) {
@@ -106,7 +106,7 @@ void kalloc_init(void) {
     for (int i = 0;i < 32;i++) {
         if (kalloc_size_arr[i] == 336) idx336 = i;
     }
-    if (idx336 == 0xffff) panic("update 336 with whatever new kalloc size is big enough to hold a magazine_t");
+    if (idx336 == 0xffff) panic("update 336 with whatever new kalloc size is big enough to hold a Magazine");
     kalloc_mags[idx336] = mag_new(kalloc_inner, kfree_inner, (void*)idx336); 
     for (qword i = 0;i < 32;i++) {
         if (i != idx336) kalloc_mags[i] = mag_new(kalloc_inner, kfree_inner, (void*)i);

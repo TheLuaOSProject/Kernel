@@ -38,8 +38,6 @@ static struct IDTRegister idtr = {
 
 void idt_init()
 {
-    info("initialising interrupts...\n");
-
     idt_register_int(0x0, int_div_by_zero);
     idt_register_int(0x3, int_breakpoint);
     idt_register_int(0x8, int_double_fault);
@@ -48,8 +46,6 @@ void idt_init()
     idt_register_int(0x6, int_invalid_opcode);
 
     asm volatile("LIDT %0" :: "m"(idtr));
-
-    info("done");
 }
 
 void idt_register_int(byte int_no, attribute(interrupt) void(*routine)(void *))
@@ -74,7 +70,7 @@ void idt_register_int(byte int_no, attribute(interrupt) void(*routine)(void *))
         .offset_high = handler >> 32,
         .reserved = 0
     };
-    info("registered interrupt {}", int_no);
+    info("Registered interrupt {}", int_no);
 }
 
 // I should have frames, and maybe a more efficent method than this?

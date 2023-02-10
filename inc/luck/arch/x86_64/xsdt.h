@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023 Amrit Bhogal, pitust
+ * Copyright (C) 2023 Amrit Bhogal
  *
  * This file is part of LuaOS.
  *
@@ -20,10 +20,15 @@
 #pragma once
 
 #include "common.h"
+#include "rsdp.h"
 
 NONNULL_BEGIN
 
-void console_write(const char *str);
-void console_write_char(char c);
+struct XSDT {
+    struct SDTHeader header, data[];
+};
+
+struct XSDT *nullable get_xsdt(const struct RSDP *desc);
+struct SDTHeader *nullable find_sdt(const struct XSDT *table, const char id[static 4], size_t id);
 
 NONNULL_END

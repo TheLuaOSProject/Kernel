@@ -21,10 +21,10 @@
 
 #include "common.h"
 
-ASSUME_NONNULL_BEGIN
+NONNULL_BEGIN
 
 struct TSSDescriptor {
-    byte tss[0x6b];
+    byte tss[0x6B];
 } attribute(aligned(4096));
 
 struct GlobalDescriptorTable {
@@ -35,8 +35,8 @@ struct GlobalDescriptorTable {
 struct GDTRegister {
     word limit;
     qword base;
-} packed;
+} attribute(packed);
 
 void gdt_init(void);
 
-ASSUME_NONNULL_END
+NONNULL_END

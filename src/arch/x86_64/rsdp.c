@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023 Amrit Bhogal, pitust
+ * Copyright (C) 2023 Amrit Bhogal
  *
  * This file is part of LuaOS.
  *
@@ -17,13 +17,35 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "luck/arch/x86_64/rsdp.h"
+#include "luck/io/log.h"
 
-#include "common.h"
+#include <limine.h>
+#include "string.h"
 
-NONNULL_BEGIN
+static volatile struct limine_rsdp_request request = {
+    .id = LIMINE_RSDP_REQUEST,
+    .revision = 0
+};
 
-void console_write(const char *str);
-void console_write_char(char c);
 
-NONNULL_END
+struct RSDP *get_rsdp()
+{
+    struct limine_rsdp_response *resp = request.response;
+
+    //Possible UB?
+    if (resp == nullptr || resp->address == nullptr)
+        return nullptr;
+
+    struct RSDP *rsdp = resp->address;
+
+    if (rsdp->revision < 2) {
+        error("  XSDT not supported on this machine!");
+        //Techinically should use RSDT here but im lazy lol
+        return nullptr;
+    }
+
+    return rsdp;
+}
+
+

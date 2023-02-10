@@ -18,7 +18,7 @@
  */
 
 #include "common.h"
-#include "luck/mm.h"
+#include "luck/memory/manager.h"
 
 static qword* get_pte(qword addr)
 {

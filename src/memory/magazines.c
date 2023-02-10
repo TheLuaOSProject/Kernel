@@ -17,21 +17,26 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <common.h>
-#include <stdatomic.h>
+#include "common.h"
+#include "stdatomic.h"
+#include "memory.h"
+#include "macro_util.h"
+
+
+#define _EVAL(...) __VA_ARGS__
+#define EVAL(...) _EVAL(__VA_ARGS__)
 
 #include "luck/io/log.h"
-#include "luck/magazines.h"
-#include "luck/mm.h"
-#include "memory.h"
+#include "luck/memory/magazines.h"
+#include "luck/memory/manager.h"
 
 #define mag_each_size 512
 #define max_static_mag 2
 #define max_ready_mags 32
 
-static magazine_t static_mags[max_static_mag];
+static Magazine static_mags[max_static_mag];
 static atomic_llong num_static_mag = 0;
-static mag_percpu_t mag_percpu[max_static_mag * 256];
+static MagazinePerCPU mag_percpu[max_static_mag * 256];
 
 static qword static_mag_alloc[mag_each_size * 32];
 static qword static_mag_alloc_idx = 0;
@@ -48,24 +53,25 @@ static attribute(naked) qword get_lapic_addr_dyn(void) {
 	asm ("retq");
 }
 
-void mag_init(void) {
+void magazine_init(void)
+{
 	lapic_id = virt(get_lapic_addr_dyn() & ~0xfff, dword);
 }
 
 #define max_lapic_id 2 // TODO: change this to the actual value once we do smp 
 
-magazine_t *mag_new(qword(*get)(void *ctx), void (*put)(void *ctx, qword item), void *ctx) {
-	magazine_t *mag = nullptr;
+Magazine *mag_new(qword(*get)(void *ctx), void (*put)(void *ctx, qword item), void *ctx) {
+	Magazine *mag = nullptr;
 	uint64_t mag_id = atomic_fetch_add(&num_static_mag, 1);
 	if (mag_id < max_static_mag) {
 		mag = &static_mags[mag_id];
-		memory_set(mag, 0, sizeof(magazine_t));
+		memory_set(mag, 0, sizeof(Magazine));
 		mag->mag_percpu = &mag_percpu[mag_id * 256];
-		memory_set(mag->mag_percpu, 0, sizeof(mag_percpu_t) * 256);
+		memory_set(mag->mag_percpu, 0, sizeof(MagazinePerCPU) * 256);
 		if (*lapic_id >= 256) panic("arch_get_max_cpu_id() >= 256; luaOS supports a maximum of 256 cores!");
 	} else {
-		mag = kalloc(sizeof(magazine_t));
-		mag->mag_percpu = kalloc(sizeof(mag_percpu_t) * max_lapic_id);
+		mag = kalloc(sizeof(Magazine));
+		mag->mag_percpu = kalloc(sizeof(MagazinePerCPU) * max_lapic_id);
 	}
 	mag->get = get;
 	mag->put = put;
@@ -93,8 +99,8 @@ static void ttas_unlock(atomic_bool *b) {
 }
 
 #define SWAP(a, b) do { __auto_type _tmp = (a); (a) = (b); (b) = _tmp; } while (0)
-void mag_put(magazine_t *mag, qword item) {
-	mag_percpu_t *mag_cpu = &mag->mag_percpu[*lapic_id >> 24];
+void mag_put(Magazine *mag, qword item) {
+	MagazinePerCPU *mag_cpu = &mag->mag_percpu[*lapic_id >> 24];
 	ttas_lock(&mag_cpu->locked);
 free:
 	if (mag_cpu->current && mag_cpu->current[-1] < mag_size_max) {
@@ -132,8 +138,8 @@ release:;
 	}
 	ttas_unlock(&mag_cpu->locked);
 }
-bool mag_xget(magazine_t *mag, qword *out, uint64_t flags) {
-	mag_percpu_t *mag_cpu = &mag->mag_percpu[*lapic_id >> 24];
+bool mag_xget(Magazine *mag, qword *out, uint64_t flags) {
+	MagazinePerCPU *mag_cpu = &mag->mag_percpu[*lapic_id >> 24];
 	bool ok = false;
 	ttas_lock(&mag_cpu->locked);
 cur_mag_populated:
@@ -175,7 +181,7 @@ allocate_new_obj:;
 	ttas_unlock(&mag_cpu->locked);
 	return ok;
 }
-qword mag_get(magazine_t *mag) {
+qword mag_get(Magazine *mag) {
 	qword res = 0;
 	mag_xget(mag, &res, MAG_MUSTGET);
 	return res;

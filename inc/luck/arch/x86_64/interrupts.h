@@ -21,7 +21,9 @@
 
 #include "common.h"
 
-ASSUME_NONNULL_BEGIN
+NONNULL_BEGIN
+
+
 
 struct IDTEntry {
     word offset_low, selector;
@@ -33,13 +35,9 @@ struct IDTEntry {
 struct IDTRegister {
     word limit;
     qword base;
-} packed;
-
-struct IRQContext {
-
-};
+} attribute(packed);
 
 void idt_init(void);
 void idt_register_int(byte int_no, attribute(interrupt) void(*routine)(void*));
 
-ASSUME_NONNULL_END
+NONNULL_END

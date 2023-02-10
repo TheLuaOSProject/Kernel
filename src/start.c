@@ -19,24 +19,50 @@
 
 #include <limine.h>
 
-#include "luck/mm.h"
-#include "luck/magazines.h"
+#include "luck/memory/manager.h"
+#include "luck/memory/magazines.h"
 #include "luck/io/log.h"
 #include "luck/arch/x86_64/gdt.h"
 #include "luck/arch/x86_64/interrupts.h"
+#include "luck/arch/x86_64/rsdp.h"
 
 void kernel_start()
 {
+    warning("Stage 1: Initalisation");
+    info("Initialising GDT");
     gdt_init();
+    success("Done");
+
+    info("Initialising IDT");
     idt_init();
-    mag_init();
+    success("Done");
+
+    info("Initialising memory");
+    info("  Magazines...");
+    magazine_init();
+    success("  Done");
+
+    info("  Kernel memory allocator...");
     kalloc_init();
+    success("  Done");
+    success("Done");
 
-    info("started the luaOS kernel!");
-    info("2 + 2 = {:~^15}", 4);
-    // info("kernel_start: {}", (void*)kernel_start);
-    info("cool addr: {:#x}", (qword)(void*)kalloc(69));
+    info("Initialising PIC");
+    pic_init(0x20, 0x28);
+    info("  Finding RSDP");
+    struct RSDP *rsdp = get_rsdp();
+    if (rsdp == nullptr)
+        error("  no RSDP found!");
+    else {
+        info("  RSDP found at {:#x}", (void *) rsdp);
+        info("  RSDP revision: {}", rsdp->revision);
+        info("  RSDP length: {}", rsdp->length);
+        info("  RSDP xsdt_address: {:#x}", rsdp->xsdt_address);
+        info("  RSDP rsdt_address: {:#x}", rsdp->rsdt_address);
+        success("  Done");
+    }
+    success("Done");
 
-    asm("ud2");
+    success("Initalisation complete");
     halt();
 }

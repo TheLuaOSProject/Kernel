@@ -102,7 +102,7 @@ scan:;
     spec->width = 0;
 
     spec->type = ' ';
-    
+
     if (current() == ':') {
         next();
 
@@ -167,7 +167,8 @@ scan:;
     return 0;
 }
 
-void _log_level_info(void) { output_string("\x1b[32m[INFO]\x1b[0m "); }
+void _log_level_success(void) { output_string("\x1b[32m[SUCCESS]\x1b[0m "); }
+void _log_level_info(void) { output_string("\x1b[0m[INFO]\x1b[0m "); }
 void _log_level_warning(void) { output_string("\x1b[33m[WARNING]\x1b[0m "); }
 void _log_level_error(void) { output_string("\x1b[31m[ERROR]\x1b[0m "); }
 void _log_level_panic(void) { output_string("\x1b[31m[FATAL]\x1b[0m "); }
@@ -180,6 +181,11 @@ void _log_level_panic_end(const char **fmtref) {
 
 static void log_do_append_number(char **_buf, unsigned long long num, int base, bool upcase) {
 #define buf (*_buf)
+    if (base < 2) {
+        output_string("(fmt error: invalid type)");
+        return;
+    }
+
     if (!num) *--buf = '0';
     while (num) {
         *--buf = (upcase ? "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" : "0123456789abcdefghijklmnopqrstuvwxyz")[num % base];
@@ -213,10 +219,10 @@ static void log_emit(FormatSpecifier fi, char* buf) {
 static int log_num_base(FormatSpecifier fi) {
     if (fi.type == ' ' || fi.type == 'd') return 10;
     if (fi.type == 'b') return 2;
-    if (fi.type == 'c') panic("log_num_base() expects you to check for 'c' yourself!");
+    if (fi.type == 'c') return -1;
     if (fi.type == 'o') return 8;
     if (fi.type == 'x' || fi.type == 'X') return 16;
-    panic("invalid type fi.type {}", fi.type);
+    return -2;
 }
 static void log_num_u(FormatSpecifier fi, unsigned long long num) {
     char _buf[64];
@@ -318,8 +324,10 @@ void _log_char(const char **fmtref, char c) {
         //TODO: Add proper reporting
 
         *--buf = 0;
+        output_string("expected 'c' or nothing as fi.type, found ");
+        output_char(fi.type);
+
         return;
-//        panic("expected 'c' or nothing as fi.type, found {}", fi.type);
     }
     *--buf = 0;
     *--buf = c;
@@ -327,3 +335,10 @@ void _log_char(const char **fmtref, char c) {
     log_emit(fi, buf);
 }
 
+void _log_string(attribute(unused) const char **_, const char *str)
+{
+    output_string(str);
+}
+
+void _log_voidptr(const char **fmtref, void *ptr)
+{ _log_unsignedptr(fmtref, (uintptr_t)ptr); }

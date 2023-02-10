@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023 Amrit Bhogal, pitust
+ * Copyright (C) 2023 Amrit Bhogal
  *
  * This file is part of LuaOS.
  *
@@ -17,13 +17,4 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
 
-#include "common.h"
-
-NONNULL_BEGIN
-
-void console_write(const char *str);
-void console_write_char(char c);
-
-NONNULL_END

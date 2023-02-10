@@ -29,7 +29,8 @@ typedef union {
 		qword* previous;
 	};
 	char padding[64]; // force cache line size to avoid false sharing
-} mag_percpu_t;
+} MagazinePerCPU;
+
 typedef struct {
 	atomic_bool locked;
 
@@ -42,15 +43,15 @@ typedef struct {
 	qword(*get)(void* ctx);
 	void (*put)(void* ctx, qword item);
 	void* ctx;
-	mag_percpu_t* mag_percpu;
-} magazine_t;
+	MagazinePerCPU* mag_percpu;
+} Magazine;
 
 #define MAG_MUSTGET 1
 
-magazine_t* mag_new(qword(*get)(void* ctx), void (*put)(void* ctx, qword item), void* ctx);
-void mag_destroy(magazine_t* mag);
-void mag_put(magazine_t* mag, qword item);
-bool mag_xget(magazine_t* mag, qword* out, uint64_t flags);
-qword mag_get(magazine_t* mag);
+Magazine* mag_new(qword(*get)(void* ctx), void (*put)(void* ctx, qword item), void* ctx);
+void mag_destroy(Magazine* mag);
+void mag_put(Magazine* mag, qword item);
+bool mag_xget(Magazine* mag, qword* out, uint64_t flags);
+qword mag_get(Magazine* mag);
 void mag_100ms_adjust(void);
-void mag_init(void);
+void magazine_init(void);

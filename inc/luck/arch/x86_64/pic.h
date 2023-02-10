@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023 Amrit Bhogal, pitust
+ * Copyright (C) 2023 Amrit Bhogal
  *
  * This file is part of LuaOS.
  *
@@ -23,7 +23,26 @@
 
 NONNULL_BEGIN
 
-void console_write(const char *str);
-void console_write_char(char c);
+#define MASTER_PIC      (0x20)
+#define SLAVE_PIC       (0xA0)
+#define MASTER_PIC_CMD  (MASTER_PIC)
+#define MASTER_PIC_DATA (MASTER_PIC + 1)
+#define SLAVE_PIC_CMD   (SLAVE_PIC)
+#define SLAVE_PIC_DATA  (SLAVE_PIC + 1)
+#define PIC_END_OF_INT  (0x20)
+
+#define ICW1_ICW4       (0x01)
+#define ICW1_SINGLE     (0x02)
+#define ICW1_INTERVAL4  (0x04)
+#define ICW1_LEVEL      (0x08)
+#define ICW1_INIT       (0x10)
+#define ICW4_8086       (0x01)
+#define ICW4_AUTO       (0x02)
+#define ICW4_BUF_SLAVE  (0x08)
+#define ICW4_BUF_MASTER (0x0C)
+#define ICW4_SFNM       (0x10)
+
+void pic_init(int master_offset, int slave_offset);
+void pic_send_eoi(byte irq);
 
 NONNULL_END

@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-ASSUME_NONNULL_BEGIN
+NONNULL_BEGIN
 
 static size_t string_length(const char *str)
 {
@@ -109,4 +109,4 @@ static void string_concatenate(char *dest, const char *src)
 //    string_format(buf, 256, "{} + {} = {}", 1, 1, 1 + 1);
 //}
 
-ASSUME_NONNULL_END
+NONNULL_END
