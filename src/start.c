@@ -71,7 +71,8 @@ void kernel_start()
         debug("  Found entry with ID {}", entry->id);
 
         switch(entry->id) {
-        case MADT_ENTRY_ID_LAPIC:
+        case MADT_ENTRY_ID_LAPIC:;
+
             struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *)entry;
             success("  Found LAPIC");
             debug("    Processor ID: {}", lapic->processor_id);
