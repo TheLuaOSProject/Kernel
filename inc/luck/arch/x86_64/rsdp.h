@@ -39,6 +39,6 @@ struct RSDP {
     byte extended_checksum, reserved[3];
 } attribute(packed);
 
-struct RSDP *nullable get_rsdp();
+struct RSDP *nullable rsdp_init();
 
 NONNULL_END

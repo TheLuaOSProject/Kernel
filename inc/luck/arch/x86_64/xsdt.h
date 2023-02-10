@@ -28,7 +28,7 @@ struct XSDT {
     struct SDTHeader header, data[];
 };
 
-struct XSDT *nullable get_xsdt(const struct RSDP *desc);
-struct SDTHeader *nullable find_sdt(const struct XSDT *table, const char id[static 4], size_t id);
+struct XSDT *nullable xsdt_init(const struct RSDP *desc);
+struct SDTHeader *nullable xsdt_find(const struct XSDT *table, const char id[static 4], int idx);
 
 NONNULL_END

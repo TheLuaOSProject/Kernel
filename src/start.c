@@ -19,16 +19,24 @@
 
 #include <limine.h>
 
+#include "luck/io/log.h"
+
 #include "luck/memory/manager.h"
 #include "luck/memory/magazines.h"
-#include "luck/io/log.h"
 #include "luck/arch/x86_64/gdt.h"
-#include "luck/arch/x86_64/interrupts.h"
+#include "luck/arch/x86_64/idt.h"
 #include "luck/arch/x86_64/rsdp.h"
+#include "luck/arch/x86_64/madt.h"
+#include "luck/arch/x86_64/xsdt.h"
+
+
 
 void kernel_start()
 {
     warning("Stage 1: Initalisation");
+    info("{} + {} = {}", 2, 2, 2 + 2);
+    info("Hello, {}", "World!");
+
     info("Initialising GDT");
     gdt_init();
     success("Done");
@@ -47,20 +55,31 @@ void kernel_start()
     success("  Done");
     success("Done");
 
-    info("Initialising PIC");
-    pic_init(0x20, 0x28);
-    info("  Finding RSDP");
-    struct RSDP *rsdp = get_rsdp();
-    if (rsdp == nullptr)
-        error("  no RSDP found!");
-    else {
-        info("  RSDP found at {:#x}", (void *) rsdp);
-        info("  RSDP revision: {}", rsdp->revision);
-        info("  RSDP length: {}", rsdp->length);
-        info("  RSDP xsdt_address: {:#x}", rsdp->xsdt_address);
-        info("  RSDP rsdt_address: {:#x}", rsdp->rsdt_address);
-        success("  Done");
+    info("Initialising APIC");
+    struct RSDP *rsdp = rsdp_init();
+    if (rsdp == nullptr) panic("Could not find RSDP");
+
+    struct XSDT *xsdt = xsdt_init(rsdp);
+    if (xsdt == nullptr) panic("Could not find XSDT");
+
+    struct MADT *madt = madt_init(xsdt);
+    if (madt == nullptr) panic("Could not find MADT");
+
+    for (struct MADTEntryHeader *entry = (struct MADTEntryHeader *)madt->entries;
+         (uintptr_t)entry < (uintptr_t)(madt->entries + madt->descriptor.length - sizeof(struct MADT));
+         entry = (struct MADTEntryHeader *)((byte *)entry + (entry)->length)) {
+
+        switch(entry->id) {
+        case MADT_ENTRY_ID_LAPIC:
+            struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *)entry;
+            success("  Found LAPIC");
+            debug("    Processor ID: {}", lapic->processor_id);
+            debug("    APIC ID: {}", lapic->apic_id);
+            debug("    Flags: {}", lapic->flags);
+            break;
+        }
     }
+
     success("Done");
 
     success("Initalisation complete");

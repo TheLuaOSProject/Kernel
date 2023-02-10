@@ -20,6 +20,8 @@
 
 #include "common.h"
 #include "sdt.h"
+#include "xsdt.h"
+
 
 NONNULL_BEGIN
 
@@ -36,6 +38,7 @@ struct MADT {
     struct MADTEntryHeader entries[];
 } attribute(packed);
 
+#define MADT_ENTRY_ID_LAPIC (0)
 struct MADTEntry_LAPIC {
     struct MADTEntryHeader header;
 
@@ -47,6 +50,7 @@ struct MADTEntry_IOAPIC {
     /*TODO*/
 };
 
-void madt_init();
+struct MADT *nullable madt_init(const struct XSDT *table);
+
 
 NONNULL_END

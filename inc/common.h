@@ -25,6 +25,12 @@
 #include <stdatomic.h>
 #include <stdnoreturn.h>
 
+#if __STDC_VERSION__ > 201710L
+#   define C2X true
+#else
+#   define C2X false
+#endif
+
 #define attribute(...) __attribute__((__VA_ARGS__))
 
 #define inline attribute(always_inline) static inline

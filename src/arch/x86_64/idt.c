@@ -17,7 +17,7 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "luck/arch/x86_64/interrupts.h"
+#include "luck/arch/x86_64/idt.h"
 #include "luck/arch/x86_64/cpu.h"
 
 #include "luck/io/log.h"

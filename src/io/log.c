@@ -168,7 +168,8 @@ scan:;
 }
 
 void _log_level_success(void) { output_string("\x1b[32m[SUCCESS]\x1b[0m "); }
-void _log_level_info(void) { output_string("\x1b[0m[INFO]\x1b[0m "); }
+void _log_level_info(void) { output_string("\x1b[34m[INFO]\x1b[0m "); }
+void _log_level_debug(void) { output_string("\x1b[2;37m[DEBUG]\x1b[0m "); }
 void _log_level_warning(void) { output_string("\x1b[33m[WARNING]\x1b[0m "); }
 void _log_level_error(void) { output_string("\x1b[31m[ERROR]\x1b[0m "); }
 void _log_level_panic(void) { output_string("\x1b[31m[FATAL]\x1b[0m "); }
@@ -193,7 +194,7 @@ static void log_do_append_number(char **_buf, unsigned long long num, int base, 
     }
 #undef buf
 }
-static void log_emit(FormatSpecifier fi, char* buf) {
+static void log_emit(FormatSpecifier fi, const char *buf) {
     if (string_length(buf) < fi.width) {
         int wi_b = string_length(buf);
         int dis_b = wi_b - fi.width;
@@ -335,9 +336,12 @@ void _log_char(const char **fmtref, char c) {
     log_emit(fi, buf);
 }
 
-void _log_string(attribute(unused) const char **_, const char *str)
+void _log_string(attribute(unused) const char **fmt, const char *str)
 {
-    output_string(str);
+    FormatSpecifier fi;
+    parse_fmt(fmt, &fi);
+
+    log_emit(fi, str);
 }
 
 void _log_voidptr(const char **fmtref, void *ptr)

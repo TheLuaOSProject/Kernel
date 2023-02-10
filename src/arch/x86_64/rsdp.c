@@ -29,7 +29,7 @@ static volatile struct limine_rsdp_request request = {
 };
 
 
-struct RSDP *get_rsdp()
+struct RSDP *rsdp_init()
 {
     struct limine_rsdp_response *resp = request.response;
 

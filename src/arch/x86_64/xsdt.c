@@ -24,16 +24,17 @@
 #include "memory.h"
 #include "luck/io/log.h"
 
-struct XSDT *get_xsdt(const struct RSDP *desc)
+struct XSDT *xsdt_init(const struct RSDP *desc)
 {
     struct XSDT *xsdt = (void *)desc->xsdt_address;
 
     return sdt_checksum(&xsdt->header) ? xsdt : nullptr;
 }
 
-struct SDTHeader *find_sdt(const struct XSDT *table, const char id[static 4], size_t idx)
+struct SDTHeader *xsdt_find(const struct XSDT *table, const char id[static 4], int idx)
 {
     size_t entryc = (table->header.length - sizeof(struct SDTHeader)) / 8;
+    info(" xsdt_find: looking for {} in table with {} entries", (char *)id, entryc);
 
     for (size_t i = 0; i < entryc; i++) {
         struct SDTHeader *sdt = (struct SDTHeader *)*((qword *)((byte *)table->data) + i);

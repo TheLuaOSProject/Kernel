@@ -19,7 +19,14 @@
 
 #include "luck/arch/x86_64/madt.h"
 
-void madt_init(void)
-{
+#include "luck/arch/x86_64/xsdt.h"
 
+struct MADT *madt_init(const struct XSDT *table)
+{
+    struct MADT *madt = (struct MADT *nullable)xsdt_find(table, "APIC", 0);
+    if (madt == nullptr) return nullptr;
+
+    /*TODO*/
+
+    return madt;
 }
