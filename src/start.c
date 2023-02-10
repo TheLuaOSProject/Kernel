@@ -68,6 +68,7 @@ void kernel_start()
     for (struct MADTEntryHeader *entry = (struct MADTEntryHeader *)madt->entries;
          (uintptr_t)entry < (uintptr_t)(madt->entries + madt->descriptor.length - sizeof(struct MADT));
          entry = (struct MADTEntryHeader *)((byte *)entry + (entry)->length)) {
+        debug("  Found entry with ID {}", entry->id);
 
         switch(entry->id) {
         case MADT_ENTRY_ID_LAPIC:

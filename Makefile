@@ -60,7 +60,7 @@ override ASFILES := $(shell find ./src -type f -name '*.asm')
 override COBJS := $(addprefix build/obj/,$(CFILES:.c=.c.o))
 override ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.asm.o))
 
-override QEMUFLAGS := -m 2G -monitor stdio -serial file:luaos.log
+override QEMUFLAGS := -smp 2 -m 2G -monitor stdio -serial file:luaos.log
 
 .PHONY: all
 all: build/bin/luaos.iso
