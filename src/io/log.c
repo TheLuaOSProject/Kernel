@@ -203,54 +203,36 @@ scan:;
     return 0;
 }
 
-void _log_level_success(const char *prefix)
-{
-    output_string_console("\x1b[32m");
-    output_string("[SUCCESS] (");
-    output_string(prefix);
-    output_string(") ");
+#define log_level_impl(level, ansicolor, prefix) \
+    void _log_level_##level(void) { \
+        output_string("["); \
+        output_string_console("\x1b[0;3" #ansicolor ";1m"); \
+        output_string(prefix); \
+        output_string_console("\x1b[0m"); \
+        output_string("]"); \
+    }
+
+log_level_impl(success, 2, "+");
+log_level_impl(info, 4, "*");
+log_level_impl(debug, 0, "*");
+log_level_impl(warning, 3, "!");
+log_level_impl(error, 1, "-");
+log_level_impl(panic, 1, "-");
+
+void _log_begin(const char *nonnull file, const char *nonnull line, const char *nonnull function) {
+    (void)file;
+    (void)function;
+
+    output_string(" ");
+    output_string_console("\x1b[0;30;1m");
+    output_string(file);
+    // output_string(function);
+    output_string(":");
+    output_string(line);
     output_string_console("\x1b[0m");
+    output_string(" ");
 }
-void _log_level_info(const char *prefix)
-{
-    output_string_console("\x1b[32m");
-    output_string("[INFO] (");
-    output_string(prefix);
-    output_string(") ");
-    output_string_console("\x1b[0m");
-}
-void _log_level_debug(const char *prefix)
-{
-    output_string_console("\x1b[36m");
-    output_string("[DEBUG] (");
-    output_string(prefix);
-    output_string(") ");
-    output_string_console("\x1b[0m");
-}
-void _log_level_warning(const char *prefix)
-{
-    output_string_console("\x1b[33m");
-    output_string("[WARNING] (");
-    output_string(prefix);
-    output_string(") ");
-    output_string_console("\x1b[0m");
-}
-void _log_level_error(const char *prefix)
-{
-    output_string_console("\x1b[31m");
-    output_string("[ERROR] (");
-    output_string(prefix);
-    output_string(") ");
-    output_string_console("\x1b[0m");
-}
-void _log_level_panic(const char *prefix)
-{
-    output_string_console("\x1b[31m");
-    output_string("[PANIC] (");
-    output_string(prefix);
-    output_string(") ");
-    output_string_console("\x1b[0m");
-}
+
 void _log_level_common_end(const char **fmtref)
 {
     output_string(*fmtref);
@@ -278,22 +260,22 @@ static void log_do_append_number(char **_buf, unsigned long long num, int base, 
 }
 static void log_emit(FormatSpecifier fi, const char *buf) {
     if (string_length(buf) < fi.width) {
-        int wi_b = string_length(buf);
-        int dis_b = wi_b - fi.width;
-        int half_b = dis_b / 2;
-        int half2_b = dis_b - half_b;
+        size_t wi_b = string_length(buf);
+        size_t dis_b = wi_b - fi.width;
+        size_t half_b = dis_b / 2;
+        size_t half2_b = dis_b - half_b;
         if (fi.align == '>') {
-            for (int i = 0;i < dis_b;i++) output_char(fi.fill);
+            for (size_t i = 0;i < dis_b;i++) output_char(fi.fill);
         }
         if (fi.align == '^') {
-            for (int i = 0;i < half2_b;i++) output_char(fi.fill);
+            for (size_t i = 0;i < half2_b;i++) output_char(fi.fill);
         }
         output_string(buf);
         if (fi.align == '<') {
-            for (int i = 0;i < dis_b;i++) output_char(fi.fill);
+            for (size_t i = 0;i < dis_b;i++) output_char(fi.fill);
         }
         if (fi.align == '^') {
-            for (int i = 0;i < half_b;i++) output_char(fi.fill);
+            for (size_t i = 0;i < half_b;i++) output_char(fi.fill);
         }
     } else {
         output_string(buf);

@@ -25,12 +25,14 @@
 
 NONNULL_BEGIN
 
-void _log_level_success(const char *prefix);
-void _log_level_info(const char *prefix);
-void _log_level_debug(const char *prefix);
-void _log_level_warning(const char *prefix);
-void _log_level_error(const char *prefix);
-void _log_level_panic(const char *prefix);
+void _log_level_success(void);
+void _log_level_info(void);
+void _log_level_debug(void);
+void _log_level_warning(void);
+void _log_level_error(void);
+void _log_level_panic(void);
+
+void _log_begin(const char* file, const char *line, const char* function);
 
 void _log_level_common_end(const char *nonnull *nonnull fmtref);
 noreturn void _log_level_panic_end(const char *nonnull *nonnull fmtref);
@@ -66,7 +68,8 @@ _log__formatters(_log__defines)
     { __auto_type _argument = (argument); _Generic(_argument _log__formatters(_log__eachtype_cb), char *: _log_string)(&_fmt, _argument); }
 
 #define log(level, fmt, ...) do { \
-        _log_level_##level(string_concatenate((char [512]){__FILE__":"stringify(__LINE__)" - "}, __PRETTY_FUNCTION__)); \
+        _log_level_##level(); \
+        _log_begin(__FILE_NAME__, stringify(__LINE__), __FUNCTION__); \
         const char* _fmt = (fmt); \
         foreach(_log__one, _ __VA_OPT__(,) __VA_ARGS__) \
         _log_level_##level##_end(&_fmt); \
