@@ -16,19 +16,44 @@
  * You should have received a copy of the GNU General Public License
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #pragma once
 
 #include "common.h"
-#include "rsdp.h"
 
 NONNULL_BEGIN
 
-struct XSDT {
-    struct SDTHeader header, data[];
+struct SDTHeader {
+    char signature[4];
+    dword length;
+    byte revision, checksum;
+    char oem_id[6], oem_table_id[8];
+    dword oem_revision, creator_id, creator_revision;
 };
 
-struct XSDT *nullable xsdt_init(const struct RSDP *desc);
-struct SDTHeader *nullable xsdt_find(const struct XSDT *table, const char id[static 4], int idx);
+struct RSDT {
+    struct SDTHeader header;
+    dword pointers[];
+};
+struct XSDT {
+    struct SDTHeader header;
+    qword pointers[];
+} attribute(packed);
+
+struct RSDP {
+    //1.0
+    char signature[8];
+    byte checksum;
+    char oem_id[6];
+    byte revision;
+    dword rsdt_address;
+
+    //2.0
+    dword length;
+    qword xsdt_address;
+    byte extended_checksum, reserved[3];
+} attribute(packed);
+
+struct RSDP *nullable rsdp_init(void);
+struct SDTHeader *nullable sdt_find(const struct RSDP *table, const char id[static 4], int idx);
 
 NONNULL_END

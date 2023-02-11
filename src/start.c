@@ -21,13 +21,13 @@
 
 #include "luck/io/log.h"
 
+
+#include "luck/acpi/madt.h"
+#include "luck/acpi/acpi.h"
 #include "luck/arch/x86_64/gdt.h"
 #include "luck/arch/x86_64/idt.h"
-#include "luck/arch/x86_64/madt.h"
-#include "luck/arch/x86_64/rsdp.h"
-#include "luck/arch/x86_64/xsdt.h"
-#include "luck/memory/magazines.h"
 #include "luck/memory/manager.h"
+#include "luck/memory/magazines.h"
 
 attribute(used) noreturn void kernel_start()
 {
@@ -40,7 +40,7 @@ attribute(used) noreturn void kernel_start()
     success("Done");
 
     info("Initialising IDT");
-    idt_init();
+    // idt_init();
     success("Done");
 
     info("Initialising memory");
@@ -60,19 +60,13 @@ attribute(used) noreturn void kernel_start()
     if (rsdp == nullptr)
         panic("Could not find RSDP");
 
-    // TODO: RSDT support, technically implemented but no API, only XSDT
-    struct XSDT *xsdt = xsdt_init(rsdp);
-    if (xsdt == nullptr)
-        panic("Could not find XSDT");
-
-    struct MADT *madt = madt_init(xsdt);
-    if (madt == nullptr)
-        panic("Could not find MADT");
+    struct MADT *madt = madt_init(rsdp);
+    if (madt == nullptr) panic("Could not find MADT");
 
     size_t core_c = 0;
 
     for (struct MADTEntryHeader *entry = (struct MADTEntryHeader *)madt->entries;
-         (uintptr_t)entry < (uintptr_t)(madt->entries + madt->descriptor.length - sizeof(struct MADT));
+         (uintptr_t)entry < (uintptr_t)(((uintptr_t)madt->entries) + madt->descriptor.length - sizeof(struct MADT));
          entry = (struct MADTEntryHeader *)((byte *)entry + (entry)->length)) {
 
         debug("  Found entry with ID {}", entry->id);

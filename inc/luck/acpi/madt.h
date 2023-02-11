@@ -19,8 +19,7 @@
 #pragma once
 
 #include "common.h"
-#include "sdt.h"
-#include "xsdt.h"
+#include "luck/acpi/acpi.h"
 
 
 NONNULL_BEGIN
@@ -50,7 +49,7 @@ struct MADTEntry_IOAPIC {
     /*TODO*/
 };
 
-struct MADT *nullable madt_init(const struct XSDT *table);
+struct MADT *nullable madt_init(const struct RSDP *rsdp);
 
 
 NONNULL_END

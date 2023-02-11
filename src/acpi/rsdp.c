@@ -17,7 +17,7 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "luck/arch/x86_64/rsdp.h"
+#include "luck/acpi/acpi.h"
 #include "luck/io/log.h"
 
 #include <limine.h>
@@ -29,7 +29,7 @@ static volatile struct limine_rsdp_request request = {
 };
 
 
-struct RSDP *rsdp_init()
+struct RSDP *rsdp_init(void)
 {
     struct limine_rsdp_response *resp = request.response;
 
@@ -40,9 +40,8 @@ struct RSDP *rsdp_init()
     struct RSDP *rsdp = resp->address;
 
     if (rsdp->revision < 2) {
-        error("  XSDT not supported on this machine!");
-        //Techinically should use RSDT here but im lazy lol
-        return nullptr;
+        info("  XSDT not supported on this machine; using RSDT");
+        return rsdp;
     }
 
     return rsdp;

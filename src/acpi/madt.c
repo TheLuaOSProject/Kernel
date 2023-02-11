@@ -16,27 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
-#pragma once
 
-#include "common.h"
+#include "luck/acpi/acpi.h"
+#include "luck/acpi/madt.h"
 
-NONNULL_BEGIN
-
-struct SDTHeader {
-    char signature[4];
-    dword length;
-    byte revision, checksum;
-    char oem_id[6], oem_table_id[8];
-    dword oem_revision, creator_id, creator_revision;
-};
-
-inline bool sdt_checksum(struct SDTHeader *header)
+struct MADT *madt_init(const struct RSDP *rsdp)
 {
-    byte sum = 0;
-    for (size_t i = 0; i < header->length; i++) {
-        sum += ((byte *)header)[i];
-    }
-    return sum == 0;
-}
+    struct MADT *madt = (struct MADT *nullable)sdt_find(rsdp, "APIC", 0);
+    if (madt == nullptr) return nullptr;
 
-NONNULL_END
+    /*TODO*/
+
+    return madt;
+}
