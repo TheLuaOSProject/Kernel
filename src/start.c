@@ -40,7 +40,7 @@ attribute(used) noreturn void kernel_start()
     success("Done");
 
     info("Initialising IDT");
-    // idt_init();
+    idt_init();
     success("Done");
 
     info("Initialising memory");
