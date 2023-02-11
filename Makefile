@@ -128,4 +128,8 @@ clean:
 cleanall: clean
 	rm -rf extern
 
--include $(CFILES:%.c=build/obj/%.d)
+extern/include/limine.h:
+	mkdir -p extern/include/
+	curl https://raw.githubusercontent.com/limine-bootloader/limine/trunk/limine.h -o $@
+
+-include $(CFILES:%.c=build/obj/%.c.d)
