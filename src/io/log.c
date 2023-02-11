@@ -38,7 +38,6 @@ static void output_char_serial(char c) {
 
 static void output_string_serial(const char *s) {
     //Remove all ansi escape sequences then output to serial
-
     char buf[1024];
     char *bufptr = buf;
     char c;
@@ -412,6 +411,25 @@ void _log_voidptr(const char **fmtref, void *ptr)
 {
     FormatSpecifier fs;
     parse_fmt(fmtref, &fs);
-    log_emit(fs, "0x");
-    log_num_u(fs, (unsigned long)ptr);
+
+    char str[20] = {0};
+    const char *hex = "0123456789ABCDEF";
+
+    // Extract the individual bytes of the pointer
+    uintptr_t ptr_val = (uintptr_t) ptr;
+    byte bytes[16] = {0};
+    for (int i = 0; i < 16; i++) {
+        bytes[i] = (byte)((ptr_val >> (i * 4)) & 0xF);
+    }
+
+    // Construct the hexadecimal string representation of the pointer
+    int str_pos = 0;
+    str[str_pos++] = '0';
+    str[str_pos++] = 'x';
+    for (int i = 15; i >= 0; i--) {
+        str[str_pos++] = hex[bytes[i]];
+    }
+    str[str_pos] = '\0';
+
+    log_emit(fs, str);
 }

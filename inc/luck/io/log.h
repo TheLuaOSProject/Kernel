@@ -67,13 +67,13 @@ _log__formatters(_log__defines)
 #define _log__one(_, argument) \
     { __auto_type _argument = (argument); _Generic(_argument _log__formatters(_log__eachtype_cb), char *: _log_string)(&_fmt, _argument); }
 
-#define log(level, fmt, ...) do { \
+#define log(level, fmt, ...) ({ \
         _log_level_##level(); \
         _log_begin(__FILE_NAME__, stringify(__LINE__), __FUNCTION__); \
         const char* _fmt = (fmt); \
         foreach(_log__one, _ __VA_OPT__(,) __VA_ARGS__) \
         _log_level_##level##_end(&_fmt); \
-    } while (0)
+    })
 
 #define success(fmt, ...)   log(success, fmt __VA_OPT__(,) __VA_ARGS__)
 #define info(fmt, ...)      log(info, fmt __VA_OPT__(,) __VA_ARGS__)
