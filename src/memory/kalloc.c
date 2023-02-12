@@ -26,10 +26,9 @@
 #include "luck/io/log.h"
 
 #define kalloc_sizes \
-    16, 32, 48, 64, 80, 112, 144, 176, 224, 272, 336, 416, 512, 624, 752, 912, 1104, 1328, \
-    1600, 1920, 2304, 2752, 3296, 3936, 4704, 5616, 6720, 8032, 9600, 11472, 13712, 16384
+    16, 32, 48, 64, 96, 128, 176, 224, 288, 368, 480, 624, 800, 1024, 1360, 2048
 
-static qword kalloc_size_arr[32] = {kalloc_sizes};
+static qword kalloc_size_arr[16] = {kalloc_sizes};
 
 #define raw_slabs(name, convert, oom) \
     static qword name##_slab_list_head = 0; \
@@ -78,7 +77,7 @@ static qword kalloc_inner(void* ctx) {
         qword va = (qword)virt(pa, void);
         qword ssiz = kalloc_size_arr[i];
         if (ssiz > 4096) {
-            panic("todo: kalloc with size > 4096");
+            panic("todo: kalloc with size > 4096 (siz={})", ssiz);
         }
         qword cnt = 4096/ssiz;
         if (cnt == 1) {
@@ -102,14 +101,14 @@ static void kfree_inner(void* ctx, qword pg) {
 
 void kalloc_init(void) {
     page_mag = mag_new(page_slab_list_alloc, page_slab_list_free, nullptr);
-    qword idx336 = 0xffff;
+    qword idx_special = 0xffff;
     for (int i = 0;i < 32;i++) {
-        if (kalloc_size_arr[i] == 336) idx336 = i;
+        if (kalloc_size_arr[i] == 368) idx_special = i;
     }
-    if (idx336 == 0xffff) panic("update 336 with whatever new kalloc size is big enough to hold a Magazine");
-    kalloc_mags[idx336] = mag_new(kalloc_inner, kfree_inner, (void*)idx336); 
+    if (idx_special == 0xffff) panic("update 368 with whatever new kalloc size is big enough to hold a Magazine (>312 bytes)");
+    kalloc_mags[idx_special] = mag_new(kalloc_inner, kfree_inner, (void*)idx_special); 
     for (qword i = 0;i < 32;i++) {
-        if (i != idx336) kalloc_mags[i] = mag_new(kalloc_inner, kfree_inner, (void*)i);
+        if (i != idx_special) kalloc_mags[i] = mag_new(kalloc_inner, kfree_inner, (void*)i);
     }
 }
 
@@ -122,13 +121,20 @@ qword page_alloc(enum PageType pty) {
 }
 
 static qword find_kalloc_mag(qword size) {
-    if (size > kalloc_size_arr[31]) panic("cannot kalloc() or kfree() more than {} bytes! (attempted to kalloc/kfree {})", kalloc_size_arr[31], size);
+    if (size > kalloc_size_arr[15]) panic("cannot kalloc() or kfree() more than {} bytes! (attempted to kalloc/kfree {})", kalloc_size_arr[15], size);
     for (qword i = 0;i < 32;i++) {
         if (kalloc_size_arr[i] >= size) return i;
     }
     panic("wtf");
 }
+static atomic_ullong addr = 0xffff900000000000;
 void* kalloc(qword size) {
+    if (size > kalloc_size_arr[15]) {
+        size = (size + 0xfff) & ~0xfff;
+        qword this_addr = atomic_fetch_add(&addr, size);
+        for (qword i = 0;i < size;i += 4096) pmap_map(this_addr + i, page_alloc(kRegular));
+        return (void*)this_addr;
+    }
     qword mag = find_kalloc_mag(size);
 earlykalloc:
     if (!kalloc_mags[mag]) {

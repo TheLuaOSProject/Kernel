@@ -43,6 +43,7 @@ override CFLAGS +=       	\
     -MMD                 	\
 	-target x86_64-elf	 	\
 	-isystem extern/limine	\
+	-Iextern/terminal       \
 	-Iinc               	\
 	-Wno-unused-function    \
 
@@ -56,7 +57,7 @@ override LDFLAGS +=         \
 
 override ASFLAGS += -f elf64
 
-override CFILES := $(shell find ./src -type f -name '*.c')
+override CFILES := $(shell find ./src -type f -name '*.c') extern/terminal/term.c extern/terminal/backends/framebuffer.c
 override ASFILES := $(shell find ./src -type f -name '*.asm')
 
 override COBJS := $(addprefix build/obj/,$(CFILES:.c=.c.o))
@@ -88,6 +89,10 @@ extern/limine:
 	git clone https://github.com/limine-bootloader/limine.git --branch=v4.x-branch-binary --depth=1 $@
 	$(MAKE) -C $@
 
+extern/terminal:
+	mkdir -p $@
+	git clone https://github.com/limine-bootloader/terminal --depth 1 $@
+
 build/bin/luaos.iso: extern/limine build/bin/luck.elf res/limine.cfg
 	mkdir -p $(dir $@)/iso
 	cp build/bin/luck.elf res/powered-by-lua.bmp res/limine.cfg res/font.bin extern/limine/limine-cd.bin extern/limine/limine.sys extern/limine/limine-cd-efi.bin $(dir $@)/iso
@@ -110,7 +115,7 @@ build/bin/luck.elf: $(COBJS) $(ASOBJS)
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 
-build/obj/%.c.o: %.c extern/limine
+build/obj/%.c.o: %.c extern/limine extern/terminal
 	@printf "\x1b[32mCompiling $<\n\x1b[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@

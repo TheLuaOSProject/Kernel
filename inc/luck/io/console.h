@@ -23,6 +23,7 @@
 
 NONNULL_BEGIN
 
+void initalise_terminal();
 void console_write(const char *str);
 void console_write_char(char c);
 

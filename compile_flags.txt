@@ -2,3 +2,4 @@
 -Iextern/limine
 -target
 x86_64-elf
+-Iextern/terminal

@@ -24,6 +24,7 @@
 
 #include "luck/acpi/madt.h"
 #include "luck/acpi/acpi.h"
+#include "luck/io/console.h"
 #include "luck/arch/x86_64/gdt.h"
 #include "luck/arch/x86_64/idt.h"
 #include "luck/memory/manager.h"
@@ -31,6 +32,14 @@
 
 attribute(used) noreturn void kernel_start()
 {
+    qword cr3;
+    asm volatile("MOVQ %%CR3, %0" : "=r"(cr3));
+    for (qword i = 0;i < 256;i++) {
+        *virt(cr3 + i * 8, qword) = 0;
+    }
+    asm volatile("MOVQ %0, %%CR3" :: "r"(cr3) : "memory");
+
+
     success("\nStarted LuaOS");
     info("{} + {} = {}", 2, 2, 2 + 2);
     info("Hello, {}", "World!");
@@ -54,6 +63,8 @@ attribute(used) noreturn void kernel_start()
         success("  Done");
     }
     success("Done");
+
+    initalise_terminal();
 
     info("Initialising APIC");
     struct RSDP *rsdp = rsdp_init();

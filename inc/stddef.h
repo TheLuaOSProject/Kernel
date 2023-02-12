@@ -7,5 +7,5 @@
 typedef unsigned long size_t;
 typedef long ssize_t;
 
-#define NULL (_Pragma("GCC warning \"luaOS code style: 'Use `nullptr` not `NULL`\"")(void*) 0)
+#define NULL ((void*)0)
 #define nullptr ((void*)0)
