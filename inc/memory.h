@@ -21,20 +21,20 @@
 
 #include <common.h>
 
-static size_t memory_copy(void *dest, const void *src, size_t n)
+static void *memory_copy(void *dest, const void *src, size_t n)
 {
     for (size_t i = 0; i < n; i++) {
         ((char *)dest)[i] = ((char *)src)[i];
     }
-    return n;
+    return dest;
 }
 
-static size_t memory_set(void *dest, int c, size_t n)
+static void *memory_set(void *dest, int c, size_t n)
 {
     for (size_t i = 0; i < n; i++) {
         ((char *)dest)[i] = c;
     }
-    return n;
+    return dest;
 }
 
 static int memory_compare(const void *s1, const void *s2, size_t n)

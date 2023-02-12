@@ -19,5 +19,8 @@
 
 #include "memory.h"
 
-void* memcpy(void *dst, const void *src, size_t n)
-{ memory_copy(dst, src, n); return dst; }
+void *memcpy(void *dst, const void *src, size_t n)
+{ return memory_copy(dst, src, n); }
+
+void *memset(void *dst, int i, size_t n)
+{ return memory_set(dst, i, n); }
