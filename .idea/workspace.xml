@@ -3,9 +3,9 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
-  <component name="CMakePresetLoader"><![CDATA[{
-  "useNewFormat": true
-}]]></component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
   <component name="CMakeRunConfigurationManager">
     <generated>
       <config projectName="Kernel" targetName="debug" />
@@ -21,14 +21,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="64d10e30-ccab-45e4-84b1-4ebb42cd796b" name="Changes" comment="Whoops, this should have been added">
-      <change afterPath="$PROJECT_DIR$/src/compilersupport.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/io/log.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/io/log.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/string.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/string.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/start.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/start.c" afterDir="false" />
-    </list>
+    <list default="true" id="64d10e30-ccab-45e4-84b1-4ebb42cd796b" name="Changes" comment="Whoops, this should have been added" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -101,26 +94,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "Runtime.Targets.Configurable",
-    "structure.view.defaults.are.configured": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Runtime.Targets.Configurable&quot;,
+    &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Embedded GDB Server.Debug">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
@@ -144,6 +132,11 @@
     <configuration name="uefi" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="uefi" CONFIG_NAME="uefi" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="Debug" type="com.jetbrains.cidr.embedded.customgdbserver.type" factoryName="com.jetbrains.cidr.embedded.customgdbserver.factory" PROGRAM_PARAMS="-machine q35 -smp 2 -m 2G -serial stdio -gdb tcp::53068 -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="$PROJECT_DIR$/build/bin/luck.elf">
@@ -172,6 +165,7 @@
       <option name="presentableId" value="Default" />
       <updated>1676061111866</updated>
       <workItem from="1676061114525" duration="3546000" />
+      <workItem from="1676235340000" duration="65000" />
     </task>
     <task id="LOCAL-00001" summary="Whoops, this should have been added">
       <created>1676061391366</created>
