@@ -69,12 +69,15 @@ raw_slabs(page, convert_pg, {
 static Magazine* page_mag = nullptr;
 static Magazine* kalloc_mags[32] = {nullptr};
 static qword kalloc_heads[32] = {0};
+static atomic_ullong addr = 0x0000700000000000;
 
 static qword kalloc_inner(void* ctx) {
     qword i = (qword)ctx;
     if (kalloc_heads[i] == 0) {
         qword pa = page_alloc(kRegular);
-        qword va = (qword)virt(pa, void);
+        qword va = atomic_fetch_add(&addr, 4096);
+        pmap_map(va, pa);
+
         qword ssiz = kalloc_size_arr[i];
         if (ssiz > 4096) {
             panic("todo: kalloc with size > 4096 (siz={})", ssiz);
@@ -127,7 +130,6 @@ static qword find_kalloc_mag(qword size) {
     }
     panic("wtf");
 }
-static atomic_ullong addr = 0xffff900000000000;
 void* kalloc(qword size) {
     if (size > kalloc_size_arr[15]) {
         size = (size + 0xfff) & ~0xfff;

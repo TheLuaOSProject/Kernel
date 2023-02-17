@@ -404,7 +404,7 @@ void _log_string(attribute(unused) const char **fmt, const char *str)
     FormatSpecifier fi;
     parse_fmt(fmt, &fi);
 
-    log_emit(fi, str);
+    log_emit(fi, str ?: "(null)");
 }
 
 void _log_voidptr(const char **fmtref, void *ptr)

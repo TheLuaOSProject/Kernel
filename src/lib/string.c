@@ -19,3 +19,22 @@
 
 #include "string.h"
 
+char *strchr(const char *s, int c) {
+    while (*s) if (*s++ == c) return (char*)s;
+    return (char*)s;
+}
+char *strrchr(const char *s, int c) {
+    const char* o = s+string_length(s);
+    while (*s) if (*s++ == c) o = s-1;
+    return (char*)o;
+}
+size_t strlen(const char *s) {
+    return string_length(s);
+}
+int strcmp(const char *s1, const char *s2) {
+    return string_compare(s1, s2);
+}
+char *strcpy(char *dst, const char *src) {
+    string_copy(dst, src);
+    return dst;
+}

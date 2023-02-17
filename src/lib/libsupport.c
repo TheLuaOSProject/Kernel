@@ -19,8 +19,26 @@
 
 #include "memory.h"
 
-void *memcpy(void *dst, const void *src, size_t n)
+void* memcpy(void *dst, const void *src, size_t n)
 { return memory_copy(dst, src, n); }
 
-void *memset(void *dst, int i, size_t n)
-{ return memory_set(dst, i, n); }
+void* memset(void *dst, int c, size_t n)
+{ return memory_set(dst, c, n); }
+
+int memcmp(const void *b1, const void *b2, size_t n)
+{ return memory_compare(b1, b2, n); }
+
+void* memmove(void *dest, const void *src, size_t n)
+{
+    if (dest < src) {
+        for (size_t i = 0; i < n; i++) {
+            ((char *)dest)[i] = ((char *)src)[i];
+        }
+        return dest;
+    } else {
+        for (size_t i = n - 1; i < n; i++) {
+            ((char *)dest)[i] = ((char *)src)[i];
+        }
+        return dest;
+    }
+}

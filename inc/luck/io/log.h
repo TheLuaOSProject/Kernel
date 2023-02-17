@@ -67,7 +67,7 @@ _log__formatters(_log__defines)
 #define _log__one(_, argument) \
     { __auto_type _argument = (argument); _Generic(_argument _log__formatters(_log__eachtype_cb), char *: _log_string)(&_fmt, _argument); }
 
-#define log(level, fmt, ...) ({ \
+#define write_log(level, fmt, ...) ({ \
         _log_level_##level(); \
         _log_begin(__FILE_NAME__, stringify(__LINE__), __FUNCTION__); \
         const char* _fmt = (fmt); \
@@ -75,11 +75,11 @@ _log__formatters(_log__defines)
         _log_level_##level##_end(&_fmt); \
     })
 
-#define success(fmt, ...)   log(success, fmt __VA_OPT__(,) __VA_ARGS__)
-#define info(fmt, ...)      log(info, fmt __VA_OPT__(,) __VA_ARGS__)
-#define debug(fmt, ...)     log(debug, fmt __VA_OPT__(,) __VA_ARGS__)
-#define warning(fmt, ...)   log(warning, fmt __VA_OPT__(,) __VA_ARGS__)
-#define error(fmt, ...)     log(error, fmt __VA_OPT__(,) __VA_ARGS__)
-#define panic(fmt, ...)     log(panic, fmt __VA_OPT__(,) __VA_ARGS__)
+#define success(fmt, ...)   write_log(success, fmt __VA_OPT__(,) __VA_ARGS__)
+#define info(fmt, ...)      write_log(info, fmt __VA_OPT__(,) __VA_ARGS__)
+#define debug(fmt, ...)     write_log(debug, fmt __VA_OPT__(,) __VA_ARGS__)
+#define warning(fmt, ...)   write_log(warning, fmt __VA_OPT__(,) __VA_ARGS__)
+#define error(fmt, ...)     write_log(error, fmt __VA_OPT__(,) __VA_ARGS__)
+#define panic(fmt, ...)     write_log(panic, fmt __VA_OPT__(,) __VA_ARGS__)
 
 NONNULL_END
