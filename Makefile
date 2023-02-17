@@ -64,20 +64,18 @@ override COBJS := $(addprefix build/obj/,$(CFILES:.c=.c.o))
 override ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.asm.o))
 
 override QEMUFLAGS := -smp 2 -m 2G -monitor stdio -serial file:luaos.log
+QDF ?= -s
 
 .PHONY: all
 all: build/bin/luaos.iso extern/ovmf-x64
 
 .PHONY: uefi
 uefi: extern/ovmf-x64 build/bin/luaos.iso
-	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d -s
+	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d $(QDF)
 
 .PHONY: bios
 bios: build/bin/luaos.iso
-	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d -s
-
-debug:
-	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d -s -S
+	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d $(QDF)
 
 
 extern/ovmf-x64:
@@ -110,7 +108,7 @@ build/bin/luaos.iso: extern/limine build/bin/luck.elf res/limine.cfg
 
 	extern/limine/limine-deploy $@
 
-build/bin/luck.elf: $(COBJS) $(ASOBJS)
+build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/luajit/src/libluajit_luck.o
 	@printf "\x1b[35mLinking $@\n\x1b[0m"
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
