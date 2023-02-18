@@ -81,4 +81,5 @@ double pow(double x, double y);
 // memchr memcmp memcpy memmove memset
 // putchar setvbuf strchr strcmp strcpy strerror strlen strncpy strrchr strstr strtoul  tmpfile ungetc
 
-
+void fflush(FILE *f);
+int fputc(int c, FILE *stream);

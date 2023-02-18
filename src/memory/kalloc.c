@@ -70,7 +70,11 @@ static Magazine* page_mag = nullptr;
 static Magazine* kalloc_mags[32] = {nullptr};
 static qword kalloc_heads[32] = {0};
 static atomic_ullong addr = 0x0000700000000000;
+static atomic_ullong kaddr = 0xffffffffA0000000;
 
+qword kvirtalloc(qword size) {
+    return atomic_fetch_add(&kaddr, size);
+}
 static qword kalloc_inner(void* ctx) {
     qword i = (qword)ctx;
     if (kalloc_heads[i] == 0) {
@@ -116,11 +120,17 @@ void kalloc_init(void) {
 }
 
 qword page_alloc(enum PageType pty) {
-	(void)pty; // for now :P
+    (void)pty; // for now :P
 
     qword addr = mag_get(page_mag);
     memory_set(virt(addr, void), 0, 4096);
     return addr;
+}
+
+void page_free(enum PageType pty, qword addr) {
+    (void)pty;
+    
+    mag_put(page_mag, addr);
 }
 
 static qword find_kalloc_mag(qword size) {

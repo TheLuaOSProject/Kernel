@@ -89,7 +89,7 @@ extern/limine:
 	$(MAKE) -C $@
 
 extern/luajit:
-	git clone https://luajit.org/git/luajit.git $@
+	git clone https://github.com/TheLuaOSProject/LuaJIT.git $@
 
 extern/terminal/../luajit/src/lua.h: extern/luajit
 
@@ -114,7 +114,7 @@ build/bin/luaos.iso: extern/limine build/bin/luck.elf res/limine.cfg
 
 	extern/limine/limine-deploy $@
 
-extern/luajit/src/libluajit_luck.o: extern/luajit
+extern/luajit/src/libluajit_luck.o: extern/luajit makelj.sh
 	sh makelj.sh
 
 build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/luajit/src/libluajit_luck.o

@@ -28,12 +28,18 @@ enum PageType {
 };
 
 qword page_alloc(enum PageType pty);
+void page_free(enum PageType pty, qword addr);
 
 /// mapping pages ///
 void pmap_map(qword addr, qword phys);
 void pmap_map_rwx(qword addr, qword phys);
+qword pmap_unmap(qword addr);
+
+void pmap_remap_rw(qword addr);
+void pmap_remap_rwx(qword addr);
 
 /// kalloc ///
 void kalloc_init(void);
 void* kalloc(qword size);
 void kfree(void* ptr, qword size);
+uint64_t kvirtalloc(qword size);

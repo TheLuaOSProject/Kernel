@@ -1,0 +1,22 @@
+
+r = []
+def xlat(ent):
+	while len(ent):
+		a0 = ent[0:3].strip()
+		a1 = ent[4:20]
+		ent = ent[21:]
+		r.append(f'${a0.lower()}=0x{a1}')
+
+xlat(input())
+xlat(input())
+xlat(input())
+xlat(input())
+xlat(input())
+
+print('set ' + ','.join(r))
+
+# RAX=0000000000000002 RBX=00007000004531d0 RCX=0000000000000014 RDX=0000700000454d40
+# RSI=0000700000454d40 RDI=0000700000453000 RBP=000000000000005f RSP=ffff80007fdf7f30
+# R8 =0000000000000000 R9 =0000000000000009 R10=0000700000008200 R11=fffffffffffffff7
+# R12=0000000000000002 R13=0000000000000002 R14=0000700000453fc0 R15=0000000000000000
+# RIP=0000000000000000

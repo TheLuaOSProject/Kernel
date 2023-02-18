@@ -20,6 +20,7 @@ double sin(double x) { panic("todo: sin"); }
 double sinh(double x) { panic("todo: sinh"); }
 double tan(double x) { panic("todo: tan"); }
 double tanh(double x) { panic("todo: tanh"); }
+double sqrt(double x) { panic("todo: sqrt"); }
 double frexp(double value, int *exp) { panic("todo: frexp"); }
 
 double fmod(double x, double y) { panic("todo: fmod"); }
@@ -32,12 +33,12 @@ void feof() {panic("todo:feof");}
 void ferror() {panic("todo:ferror");}
 void fopen() {panic("todo:fopen");}
 void fputs() {panic("todo:fputs");}
-void fputc() {panic("todo:fputc");}
 void fread() {panic("todo:fread");}
-void fflush() {panic("todo:fflush");}
+void fflush(FILE *f) {panic("todo:fflush");}
 void fgets() {panic("todo:fgets");}
 void strncpy() {panic("todo:strncpy");}
 void memchr() {panic("todo:memchr");}
+void strncmp() {panic("todo:strncmp");}
 void strstr() {panic("todo:strstr");}
 void strerror() {panic("todo:strerror");}
 void strtoul() {panic("todo:strtoul");}
@@ -54,6 +55,10 @@ size_t fwrite(const void *restrict ptr, size_t size, size_t nitems, FILE *restri
 	if (!stream->write) panic("write to nonwriteable file");
 	stream->write(ptr, (int)(size * nitems));
 	return (int)(size * nitems);
+}
+int fputc(int c, FILE *stream) {
+	fwrite(&c, 1, 1, stream);
+	return 1;
 }
 void putchar(char c) {
 	fwrite(&c, 1, 1, stdout);

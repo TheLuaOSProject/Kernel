@@ -22,6 +22,7 @@
 
 static volatile struct limine_hhdm_request hhdm_request = {LIMINE_HHDM_REQUEST, 0, nullptr};
 static volatile struct limine_kernel_address_request kaddr = {LIMINE_KERNEL_ADDRESS_REQUEST, 0, nullptr};
+static __attribute__((used)) volatile struct limine_stack_size_request plzzstack = {LIMINE_STACK_SIZE_REQUEST, 0, nullptr, 16*1024*1024};
 
 uint64_t _limine__virt_to_phys(uint64_t virt) {
 	if (virt >= kaddr.response->virtual_base) return virt - kaddr.response->virtual_base + kaddr.response->physical_base;

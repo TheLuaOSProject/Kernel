@@ -56,6 +56,7 @@ LUALIB_API int luaopen_string(lua_State *L);
 LUALIB_API int luaopen_table(lua_State *L);
 LUALIB_API int luaopen_debug(lua_State *L);
 LUALIB_API int luaopen_bit(lua_State *L);
+LUALIB_API int luaopen_jit(lua_State *L);
 
 void stdout_write(const char *str, int siz) {
     while (siz) {
@@ -63,6 +64,16 @@ void stdout_write(const char *str, int siz) {
         siz--;
     }
 }
+
+static long long fib(long long x) {
+    if (x == 0) return 0;
+    if (x == 1) return 1;
+    return fib(x-1)+fib(x-2);
+}
+// static long long rdtsc() {
+//     long long res;
+// }
+
 
 attribute(used) noreturn void kernel_start()
 {
@@ -150,6 +161,15 @@ attribute(used) noreturn void kernel_start()
         panic("cant open lua");
     }
     const char *in = "print('what is the best language? it\\'s LUA, of course!')";
+    in =
+"function fib(x)\n"
+"    if x == 0 then return 0 end\n"
+"    if x == 1 then return 1 end\n"
+"    return fib(x-1)+fib(x-2)\n"
+"end\n"
+"print('fib 30?')\n"
+"print(fib(33))\n"
+;
     
     _lua_openmodule("", base);
     lua_openmodule(table);
@@ -157,6 +177,7 @@ attribute(used) noreturn void kernel_start()
     lua_openmodule(math);
     lua_openmodule(debug);
     lua_openmodule(bit);
+    lua_openmodule(jit);
     FILE* stdout = _get_pcb()->stdout = kalloc(sizeof(FILE));
     stdout->write = stdout_write;
 

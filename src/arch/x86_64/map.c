@@ -18,6 +18,7 @@
  */
 
 #include "common.h"
+#include "luck/io/log.h"
 #include "luck/memory/manager.h"
 
 static qword* get_pte(qword addr)
@@ -44,12 +45,56 @@ static qword* get_pte(qword addr)
     STEP(1)
 }
 
+static void tlbinval(qword addr)
+{
+    asm volatile("invlpg (%0)" :: "r"(addr) : "memory");
+}
+
 void pmap_map(qword addr, qword phys)
 {
-    *get_pte(addr) = 3 | phys;
+    tlbinval(addr);
+    *get_pte(addr) = 3 | phys | (1ULL << 63);
 }
 
 void pmap_map_rwx(qword addr, qword phys)
 {
-    *get_pte(addr) = 7 | phys;
+    tlbinval(addr);
+    *get_pte(addr) = 3 | phys;
+}
+
+static void set_bits(qword addr, qword bits)
+{
+    qword *pte = get_pte(addr);
+    qword pval = *pte;
+    pval &= ~0xfff;
+    pval &= ~(1ULL << 63);
+    pval |= bits;
+    *pte = pval;
+    tlbinval(addr);
+}
+
+void pmap_remap_rw(qword addr)
+{
+    (void)addr;
+
+    set_bits(addr, 3 | (1ULL << 63));
+}
+
+void pmap_remap_rwx(qword addr)
+{
+    (void)addr;
+
+    set_bits(addr, 3);
+}
+
+qword pmap_unmap(qword addr)
+{
+    (void)addr;
+    tlbinval(addr);
+
+    qword* pte = get_pte(addr);
+    qword pa = *pte & 0x0000fffffffff000;
+    *pte = 0;
+    // panic("whats unmap for");
+    return pa;
 }
