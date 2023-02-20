@@ -19,7 +19,6 @@
 
 #include <limine.h>
 
-#include "lj-libc/limits.h"
 #include "luck/io/log.h"
 
 #include "luck/acpi/madt.h"
@@ -30,53 +29,20 @@
 #include "luck/memory/manager.h"
 #include "luck/memory/magazines.h"
 
-#include "../luajit/src/lua.h"
-
-#undef stdin
-#undef stdout
-#undef stderr
-
-void *ljsup_alloc(void *ud, void *ptr, size_t osize, size_t nsize);
-
-int luaL_loadbuffer(lua_State *L, const char *s, size_t len, const char *name);
-
-void luaJIT_version_2_1_0_beta3(void);
-
-void LJDBG(const char* msg) {success("lj: {}", msg);}
-
-#define _lua_openmodule(mname, module) \
-    lua_pushcfunction(L, luaopen_##module); \
-    lua_pushstring(L, mname); \
-    lua_call(L, 1, 0);
-#define lua_openmodule(module) _lua_openmodule(#module, module)
-
-LUALIB_API int luaopen_base(lua_State *L);
-LUALIB_API int luaopen_math(lua_State *L);
-LUALIB_API int luaopen_string(lua_State *L);
-LUALIB_API int luaopen_table(lua_State *L);
-LUALIB_API int luaopen_debug(lua_State *L);
-LUALIB_API int luaopen_bit(lua_State *L);
-
-void stdout_write(const char *str, int siz) {
-    while (siz) {
-        console_write_char(*str++);
-        siz--;
-    }
-}
-
 attribute(used) noreturn void kernel_start()
 {
-    asm(
+    asm (
         ".intel_syntax noprefix\n"
-        "mov rax, cr0\n"
-        "and ax, 0xFFFB\n"
-        "or ax, 0x2\n"
-        "mov cr0, rax\n"
-        "mov rax, cr4\n"
-        "or ax, 3 << 9\n"
-        "mov cr4, rax\n"
+        "mov    rax, cr0\n"
+        "and    ax, 0xFFFB\n"
+        "or     ax, 0x2\n"
+        "mov    cr0, rax\n"
+        "mov    rax, cr4\n"
+        "or     ax, 3 << 9\n"
+        "mov    cr4, rax\n"
         ".att_syntax\n"
     );
+
 
     qword cr3;
     asm volatile("MOVQ %%CR3, %0" : "=r"(cr3));
@@ -86,7 +52,7 @@ attribute(used) noreturn void kernel_start()
     asm volatile("MOVQ %0, %%CR3" :: "r"(cr3) : "memory");
 
 
-    success("\nStarted LuaOS");
+    success("Started LuaOS");
     info("{} + {} = {}", 2, 2, 2 + 2);
     info("Hello, {}", "World!");
 
@@ -110,7 +76,7 @@ attribute(used) noreturn void kernel_start()
     }
     success("Done");
 
-    initalise_terminal();
+    terminal_init();
 
     info("Initialising APIC");
     struct RSDP *rsdp = rsdp_init();
@@ -140,31 +106,6 @@ attribute(used) noreturn void kernel_start()
         }
     }
     success("Done");
-
-    int status;
-    lua_State *L;
-
-
-    L = lua_newstate(ljsup_alloc, nullptr); // open Lua
-    if (!L) {
-        panic("cant open lua");
-    }
-    const char *in = "print('what is the best language? it\\'s LUA, of course!')";
-    
-    _lua_openmodule("", base);
-    lua_openmodule(table);
-    lua_openmodule(string);
-    lua_openmodule(math);
-    lua_openmodule(debug);
-    lua_openmodule(bit);
-    FILE* stdout = _get_pcb()->stdout = kalloc(sizeof(FILE));
-    stdout->write = stdout_write;
-
-    int v = luaL_loadbuffer(L, in, string_length(in), "entry");
-    if (v != 0) {
-        panic("fail {}", lua_tostring(L, -1));
-    }
-    lua_call(L, 0, 0);
 
     success("Initalisation complete");
     halt();

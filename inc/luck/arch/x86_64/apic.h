@@ -22,6 +22,6 @@
 
 NONNULL_BEGIN
 
-
+void apic_init();
 
 NONNULL_END

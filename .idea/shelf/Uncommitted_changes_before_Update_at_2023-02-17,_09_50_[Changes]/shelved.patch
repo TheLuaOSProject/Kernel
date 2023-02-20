@@ -1,0 +1,357 @@
+Index: Makefile
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Copyright (C) 2023 Amrit Bhogal\n#\n# This file is part of LuaOS.\n#\n# LuaOS is free software: you can redistribute it and/or modify\n# it under the terms of the GNU General Public License as published by\n# the Free Software Foundation, either version 3 of the License, or\n# (at your option) any later version.\n#\n# LuaOS is distributed in the hope that it will be useful,\n# but WITHOUT ANY WARRANTY; without even the implied warranty of\n# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n# GNU General Public License for more details.\n#\n# You should have received a copy of the GNU General Public License\n# along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.\n\noverride CC := clang\noverride LD := ld.lld\n\nGDB = x86_64-elf-gdb\n\nCFLAGS ?= -g -Og -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-microsoft\nNASMFLAGS ?= -F dwarf -g -f elf64\n\noverride CFLAGS +=       \t\\\n    -std=gnu17           \t\\\n    -ffreestanding       \t\\\n    -fno-stack-protector \t\\\n    -fno-stack-check     \t\\\n    -fno-lto             \t\\\n    -fno-pie             \t\\\n    -fno-pic             \t\\\n    -m64                 \t\\\n    -march=x86-64        \t\\\n    -mabi=sysv           \t\\\n    -mno-80387           \t\\\n    -mno-mmx             \t\\\n    -mno-sse             \t\\\n    -mno-sse2            \t\\\n    -mno-red-zone        \t\\\n    -mcmodel=kernel      \t\\\n    -MMD                 \t\\\n\t-target x86_64-elf\t \t\\\n\t-isystem extern/limine\t\\\n\t-Iextern/terminal       \\\n\t-Iinc               \t\\\n\t-Wno-unused-function    \\\n\noverride LDFLAGS +=         \\\n    -nostdlib               \\\n    -static                 \\\n    -m elf_x86_64           \\\n    -z max-page-size=0x1000 \\\n    -T res/linker.ld\t\t\\\n\t-no-pie\n\noverride ASFLAGS += -f elf64\n\noverride CFILES := $(shell find ./src -type f -name '*.c') extern/terminal/term.c extern/terminal/backends/framebuffer.c\noverride ASFILES := $(shell find ./src -type f -name '*.asm')\n\noverride COBJS := $(addprefix build/obj/,$(CFILES:.c=.c.o))\noverride ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.asm.o))\n\noverride QEMUFLAGS := -smp 2 -m 2G -monitor stdio -serial file:luaos.log\n\n.PHONY: all\nall: build/bin/luaos.iso extern/ovmf-x64\n\n.PHONY: uefi\nuefi: extern/ovmf-x64 build/bin/luaos.iso\n\tqemu-system-x86_64 -M q35 $(QEMUFLAGS) -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d -s\n\n.PHONY: bios\nbios: build/bin/luaos.iso\n\tqemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d -s\n\ndebug:\n\tqemu-system-x86_64 -M q35 $(QEMUFLAGS) -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d -s -S\n\n\nextern/ovmf-x64:\n\tmkdir -p $@\n\tcd $@ && curl -o OVMF-X64.zip https://efi.akeo.ie/OVMF/OVMF-X64.zip && 7z x OVMF-X64.zip\n\nextern/limine:\n\tmkdir -p $@\n\tgit clone https://github.com/limine-bootloader/limine.git --branch=v4.x-branch-binary --depth=1 $@\n\t$(MAKE) -C $@\n\nextern/terminal:\n\tmkdir -p $@\n\tgit clone https://github.com/limine-bootloader/terminal --depth 1 $@\n\nbuild/bin/luaos.iso: extern/limine build/bin/luck.elf res/limine.cfg\n\tmkdir -p $(dir $@)/iso\n\tcp build/bin/luck.elf res/powered-by-lua.bmp res/limine.cfg res/font.bin extern/limine/limine-cd.bin extern/limine/limine.sys extern/limine/limine-cd-efi.bin $(dir $@)/iso\n\txorriso -as mkisofs\\\n\t\t\t-b limine-cd.bin\\\n\t\t\t-no-emul-boot\\\n\t\t\t-boot-load-size 4\\\n\t\t\t-boot-info-table\\\n\t\t\t--efi-boot limine-cd-efi.bin\\\n\t\t\t-efi-boot-part\\\n\t\t\t--efi-boot-image\\\n\t\t\t--protective-msdos-label\\\n\t\t\t$(dir $@)/iso -o $@\n\trm -rf $(dir $@)/iso\n\n\textern/limine/limine-deploy $@\n\nbuild/bin/luck.elf: $(COBJS) $(ASOBJS)\n\t@printf \"\\x1b[35mLinking $@\\n\\x1b[0m\"\n\t@mkdir -p $(dir $@)\n\t$(LD) $(LDFLAGS) -o $@ $^\n\nbuild/obj/%.c.o: %.c extern/limine extern/terminal\n\t@printf \"\\x1b[32mCompiling $<\\n\\x1b[0m\"\n\t@mkdir -p $(dir $@)\n\t$(CC) $(CFLAGS) -c $< -o $@\n\nbuild/obj/%.asm.o: %.asm\n\t@printf \"\\x1b[32mAssembling $^\\n\\x1b[0m\"\n\t@mkdir -p $(dir $@)\n\tnasm $(NASMFLAGS) $^ -o $@\n\n\n.PHONY: clean\nclean:\n\trm -rf build\n\ncleanall: clean\n\trm -rf extern\n\nextern/include/limine.h:\n\tmkdir -p extern/include/\n\tcurl https://raw.githubusercontent.com/limine-bootloader/limine/trunk/limine.h -o $@\n\n-include $(CFILES:%.c=build/obj/%.c.d)\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Makefile b/Makefile
+--- a/Makefile	(revision 0b33016ccd789ac6bf5bd8493c52c65c4325a89a)
++++ b/Makefile	(date 1676592062572)
+@@ -43,7 +43,7 @@
+     -MMD                 	\
+ 	-target x86_64-elf	 	\
+ 	-isystem extern/limine	\
+-	-Iextern/terminal       \
++	-isystem extern/terminal\
+ 	-Iinc               	\
+ 	-Wno-unused-function    \
+ 
+Index: src/start.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/**\n * Copyright (C) 2023 Amrit Bhogal\n *\n * This file is part of LuaOS.\n *\n * LuaOS is free software: you can redistribute it and/or modify\n * it under the terms of the GNU General Public License as published by\n * the Free Software Foundation, either version 3 of the License, or\n * (at your option) any later version.\n *\n * LuaOS is distributed in the hope that it will be useful,\n * but WITHOUT ANY WARRANTY; without even the implied warranty of\n * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n * GNU General Public License for more details.\n *\n * You should have received a copy of the GNU General Public License\n * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.\n */\n\n#include <limine.h>\n\n#include \"luck/io/log.h\"\n\n\n#include \"luck/acpi/madt.h\"\n#include \"luck/acpi/acpi.h\"\n#include \"luck/io/console.h\"\n#include \"luck/arch/x86_64/gdt.h\"\n#include \"luck/arch/x86_64/idt.h\"\n#include \"luck/memory/manager.h\"\n#include \"luck/memory/magazines.h\"\n\nattribute(used) noreturn void kernel_start()\n{\n    qword cr3;\n    asm volatile(\"MOVQ %%CR3, %0\" : \"=r\"(cr3));\n    for (qword i = 0;i < 256;i++) {\n        *virt(cr3 + i * 8, qword) = 0;\n    }\n    asm volatile(\"MOVQ %0, %%CR3\" :: \"r\"(cr3) : \"memory\");\n\n\n    success(\"\\nStarted LuaOS\");\n    info(\"{} + {} = {}\", 2, 2, 2 + 2);\n    info(\"Hello, {}\", \"World!\");\n\n    info(\"Initialising GDT\");\n    gdt_init();\n    success(\"Done\");\n\n    info(\"Initialising IDT\");\n    idt_init();\n    success(\"Done\");\n\n    info(\"Initialising memory\");\n    {\n        info(\"  Magazines...\");\n        magazine_init();\n        success(\"  Done\");\n\n        info(\"  Kernel memory allocator...\");\n        kalloc_init();\n        success(\"  Done\");\n    }\n    success(\"Done\");\n\n    initalise_terminal();\n\n    info(\"Initialising APIC\");\n    struct RSDP *rsdp = rsdp_init();\n    if (rsdp == nullptr)\n        panic(\"Could not find RSDP\");\n\n    struct MADT *madt = madt_init(rsdp);\n    if (madt == nullptr) panic(\"Could not find MADT\");\n\n    size_t core_c = 0;\n\n    for (struct MADTEntryHeader *entry = (struct MADTEntryHeader *)madt->entries;\n         (uintptr_t)entry < (uintptr_t)(((uintptr_t)madt->entries) + madt->descriptor.length - sizeof(struct MADT));\n         entry = (struct MADTEntryHeader *)((byte *)entry + (entry)->length)) {\n\n        debug(\"  Found entry with ID {}\", entry->id);\n        switch (entry->id) {\n            case MADT_ENTRY_ID_LAPIC: {\n                struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *) entry;\n                success(\"  Found LAPIC at core {} (address: {})\", core_c++,\n                        (void *) lapic);\n                debug(\"    Processor ID: {}\", lapic->processor_id);\n                debug(\"    APIC ID: {}\", lapic->apic_id);\n                debug(\"    Flags: {}\", lapic->flags);\n                break;\n            }\n        }\n    }\n    success(\"Done\");\n\n    success(\"Initalisation complete\");\n    halt();\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/start.c b/src/start.c
+--- a/src/start.c	(revision 0b33016ccd789ac6bf5bd8493c52c65c4325a89a)
++++ b/src/start.c	(date 1676592156323)
+@@ -21,7 +21,6 @@
+ 
+ #include "luck/io/log.h"
+ 
+-
+ #include "luck/acpi/madt.h"
+ #include "luck/acpi/acpi.h"
+ #include "luck/io/console.h"
+@@ -30,17 +29,23 @@
+ #include "luck/memory/manager.h"
+ #include "luck/memory/magazines.h"
+ 
++#define new(...) (typeof(__VA_ARGS__) *)kalloc(sizeof(typeof(__VA_ARGS__)))
++
++#define var __auto_type
++#define let con st var
++
+ attribute(used) noreturn void kernel_start()
+ {
++
+     qword cr3;
+     asm volatile("MOVQ %%CR3, %0" : "=r"(cr3));
+-    for (qword i = 0;i < 256;i++) {
++    for (qword i = 0;i < 256; i++) {
+         *virt(cr3 + i * 8, qword) = 0;
+     }
+     asm volatile("MOVQ %0, %%CR3" :: "r"(cr3) : "memory");
+ 
+ 
+-    success("\nStarted LuaOS");
++    success("Started LuaOS");
+     info("{} + {} = {}", 2, 2, 2 + 2);
+     info("Hello, {}", "World!");
+ 
+@@ -64,7 +69,7 @@
+     }
+     success("Done");
+ 
+-    initalise_terminal();
++    terminal_init();
+ 
+     info("Initialising APIC");
+     struct RSDP *rsdp = rsdp_init();
+@@ -98,3 +103,4 @@
+     success("Initalisation complete");
+     halt();
+ }
++
+Index: inc/luck/io/console.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/**\n * Copyright (C) 2023 Amrit Bhogal, pitust\n *\n * This file is part of LuaOS.\n *\n * LuaOS is free software: you can redistribute it and/or modify\n * it under the terms of the GNU General Public License as published by\n * the Free Software Foundation, either version 3 of the License, or\n * (at your option) any later version.\n *\n * LuaOS is distributed in the hope that it will be useful,\n * but WITHOUT ANY WARRANTY; without even the implied warranty of\n * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n * GNU General Public License for more details.\n *\n * You should have received a copy of the GNU General Public License\n * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.\n */\n\n#pragma once\n\n#include \"common.h\"\n\nNONNULL_BEGIN\n\nvoid initalise_terminal();\nvoid console_write(const char *str);\nvoid console_write_char(char c);\n\nNONNULL_END\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/inc/luck/io/console.h b/inc/luck/io/console.h
+--- a/inc/luck/io/console.h	(revision 0b33016ccd789ac6bf5bd8493c52c65c4325a89a)
++++ b/inc/luck/io/console.h	(date 1676588909160)
+@@ -23,7 +23,7 @@
+ 
+ NONNULL_BEGIN
+ 
+-void initalise_terminal();
++void terminal_init();
+ void console_write(const char *str);
+ void console_write_char(char c);
+ 
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"CMakePresetLoader\">{\n  &quot;useNewFormat&quot;: true\n}</component>\n  <component name=\"CMakeRunConfigurationManager\">\n    <generated>\n      <config projectName=\"Kernel\" targetName=\"debug\" />\n      <config projectName=\"Kernel\" targetName=\"bios\" />\n      <config projectName=\"Kernel\" targetName=\"uefi\" />\n      <config projectName=\"Kernel\" targetName=\"cleanall\" />\n      <config projectName=\"Kernel\" targetName=\"all\" />\n    </generated>\n  </component>\n  <component name=\"CMakeSettings\">\n    <configurations>\n      <configuration PROFILE_NAME=\"Debug\" ENABLED=\"true\" CONFIG_NAME=\"Debug\" />\n    </configurations>\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"64d10e30-ccab-45e4-84b1-4ebb42cd796b\" name=\"Changes\" comment=\"Whoops, this should have been added\" />\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"ClangdSettings\">\n    <option name=\"formatViaClangd\" value=\"false\" />\n  </component>\n  <component name=\"EmbeddedSvdWindowState\">\n    <option name=\"columnWidths\">\n      <list>\n        <option value=\"212\" />\n        <option value=\"92\" />\n        <option value=\"1069\" />\n      </list>\n    </option>\n    <option name=\"columnOrder\">\n      <list>\n        <option value=\"Name\" />\n        <option value=\"Value\" />\n        <option value=\"Description\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"ExternalProjectsData\">\n    <projectState path=\"$PROJECT_DIR$\">\n      <ProjectState />\n    </projectState>\n  </component>\n  <component name=\"MacroExpansionManager\">\n    <option name=\"directoryName\" value=\"l7icok2e\" />\n  </component>\n  <component name=\"MakefileLocalSettings\">\n    <option name=\"availableProjects\">\n      <map>\n        <entry>\n          <key>\n            <ExternalProjectPojo>\n              <option name=\"name\" value=\"Kernel\" />\n              <option name=\"path\" value=\"$PROJECT_DIR$\" />\n            </ExternalProjectPojo>\n          </key>\n          <value>\n            <list>\n              <ExternalProjectPojo>\n                <option name=\"name\" value=\"Kernel\" />\n                <option name=\"path\" value=\"$PROJECT_DIR$\" />\n              </ExternalProjectPojo>\n            </list>\n          </value>\n        </entry>\n      </map>\n    </option>\n    <option name=\"projectSyncType\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"RE_IMPORT\" />\n      </map>\n    </option>\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"ProjectApplicationVersion\">\n    <option name=\"ide\" value=\"CLion\" />\n    <option name=\"majorVersion\" value=\"2022\" />\n    <option name=\"minorVersion\" value=\"3.2\" />\n  </component>\n  <component name=\"ProjectId\" id=\"2LYw1s5wRliWbr7CdetNznSopUv\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,\n    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,\n    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,\n    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\n    &quot;settings.editor.selected.configurable&quot;: &quot;Runtime.Targets.Configurable&quot;,\n    &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  }\n}</component>\n  <component name=\"RunManager\" selected=\"Embedded GDB Server.Debug\">\n    <configuration name=\"all\" type=\"CLionNativeAppRunConfigurationType\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"Kernel\" TARGET_NAME=\"all\" CONFIG_NAME=\"all\" version=\"1\">\n      <method v=\"2\">\n        <option name=\"CLION.COMPOUND.BUILD\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"bios\" type=\"CLionNativeAppRunConfigurationType\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"Kernel\" TARGET_NAME=\"bios\" CONFIG_NAME=\"bios\" version=\"1\">\n      <method v=\"2\">\n        <option name=\"CLION.COMPOUND.BUILD\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"cleanall\" type=\"CLionNativeAppRunConfigurationType\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"Kernel\" TARGET_NAME=\"cleanall\" CONFIG_NAME=\"cleanall\" version=\"1\">\n      <method v=\"2\">\n        <option name=\"CLION.COMPOUND.BUILD\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"debug\" type=\"CLionNativeAppRunConfigurationType\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"Kernel\" TARGET_NAME=\"debug\" CONFIG_NAME=\"debug\" version=\"1\">\n      <method v=\"2\">\n        <option name=\"CLION.COMPOUND.BUILD\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"uefi\" type=\"CLionNativeAppRunConfigurationType\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"Kernel\" TARGET_NAME=\"uefi\" CONFIG_NAME=\"uefi\" version=\"1\">\n      <method v=\"2\">\n        <option name=\"CLION.COMPOUND.BUILD\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration default=\"true\" type=\"CMakeRunConfiguration\" factoryName=\"Application\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\">\n      <method v=\"2\">\n        <option name=\"com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"Debug\" type=\"com.jetbrains.cidr.embedded.customgdbserver.type\" factoryName=\"com.jetbrains.cidr.embedded.customgdbserver.factory\" PROGRAM_PARAMS=\"-machine q35 -smp 2 -m 2G -serial stdio -gdb tcp::53068 -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d\" REDIRECT_INPUT=\"false\" ELEVATE=\"false\" USE_EXTERNAL_CONSOLE=\"false\" PASS_PARENT_ENVS_2=\"true\" PROJECT_NAME=\"Kernel\" TARGET_NAME=\"all\" CONFIG_NAME=\"all\" version=\"1\" RUN_PATH=\"$PROJECT_DIR$/build/bin/luck.elf\">\n      <custom-gdb-server version=\"1\" gdb-connect=\"tcp::53068\" executable=\"/usr/local/bin/qemu-system-x86_64\" warmup-ms=\"0\" download-type=\"UPDATED_ONLY\" reset-cmd=\"monitor system_reset\" reset-type=\"AFTER_DOWNLOAD\">\n        <debugger kind=\"GDB\">/usr/local/bin/x86_64-elf-gdb</debugger>\n      </custom-gdb-server>\n      <method v=\"2\">\n        <option name=\"CLION.COMPOUND.BUILD\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <list>\n      <item itemvalue=\"Embedded GDB Server.Debug\" />\n      <item itemvalue=\"Makefile Application.all\" />\n      <item itemvalue=\"Makefile Application.bios\" />\n      <item itemvalue=\"Makefile Application.uefi\" />\n      <item itemvalue=\"Makefile Application.cleanall\" />\n      <item itemvalue=\"Makefile Application.debug\" />\n    </list>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"64d10e30-ccab-45e4-84b1-4ebb42cd796b\" name=\"Changes\" comment=\"\" />\n      <created>1676061111866</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1676061111866</updated>\n      <workItem from=\"1676061114525\" duration=\"3546000\" />\n      <workItem from=\"1676235340000\" duration=\"65000\" />\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"Whoops, this should have been added\">\n      <created>1676061391366</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1676061391366</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"2\" />\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"Whoops, this should have been added\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Whoops, this should have been added\" />\n  </component>\n  <component name=\"XDebuggerManager\">\n    <breakpoint-manager>\n      <breakpoints>\n        <line-breakpoint enabled=\"true\" type=\"com.jetbrains.cidr.execution.debugger.OCBreakpointType\">\n          <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>\n          <line>78</line>\n          <option name=\"timeStamp\" value=\"1\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"com.jetbrains.cidr.execution.debugger.OCBreakpointType\">\n          <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>\n          <line>103</line>\n          <option name=\"timeStamp\" value=\"3\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"com.jetbrains.cidr.execution.debugger.OCBreakpointType\">\n          <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>\n          <line>98</line>\n          <option name=\"timeStamp\" value=\"4\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"com.jetbrains.cidr.execution.debugger.OCBreakpointType\">\n          <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>\n          <line>93</line>\n          <option name=\"timeStamp\" value=\"5\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"com.jetbrains.cidr.execution.debugger.OCBreakpointType\">\n          <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>\n          <line>88</line>\n          <option name=\"timeStamp\" value=\"6\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"com.jetbrains.cidr.execution.debugger.OCBreakpointType\">\n          <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>\n          <line>83</line>\n          <option name=\"timeStamp\" value=\"7\" />\n        </line-breakpoint>\n      </breakpoints>\n    </breakpoint-manager>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 0b33016ccd789ac6bf5bd8493c52c65c4325a89a)
++++ b/.idea/workspace.xml	(date 1676656237051)
+@@ -13,6 +13,7 @@
+       <config projectName="Kernel" targetName="uefi" />
+       <config projectName="Kernel" targetName="cleanall" />
+       <config projectName="Kernel" targetName="all" />
++      <config projectName="Kernel" targetName="Makefile" />
+     </generated>
+   </component>
+   <component name="CMakeSettings">
+@@ -21,7 +22,16 @@
+     </configurations>
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="64d10e30-ccab-45e4-84b1-4ebb42cd796b" name="Changes" comment="Whoops, this should have been added" />
++    <list default="true" id="64d10e30-ccab-45e4-84b1-4ebb42cd796b" name="Changes" comment="Clion settings">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/launch.json" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.vscode/tasks.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/tasks.json" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/apic.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/apic.h" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/inc/luck/io/console.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/io/console.h" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/io/console.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/console.c" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/start.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/start.c" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -51,6 +61,9 @@
+       <ProjectState />
+     </projectState>
+   </component>
++  <component name="Git.Settings">
++    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++  </component>
+   <component name="MacroExpansionManager">
+     <option name="directoryName" value="l7icok2e" />
+   </component>
+@@ -102,13 +115,27 @@
+     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+-    &quot;settings.editor.selected.configurable&quot;: &quot;Runtime.Targets.Configurable&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.new.ui&quot;,
+     &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
+     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+ }</component>
++  <component name="RecentsManager">
++    <key name="MoveFile.RECENT_KEYS">
++      <recent name="$PROJECT_DIR$/src/lib" />
++    </key>
++  </component>
+   <component name="RunManager" selected="Embedded GDB Server.Debug">
++    <configuration name="Makefile" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="Makefile" CONFIG_NAME="Makefile" version="1">
++      <method v="2">
++        <option name="CLION.COMPOUND.BUILD" enabled="true" />
++      </method>
++    </configuration>
+     <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1">
+       <method v="2">
+         <option name="CLION.COMPOUND.BUILD" enabled="true" />
+@@ -154,6 +181,7 @@
+       <item itemvalue="Makefile Application.uefi" />
+       <item itemvalue="Makefile Application.cleanall" />
+       <item itemvalue="Makefile Application.debug" />
++      <item itemvalue="Makefile Application.Makefile" />
+     </list>
+   </component>
+   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+@@ -166,6 +194,12 @@
+       <updated>1676061111866</updated>
+       <workItem from="1676061114525" duration="3546000" />
+       <workItem from="1676235340000" duration="65000" />
++      <workItem from="1676235411276" duration="738000" />
++      <workItem from="1676486557916" duration="251000" />
++      <workItem from="1676587240706" duration="534000" />
++      <workItem from="1676587862953" duration="2455000" />
++      <workItem from="1676592019223" duration="317000" />
++      <workItem from="1676656185347" duration="1000" />
+     </task>
+     <task id="LOCAL-00001" summary="Whoops, this should have been added">
+       <created>1676061391366</created>
+@@ -174,7 +208,21 @@
+       <option name="project" value="LOCAL" />
+       <updated>1676061391366</updated>
+     </task>
+-    <option name="localTasksCounter" value="2" />
++    <task id="LOCAL-00002" summary="feat(libc): Move the definition of `memset` into libsupport.c, which will contain symbols for library support">
++      <created>1676235698381</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1676235698381</updated>
++    </task>
++    <task id="LOCAL-00003" summary="Clion settings">
++      <created>1676235717041</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1676235717041</updated>
++    </task>
++    <option name="localTasksCounter" value="4" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -182,7 +230,9 @@
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="Whoops, this should have been added" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Whoops, this should have been added" />
++    <MESSAGE value="feat(libc): Move the definition of `memset` into libsupport.c, which will contain symbols for library support" />
++    <MESSAGE value="Clion settings" />
++    <option name="LAST_COMMIT_MESSAGE" value="Clion settings" />
+   </component>
+   <component name="XDebuggerManager">
+     <breakpoint-manager>
+Index: src/io/console.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/**\n * Copyright (C) 2023 Amrit Bhogal\n *\n * This file is part of LuaOS.\n *\n * LuaOS is free software: you can redistribute it and/or modify\n * it under the terms of the GNU General Public License as published by\n * the Free Software Foundation, either version 3 of the License, or\n * (at your option) any later version.\n *\n * LuaOS is distributed in the hope that it will be useful,\n * but WITHOUT ANY WARRANTY; without even the implied warranty of\n * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n * GNU General Public License for more details.\n *\n * You should have received a copy of the GNU General Public License\n * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.\n */\n\n#include <limine.h>\n#include <string.h>\n\n#include \"luck/io/console.h\"\n#include \"luck/memory/manager.h\"\n\n#include \"term.h\"\n#include \"backends/framebuffer.h\"\n\nstatic const volatile struct limine_framebuffer_request fb_request = {\n    .id = LIMINE_FRAMEBUFFER_REQUEST\n};\n\nstatic struct term_context *term_ctx;\nstatic uint32_t term_pal[8] = {0x161A21, 0xF8485D, 0x4FD93D, 0xFF9B28, 0x0CB2FF, 0xCA87FF, 0x65E0B8, 0xBBBBBB};\nstatic uint32_t term_pal_bright[8] = {0x565555, 0xFF4D62, 0x8ED71C, 0xECA02D, 0x18B7FF, 0xCA87FF, 0x6AE6BE, 0xFEFFFF};\nstatic uint32_t term_bg = 0x0B0E13, term_fg = 0xDBDBDB;\n\nvoid initalise_terminal()\n{\n    if (!fb_request.response) return;\n    if (fb_request.response->framebuffer_count == 0) return;\n    struct limine_framebuffer *fb = fb_request.response->framebuffers[0];\n\n\n    term_ctx = fbterm_init(kalloc, fb->address, fb->width, fb->height, fb->pitch, nullptr, term_pal, term_pal_bright, &term_bg, &term_fg, &term_bg, &term_fg, nullptr, 0, 0, 0, 1, 1, 0);\n}\n\nvoid console_write(const char *str)\n{\n    if (term_ctx) term_write(term_ctx, str, string_length(str));\n}\nvoid console_write_char(char c)\n{\n    if (term_ctx) term_write(term_ctx, &c, 1);\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/io/console.c b/src/io/console.c
+--- a/src/io/console.c	(revision 0b33016ccd789ac6bf5bd8493c52c65c4325a89a)
++++ b/src/io/console.c	(date 1676588909147)
+@@ -35,7 +35,7 @@
+ static uint32_t term_pal_bright[8] = {0x565555, 0xFF4D62, 0x8ED71C, 0xECA02D, 0x18B7FF, 0xCA87FF, 0x6AE6BE, 0xFEFFFF};
+ static uint32_t term_bg = 0x0B0E13, term_fg = 0xDBDBDB;
+ 
+-void initalise_terminal()
++void terminal_init()
+ {
+     if (!fb_request.response) return;
+     if (fb_request.response->framebuffer_count == 0) return;
+Index: inc/luck/arch/x86_64/apic.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/**\n * Copyright (C) 2023 Amrit Bhogal\n *\n * This file is part of LuaOS.\n *\n * LuaOS is free software: you can redistribute it and/or modify\n * it under the terms of the GNU General Public License as published by\n * the Free Software Foundation, either version 3 of the License, or\n * (at your option) any later version.\n *\n * LuaOS is distributed in the hope that it will be useful,\n * but WITHOUT ANY WARRANTY; without even the implied warranty of\n * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n * GNU General Public License for more details.\n *\n * You should have received a copy of the GNU General Public License\n * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.\n */\n#pragma once\n\n#include \"common.h\"\n\nNONNULL_BEGIN\n\n\n\nNONNULL_END\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/inc/luck/arch/x86_64/apic.h b/inc/luck/arch/x86_64/apic.h
+--- a/inc/luck/arch/x86_64/apic.h	(revision 0b33016ccd789ac6bf5bd8493c52c65c4325a89a)
++++ b/inc/luck/arch/x86_64/apic.h	(date 1676588950636)
+@@ -22,6 +22,6 @@
+ 
+ NONNULL_BEGIN
+ 
+-
++void apic_init();
+ 
+ NONNULL_END
+Index: .vscode/launch.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\n    \"version\": \"0.2.0\",\n    \"configurations\": [\n        {\n            \"type\": \"gdb\",\n            \n            \"request\": \"attach\",\n            \"name\": \"Attach to gdbserver\",\n            \"executable\": \"./build/bin/luck.elf\",\n            \"target\": \":1234\",\n            \"remote\": true,\n            \"cwd\": \"${workspaceRoot}\",\n            \"valuesFormatting\": \"parseText\",\n            // \"preLaunchTask\": \"QEMU\"\n        }\n\n    ],\n    \"compounds\": []\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.vscode/launch.json b/.vscode/launch.json
+--- a/.vscode/launch.json	(revision 0b33016ccd789ac6bf5bd8493c52c65c4325a89a)
++++ b/.vscode/launch.json	(date 1676587024824)
+@@ -1,17 +1,38 @@
+ {
+     "version": "0.2.0",
+     "configurations": [
++
++        //Launch QEMU and connect with /usr/local/bin/x86_64-elf-gdb
+         {
++            "name": "Qemu",
+             "type": "gdb",
+-            
+-            "request": "attach",
+-            "name": "Attach to gdbserver",
+-            "executable": "./build/bin/luck.elf",
+-            "target": ":1234",
+-            "remote": true,
+-            "cwd": "${workspaceRoot}",
++            "request": "launch",
++            "target": "${workspaceFolder}/build/bin/luck.elf",
++            "cwd": "${workspaceFolder}",
++            "gdbpath": "/usr/local/bin/x86_64-elf-gdb",
+             "valuesFormatting": "parseText",
+-            // "preLaunchTask": "QEMU"
++            "debugServer": 1234,
++            "autorun": [
++                "target remote localhost:1234",
++                "symbol-file ${workspaceFolder}/build/bin/luck.elf",
++                "set architecture i386:x86-64:intel",
++                "set disassembly-flavor intel",
++                "set print asm-demangle on",
++                "set print pretty on",
++                "set print object on",
++                "set print static-members off",
++                "set print vtbl on",
++                "set print union on",
++                "set print array on",
++                "set print address on",
++                "set print elements 0",
++                "set print frame-arguments all",
++                "set print frame-locals all",
++                "set print thread-events off",
++                "set print inferior-events off",
++                "set print pretty on",
++            ],
++            "preLaunchTask": "Launch Qemu"
+         }
+ 
+     ],
+Index: .vscode/tasks.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\n    \"version\": \"2.0.0\",\n    \"tasks\": [\n        {\n            \"label\": \"Build\",\n            \"command\": \"make\",\n            \"type\": \"process\",\n            \"args\": [\n                \"all\", \"-j8\"\n            ],\n            \"problemMatcher\": [\n                \"$gcc\"\n            ],\n            \"presentation\": {\n                \"reveal\": \"always\"\n            },\n            \"group\": \"build\"\n        },\n        {\n            \"label\": \"QEMU\",\n            \"type\": \"process\",\n            \"command\": \"make\",\n            \"args\": [\n                \"screened\", \"-j8\"\n            ],\n            \"problemMatcher\": [\n                \"$gcc\"\n            ]\n        }\n    ]\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.vscode/tasks.json b/.vscode/tasks.json
+--- a/.vscode/tasks.json	(revision 0b33016ccd789ac6bf5bd8493c52c65c4325a89a)
++++ b/.vscode/tasks.json	(date 1676587219899)
+@@ -17,15 +17,20 @@
+             "group": "build"
+         },
+         {
+-            "label": "QEMU",
++            "label": "Launch Qemu",
+             "type": "process",
+-            "command": "make",
++            "command": "qemu-system-x86_64",
+             "args": [
+-                "screened", "-j8"
++                "-smp", "2",
++                "-m", "2G",
++                "-monitor", "stdio",
++                "-serial", "file:luaos.log",
++                "-bios", "extern/ovmf-x64/OVMF.fd",
++                "-cdrom", "build/bin/luaos.iso",
++                "-boot", "d",
++                "-s", "-S",
+             ],
+-            "problemMatcher": [
+-                "$gcc"
+-            ]
++            "dependsOn": "Build",
+         }
+     ]
+ }

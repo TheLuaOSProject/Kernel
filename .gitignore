@@ -1,7 +1,12 @@
 build/
 limine/
-extern/
+extern/limine
+extern/LuaJIT
+extern/ovmf-x64
+extern/terminal
 compile_commands.json
 .cache/
 luaos.log
 .gdb_history
+
+*.o

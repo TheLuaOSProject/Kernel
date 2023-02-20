@@ -17,15 +17,20 @@
             "group": "build"
         },
         {
-            "label": "QEMU",
+            "label": "Launch Qemu",
             "type": "process",
-            "command": "make",
+            "command": "qemu-system-x86_64",
             "args": [
-                "screened", "-j8"
+                "-smp", "2",
+                "-m", "2G",
+                "-monitor", "stdio",
+                "-serial", "file:luaos.log",
+                "-bios", "extern/ovmf-x64/OVMF.fd",
+                "-cdrom", "build/bin/luaos.iso",
+                "-boot", "d",
+                "-s", "-S",
             ],
-            "problemMatcher": [
-                "$gcc"
-            ]
+            "dependsOn": "Build",
         }
     ]
 }

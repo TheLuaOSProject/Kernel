@@ -43,7 +43,8 @@ override CFLAGS +=       	\
     -MMD                 	\
 	-target x86_64-elf	 	\
 	-isystem extern/limine	\
-	-Iextern/terminal       \
+	-isystem extern/terminal\
+	-isystem extern/luajit  \
 	-Iinc               	\
 	-Wno-unused-function    \
 	-fno-omit-frame-pointer \
@@ -88,11 +89,6 @@ extern/limine:
 	git clone https://github.com/limine-bootloader/limine.git --branch=v4.x-branch-binary --depth=1 $@
 	$(MAKE) -C $@
 
-extern/luajit:
-	git clone https://luajit.org/git/luajit.git $@
-
-extern/terminal/../luajit/src/lua.h: extern/luajit
-
 extern/terminal:
 	mkdir -p $@
 	git clone https://github.com/limine-bootloader/terminal --depth 1 $@
@@ -114,10 +110,7 @@ build/bin/luaos.iso: extern/limine build/bin/luck.elf res/limine.cfg
 
 	extern/limine/limine-deploy $@
 
-extern/luajit/src/libluajit_luck.o: extern/luajit
-	sh makelj.sh
-
-build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/luajit/src/libluajit_luck.o
+build/bin/luck.elf: $(COBJS) $(ASOBJS)
 	@printf "\x1b[35mLinking $@\n\x1b[0m"
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
@@ -132,16 +125,12 @@ build/obj/%.asm.o: %.asm
 	@mkdir -p $(dir $@)
 	nasm $(NASMFLAGS) $^ -o $@
 
-
 .PHONY: clean
 clean:
-	rm -rf build extern/luajit/src/*.o
+	rm -rf build
 
 cleanall: clean
 	rm -rf extern
 
-extern/include/limine.h:
-	mkdir -p extern/include/
-	curl https://raw.githubusercontent.com/limine-bootloader/limine/trunk/limine.h -o $@
 
 -include $(CFILES:%.c=build/obj/%.c.d)

@@ -1,17 +1,38 @@
 {
     "version": "0.2.0",
     "configurations": [
+
+        //Launch QEMU and connect with /usr/local/bin/x86_64-elf-gdb
         {
+            "name": "Qemu",
             "type": "gdb",
-            
-            "request": "attach",
-            "name": "Attach to gdbserver",
-            "executable": "./build/bin/luck.elf",
-            "target": ":1234",
-            "remote": true,
-            "cwd": "${workspaceRoot}",
+            "request": "launch",
+            "target": "${workspaceFolder}/build/bin/luck.elf",
+            "cwd": "${workspaceFolder}",
+            "gdbpath": "/usr/local/bin/x86_64-elf-gdb",
             "valuesFormatting": "parseText",
-            // "preLaunchTask": "QEMU"
+            "debugServer": 1234,
+            "autorun": [
+                "target remote localhost:1234",
+                "symbol-file ${workspaceFolder}/build/bin/luck.elf",
+                "set architecture i386:x86-64:intel",
+                "set disassembly-flavor intel",
+                "set print asm-demangle on",
+                "set print pretty on",
+                "set print object on",
+                "set print static-members off",
+                "set print vtbl on",
+                "set print union on",
+                "set print array on",
+                "set print address on",
+                "set print elements 0",
+                "set print frame-arguments all",
+                "set print frame-locals all",
+                "set print thread-events off",
+                "set print inferior-events off",
+                "set print pretty on",
+            ],
+            "preLaunchTask": "Launch Qemu"
         }
 
     ],
