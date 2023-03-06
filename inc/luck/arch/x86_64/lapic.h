@@ -19,9 +19,20 @@
 #pragma once
 
 #include "common.h"
+#include "luck/memory/manager.h"
+
+#define LAPIC_BASE 0xfee00000
 
 NONNULL_BEGIN
 
+inline dword lapic_read(dword reg)
+{ return *(dword *)(LAPIC_BASE + VIRTUAL_MEMORY_HIGH + reg); }
 
+inline void lapic_write(dword reg, dword val)
+{ *(dword *)(LAPIC_BASE + VIRTUAL_MEMORY_HIGH + reg) = val; }
+
+
+
+void lapic_init(void);
 
 NONNULL_END

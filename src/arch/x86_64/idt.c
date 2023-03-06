@@ -73,33 +73,50 @@ void idt_register_int(byte int_no, attribute(interrupt) void(*routine)(void *))
     debug("  Registered interrupt {}", int_no);
 }
 
+static void print_cpu_info(CPUContext ctx)
+{
+    info("CPU Info");
+    info("RAX: {} | RBX: {} | RCX: {} | RDX: {} | RSI: {} | RDI: {} |\n"
+         "R8:  {} | R9: {} | R10: {} | R11: {} | R12: {} | R13: {} | R14: {} | R15: {} |\n"
+         "RBP: {} | RSP: {} | RIP: {} | RFLAGS: {}\n",
+         (void *)ctx.rax, (void *)ctx.rbx, (void *)ctx.rcx, (void *)ctx.rdx, (void *)ctx.rsi, (void *)ctx.rdi,
+         (void *)ctx.r8, (void *)ctx.r9, (void *)ctx.r10, (void *)ctx.r11, (void *)ctx.r12, (void *)ctx.r13, (void *)ctx.r14, (void *)ctx.r15,
+         (void *)ctx.rbp, (void *)ctx.rsp, (void *)ctx.rip, (void *)ctx.rflags);
+}
+
 // I should have frames, and maybe a more efficent method than this?
-void div_by_zero_handler()
+void div_by_zero_handler(CPUContext *cpu)
 {
     panic("Divide by zero");
+    print_cpu_info(*cpu);
 }
 
-void breakpoint_handler()
+void breakpoint_handler(CPUContext *cpu)
 {
     panic("Breakpoint");
+    print_cpu_info(*cpu);
 }
 
-void double_fault_handler()
+void double_fault_handler(CPUContext *cpu)
 {
     panic("Double fault");
+    print_cpu_info(*cpu);
 }
 
-void general_protection_handler()
+void general_protection_handler(CPUContext *cpu)
 {
     panic("General protection fault");
+    print_cpu_info(*cpu);
 }
 
-void debug_handler()
+void debug_handler(CPUContext *cpu)
 {
     panic("Debug");
+    print_cpu_info(*cpu);
 }
 
-void invalid_opcode_handler()
+void invalid_opcode_handler(CPUContext *cpu)
 {
     panic("Invalid opcode");
+    print_cpu_info(*cpu);
 }

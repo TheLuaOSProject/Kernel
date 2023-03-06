@@ -24,7 +24,7 @@ CFLAGS ?= -g -Og -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-mi
 NASMFLAGS ?= -F dwarf -g -f elf64
 
 override CFLAGS +=       	\
-    -std=gnu17           	\
+    -std=gnu2x           	\
     -ffreestanding       	\
     -fno-stack-protector 	\
     -fno-stack-check     	\

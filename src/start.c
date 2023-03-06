@@ -130,7 +130,7 @@ attribute(used) noreturn void kernel_start()
         switch (entry->id) {
             case MADT_ENTRY_ID_LAPIC: {
                 struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *) entry;
-                success("  Found LAPIC at core {} (address: {})", core_c++,
+                success("  Found LAPIC at core {} (address: {})", core_c++, //lol
                         (void *) lapic);
                 debug("    Processor ID: {}", lapic->processor_id);
                 debug("    APIC ID: {}", lapic->apic_id);
@@ -167,5 +167,6 @@ attribute(used) noreturn void kernel_start()
     lua_call(L, 0, 0);
 
     success("Initalisation complete");
+    asm volatile("UD2");
     halt();
 }

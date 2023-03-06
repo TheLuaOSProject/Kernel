@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023 pitust
+ * Copyright (C) 2023 Amrit Bhogal
  *
  * This file is part of LuaOS.
  *
@@ -19,24 +19,15 @@
 
 #pragma once
 
-#include <common.h>
-
-qword VIRTUAL_MEMORY_HIGH;
-#define VIRTUAL_MEMORY_HIGH ((const qword)VIRTUAL_MEMORY_HIGH)
-
-/// page allocation ///
-enum PageType {
-    kPageTable,
-    kRegular
-};
-
-qword page_alloc(enum PageType pty);
-
-/// mapping pages ///
-void pmap_map(qword addr, qword phys);
-void pmap_map_rwx(qword addr, qword phys);
-
-/// kalloc ///
-void kalloc_init(void);
-void* kalloc(qword size);
-void kfree(void* ptr, qword size);
+#define if if (
+#define then )
+#define else } else
+#define elseif else if (
+#define do do {
+#define while while (
+#define repeat do
+#define until(...) while __VA_ARGS__)
+#define for(init, cond, inc) for (__auto_type init; cond; inc)
+#define end }
+#define _FUNC_END(...) (__VA_ARGS__) {
+#define function(name) name _FUNC_END
