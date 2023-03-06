@@ -22,7 +22,7 @@
 #include "common.h"
 
 typedef struct {
+    qword ds, es;
     qword rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15;
-    qword rip, rflags;
-    qword cs, ss, ds, es, fs, gs;
-} CPUContext;
+    qword error, rip, cs, rflags, ss;
+} attribute(packed) CPUContext;

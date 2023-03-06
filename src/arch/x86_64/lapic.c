@@ -17,4 +17,9 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "luck/arch/x86_64/apic.h"
+#include "luck/arch/x86_64/lapic.h"
+
+void lapic_init()
+{
+
+}

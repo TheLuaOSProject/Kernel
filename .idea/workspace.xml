@@ -12,7 +12,7 @@
       <config projectName="Kernel" targetName="uefi" />
       <config projectName="Kernel" targetName="cleanall" />
       <config projectName="Kernel" targetName="all" />
-      <config projectName="Kernel" targetName="looahjit" />
+      <config projectName="Kernel" targetName="Makefile" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -22,15 +22,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64d10e30-ccab-45e4-84b1-4ebb42cd796b" name="Changes" comment="Clion settings">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023-02-17,_09_50_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2023-02-17__09_50__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/launch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/tasks.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/tasks.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/apic.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/apic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/io/console.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/io/console.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/makelj.sh" beforeDir="false" afterPath="$PROJECT_DIR$/makelj.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/console.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/console.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/apic.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/cpu.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/cpu.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/apic.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/idt.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/idt.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/interrupts.asm" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/interrupts.asm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/start.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/start.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,10 +135,10 @@
       <recent name="$PROJECT_DIR$/src/lib" />
     </key>
   </component>
-  <component name="RunManager" selected="Makefile Target.LuaJIT/src/libluajit.a">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+  <component name="RunManager" selected="Embedded GDB Server.Debug">
+    <configuration name="Makefile" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="Makefile" CONFIG_NAME="Makefile" version="1">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
     <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1">
@@ -151,11 +152,6 @@
       </method>
     </configuration>
     <configuration name="cleanall" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="cleanall" CONFIG_NAME="cleanall" version="1">
-      <method v="2">
-        <option name="CLION.COMPOUND.BUILD" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="looahjit" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="looahjit" CONFIG_NAME="looahjit" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
@@ -197,7 +193,7 @@
       <item itemvalue="Makefile Application.bios" />
       <item itemvalue="Makefile Application.uefi" />
       <item itemvalue="Makefile Application.cleanall" />
-      <item itemvalue="Makefile Application.looahjit" />
+      <item itemvalue="Makefile Application.Makefile" />
       <item itemvalue="Makefile Target.LuaJIT/src/libluajit.a" />
       <item itemvalue="Makefile Target.extern/luajit" />
       <item itemvalue="Makefile Target.extern/luajit/src/libluajit.a" />
@@ -227,6 +223,11 @@
       <workItem from="1676592019223" duration="317000" />
       <workItem from="1676656185347" duration="3423000" />
       <workItem from="1676927060771" duration="135000" />
+      <workItem from="1677192028118" duration="2484000" />
+      <workItem from="1677271739967" duration="120000" />
+      <workItem from="1677283377183" duration="28000" />
+      <workItem from="1677439507249" duration="1195000" />
+      <workItem from="1677719283185" duration="33000" />
     </task>
     <task id="LOCAL-00001" summary="Whoops, this should have been added">
       <created>1676061391366</created>
@@ -266,33 +267,33 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>
-          <line>78</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>
-          <line>103</line>
+          <line>119</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>
-          <line>98</line>
+          <line>113</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>
-          <line>93</line>
+          <line>107</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>
-          <line>88</line>
+          <line>101</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>
-          <line>83</line>
+          <line>95</line>
           <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/arch/x86_64/idt.c</url>
+          <line>89</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

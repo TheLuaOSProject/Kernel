@@ -24,7 +24,7 @@ CFLAGS ?= -g -Og -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-mi
 NASMFLAGS ?= -F dwarf -g -f elf64
 
 override CFLAGS +=       	\
-    -std=gnu17           	\
+    -std=gnu2x           	\
     -ffreestanding       	\
     -fno-stack-protector 	\
     -fno-stack-check     	\
@@ -109,6 +109,8 @@ build/bin/luaos.iso: extern/limine build/bin/luck.elf res/limine.cfg
 	rm -rf $(dir $@)/iso
 
 	extern/limine/limine-deploy $@
+
+	@printf "\x1b[32mDone!\n"
 
 build/bin/luck.elf: $(COBJS) $(ASOBJS)
 	@printf "\x1b[35mLinking $@\n\x1b[0m"
