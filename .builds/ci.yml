@@ -1,0 +1,18 @@
+image: alpine/edge
+packages:
+  - clang
+  - make
+  - nasm
+  - git
+  - p7zip
+  - lld
+  - xorriso
+artifacts:
+  - Kernel/build/bin/luaos.iso
+  - Kernel/extern/luajit/src/libluajit_luck.o
+tasks:
+  - download: |
+      git clone https://github.com/TheLuaOSProject/Kernel
+  - make: |
+      cd Kernel && make -j 3
+
