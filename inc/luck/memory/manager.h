@@ -21,13 +21,15 @@
 
 #include <common.h>
 
-qword VIRTUAL_MEMORY_HIGH;
+NONNULL_BEGIN
+
+extern qword VIRTUAL_MEMORY_HIGH;
 #define VIRTUAL_MEMORY_HIGH ((const qword)VIRTUAL_MEMORY_HIGH)
 
 /// page allocation ///
-enum PageType {
-    kPageTable,
-    kRegular
+closed_enum PageType {
+    PageType_PAGETABLE,
+    PageType_REGULAR
 };
 
 qword page_alloc(enum PageType pty);
@@ -38,5 +40,7 @@ void pmap_map_rwx(qword addr, qword phys);
 
 /// kalloc ///
 void kalloc_init(void);
-void* kalloc(qword size);
-void kfree(void* ptr, qword size);
+void *kalloc(qword size);
+void kfree(void *ptr, qword size);
+
+NONNULL_END

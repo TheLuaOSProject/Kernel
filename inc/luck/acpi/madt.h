@@ -24,26 +24,29 @@
 
 NONNULL_BEGIN
 
-struct MADTEntryHeader {
-    byte id, length;
-} attribute(packed);
 
-struct MADT {
+struct [[gnu::packed]] MADTEntryHeader {
+    byte id, length;
+};
+
+
+struct [[gnu::packed]] MADT {
     struct SDTHeader descriptor;
 
     dword controller_address, flags;
 
     /// @warning THIS IS MISLEADING! ENTRIES ARE VARIABLE LENGTH! DO NOT TRY AND INDEX
     struct MADTEntryHeader entries[];
-} attribute(packed);
+};
 
 #define MADT_ENTRY_ID_LAPIC (0)
-struct MADTEntry_LAPIC {
+
+struct [[gnu::packed]] MADTEntry_LAPIC {
     struct MADTEntryHeader header;
 
     byte processor_id, apic_id;
     dword flags;
-} attribute(packed);
+};
 
 struct MADTEntry_IOAPIC {
     /*TODO*/

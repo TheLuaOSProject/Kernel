@@ -25,13 +25,22 @@
 
 NONNULL_BEGIN
 
-inline dword lapic_read(dword reg)
+closed_enum LAPICRegister: dword {
+    LAPICRegister_ID = 0x20,
+    LAPICRegister_VERSION = 0x30,
+    LAPICRegister_PRIORITY = 0x80,
+    LAPICRegister_INTERRUPT_COMMAND = 0x300,
+    LAPICRegister_END_OF_INTERRUPT = 0xB0,
+    LAPICRegister_INTERRUPT_REQUEST = 0x100,
+    LAPICRegister_IN_SERVICE = 0x10,
+    LAPICRegister_INTERRUPT_MASK = 0x1000
+};
+
+inline dword lapic_read(enum LAPICRegister reg)
 { return *(dword *)(LAPIC_BASE + VIRTUAL_MEMORY_HIGH + reg); }
 
-inline void lapic_write(dword reg, dword val)
+inline void lapic_write(enum LAPICRegister reg, dword val)
 { *(dword *)(LAPIC_BASE + VIRTUAL_MEMORY_HIGH + reg) = val; }
-
-
 
 void lapic_init(void);
 

@@ -22,12 +22,12 @@
 
 #include "luck/io/log.h"
 
-attribute(interrupt) void int_div_by_zero(void *);
-attribute(interrupt) void int_breakpoint(void *);
-attribute(interrupt) void int_double_fault(void *);
-attribute(interrupt) void int_general_protection(void *);
-attribute(interrupt) void int_debug(void *);
-attribute(interrupt) void int_invalid_opcode(void *);
+[[gnu::interrupt]] void int_div_by_zero(void *);
+[[gnu::interrupt]] void int_breakpoint(void *);
+[[gnu::interrupt]] void int_double_fault(void *);
+[[gnu::interrupt]] void int_general_protection(void *);
+[[gnu::interrupt]] void int_debug(void *);
+[[gnu::interrupt]] void int_invalid_opcode(void *);
 
 
 static struct IDTEntry idt[256];
@@ -48,7 +48,7 @@ void idt_init()
     asm volatile("LIDT %0" :: "m"(idtr));
 }
 
-void idt_register_int(byte int_no, attribute(interrupt) void(*routine)(void *))
+void idt_register_int(byte int_no, [[gnu::interrupt]] void(*routine)(void *))
 {
     if (int_no > 255) {
         error("Interrupt number {} is too large", int_no);

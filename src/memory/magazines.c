@@ -45,7 +45,8 @@ static atomic_llong contended, total_attempts, mag_size_max = 128;
 
 static volatile dword *lapic_id;
 
-static attribute(naked) qword get_lapic_addr_dyn(void) {
+[[gnu::naked]]
+static qword get_lapic_addr_dyn(void) {
 	asm ("movl $0x1b, %ecx");
 	asm ("rdmsr");
 	asm ("shrq $32, %rdx");
@@ -58,7 +59,7 @@ void magazine_init(void)
 	lapic_id = virt(get_lapic_addr_dyn() & ~0xfff, dword);
 }
 
-#define max_lapic_id 2 // TODO: change this to the actual value once we do smp 
+#define max_lapic_id 2 // TODO: change this to the actual value once we do smp
 
 Magazine *mag_new(qword(*get)(void *ctx), void (*put)(void *ctx, qword item), void *ctx) {
 	Magazine *mag = nullptr;

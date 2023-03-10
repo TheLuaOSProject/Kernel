@@ -16,10 +16,10 @@ typedef struct {
 } PCB;
 extern PCB* _get_pcb();
 
-#define errno _get_pcb()->errno
-#define stdin _get_pcb()->stdin
-#define stdout _get_pcb()->stdout
-#define stderr _get_pcb()->stderr
+#define errno 	(_get_pcb()->errno)
+#define stdin 	(_get_pcb()->stdin)
+#define stdout 	(_get_pcb()->stdout)
+#define stderr 	(_get_pcb()->stderr)
 
 #define INT_MAX 0x7fffffff
 
@@ -38,7 +38,7 @@ void clearerr(FILE* fd);
 
 char* getenv(const char* name);
 
-_Noreturn void exit(int code);
+[[noreturn]] void exit(int code);
 
 double acos(double x);
 double asin(double x);

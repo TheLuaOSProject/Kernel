@@ -399,7 +399,7 @@ void _log_char(const char **fmtref, char c) {
     log_emit(fi, buf);
 }
 
-void _log_string(attribute(unused) const char **fmt, const char *str)
+void _log_string(const char **fmt, const char *str)
 {
     FormatSpecifier fi;
     parse_fmt(fmt, &fi);

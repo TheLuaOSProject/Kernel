@@ -32,12 +32,13 @@ struct IDTEntry {
     dword offset_high, reserved;
 };
 
-struct IDTRegister {
+
+struct [[gnu::packed]] IDTRegister {
     word limit;
     qword base;
-} attribute(packed);
+};
 
 void idt_init(void);
-void idt_register_int(byte int_no, attribute(interrupt) void(*routine)(void*));
+void idt_register_int(byte int_no, [[gnu::interrupt]] void(*routine)(void*));
 
 NONNULL_END
