@@ -118,17 +118,17 @@ extern/luajit/src/libluajit_luck.o: extern/luajit
 	sh makelj.sh
 
 build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/luajit/src/libluajit_luck.o
-	@printf "\x1b[35mLinking $@\n\x1b[0m"
+	@/usr/bin/printf "\x1b[35mLinking $@\n\x1b[0m"
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 
 build/obj/%.c.o: %.c extern/limine extern/terminal
-	@printf "\x1b[32mCompiling $<\n\x1b[0m"
+	@/usr/bin/printf "\x1b[32mCompiling $<\n\x1b[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/obj/%.asm.o: %.asm
-	@printf "\x1b[32mAssembling $^\n\x1b[0m"
+	@/usr/bin/printf "\x1b[32mAssembling $^\n\x1b[0m"
 	@mkdir -p $(dir $@)
 	nasm $(NASMFLAGS) $^ -o $@
 
