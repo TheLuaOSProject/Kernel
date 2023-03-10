@@ -32,7 +32,7 @@ static qword* get_pte(qword addr)
         addr <<= 9; \
         qword* ptep = &virt(cr3, qword)[off]; \
         if (!isfinal && !(*ptep & 1)) { \
-            *ptep = 7 | page_alloc(kPageTable); \
+            *ptep = 7 | page_alloc(PageType_PAGETABLE); \
         } \
         if (isfinal) return ptep; \
         cr3 = *ptep & ~0xfff; \
