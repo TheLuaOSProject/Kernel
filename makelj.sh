@@ -5,7 +5,7 @@ cd extern/luajit/src
 DASM=../dynasn/dynasm.lua
 ALL_LIB="lib_base.c lib_math.c lib_bit.c lib_string.c lib_table.c lib_io.c lib_os.c lib_package.c lib_debug.c lib_jit.c lib_ffi.c lib_buffer.c"
 
-gcc host/minilua.c -o minilua.exe
+gcc host/minilua.c -o minilua.exe -lm
 
 ./minilua.exe ../dynasm/dynasm.lua -LN -D P64 -D NO_UNWIND -o host/buildvm_arch.h vm_x64.dasc
 
