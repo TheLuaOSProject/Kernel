@@ -26,6 +26,7 @@
 #include "luck/io/console.h"
 #include "luck/arch/x86_64/gdt.h"
 #include "luck/arch/x86_64/idt.h"
+#include "luck/io/ps2.h"
 #include "luck/memory/manager.h"
 #include "luck/memory/magazines.h"
 
@@ -33,6 +34,25 @@ static void call_all(void (*funcs[])(void))
 {
     for (void (*f)(void) = *funcs; f != nullptr; f = *++funcs)
         f();
+}
+static void ps2_gets(char* buf) {
+    char* start = buf;
+    while (true) {
+        char c = ps2_getc();
+        if (c == '\n') {
+            stdout_write("\n", 1);
+            *buf = 0;
+            return;
+        }
+        if (c == '\b') {
+            if (buf == start) continue;
+            buf--;
+            stdout_write("\b \b", 3);
+            continue;
+        }
+        *buf++ = c;
+        stdout_write(&c, 1);
+    }
 }
 
 [[gnu::used]] noreturn void kernel_start()

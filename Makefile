@@ -119,13 +119,18 @@ build/bin/luck.elf: $(COBJS) $(ASOBJS)
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 
-build/obj/%.c.o: %.c extern/limine extern/terminal
-	@printf "\x1b[32mCompiling $<\n\x1b[0m"
+build/obj/extern/%.c.o: extern/limine extern/terminal extern/luajit
+	@/usr/bin/printf "\x1b[32mCompiling $<\n\x1b[0m"
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $(shell echo "$@" | sed 's/build\/obj\///g' | sed 's/\.o//g') -o $@
+
+build/obj/./src/%.c.o: src/%.c extern/limine extern/terminal extern/luajit
+	@/usr/bin/printf "\x1b[32mCompiling $<\n\x1b[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/obj/%.asm.o: %.asm
-	@printf "\x1b[32mAssembling $^\n\x1b[0m"
+	@/usr/bin/printf "\x1b[32mAssembling $^\n\x1b[0m"
 	@mkdir -p $(dir $@)
 	nasm $(NASMFLAGS) $^ -o $@
 
