@@ -27,6 +27,7 @@
 #include "luck/io/console.h"
 #include "luck/arch/x86_64/gdt.h"
 #include "luck/arch/x86_64/idt.h"
+#include "luck/io/ps2.h"
 #include "luck/memory/manager.h"
 #include "luck/memory/magazines.h"
 
@@ -61,6 +62,25 @@ void stdout_write(const char *str, int siz) {
     while (siz) {
         console_write_char(*str++);
         siz--;
+    }
+}
+static void ps2_gets(char* buf) {
+    char* start = buf;
+    while (true) {
+        char c = ps2_getc();
+        if (c == '\n') {
+            stdout_write("\n", 1);
+            *buf = 0;
+            return;
+        }
+        if (c == '\b') {
+            if (buf == start) continue;
+            buf--;
+            stdout_write("\b \b", 3);
+            continue;
+        }
+        *buf++ = c;
+        stdout_write(&c, 1);
     }
 }
 
@@ -149,7 +169,6 @@ attribute(used) noreturn void kernel_start()
     if (!L) {
         panic("cant open lua");
     }
-    const char *in = "print('what is the best language? it\\'s LUA, of course!')";
     
     _lua_openmodule("", base);
     lua_openmodule(table);
@@ -160,11 +179,25 @@ attribute(used) noreturn void kernel_start()
     FILE* stdout = _get_pcb()->stdout = kalloc(sizeof(FILE));
     stdout->write = stdout_write;
 
+    const char *in = "print('what is the best language? it\\'s LUA, of course!')";
     int v = luaL_loadbuffer(L, in, string_length(in), "entry");
     if (v != 0) {
         panic("fail {}", lua_tostring(L, -1));
     }
     lua_call(L, 0, 0);
+
+    while (true) {
+        char buf[4096];
+        stdout_write("> ", 2);
+        ps2_gets(buf);
+
+        int v = luaL_loadbuffer(L, buf, string_length(buf), "stdin");
+        if (v != 0) {
+            error("fail {}", lua_tostring(L, -1));
+        } else {
+            lua_call(L, 0, 0);
+        }
+    }
 
     success("Initalisation complete");
     halt();
