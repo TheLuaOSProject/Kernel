@@ -19,7 +19,7 @@
 
 #include "luck/arch/x86_64/lapic.h"
 
+
 void lapic_init()
 {
-
 }

@@ -48,6 +48,7 @@ override CFLAGS +=       	\
 	-Iinc               	\
 	-Wno-unused-function    \
 	-fno-omit-frame-pointer \
+	-fblocks
 
 override LDFLAGS +=         \
     -nostdlib               \

@@ -74,7 +74,7 @@ static atomic_ullong addr = 0x0000700000000000;
 static qword kalloc_inner(void* ctx) {
     qword i = (qword)ctx;
     if (kalloc_heads[i] == 0) {
-        qword pa = page_alloc(kRegular);
+        qword pa = page_alloc(PageType_REGULAR);
         qword va = atomic_fetch_add(&addr, 4096);
         pmap_map(va, pa);
 
@@ -109,7 +109,7 @@ void kalloc_init(void) {
         if (kalloc_size_arr[i] == 368) idx_special = i;
     }
     if (idx_special == 0xffff) panic("update 368 with whatever new kalloc size is big enough to hold a Magazine (>312 bytes)");
-    kalloc_mags[idx_special] = mag_new(kalloc_inner, kfree_inner, (void*)idx_special); 
+    kalloc_mags[idx_special] = mag_new(kalloc_inner, kfree_inner, (void*)idx_special);
     for (qword i = 0;i < 32;i++) {
         if (i != idx_special) kalloc_mags[i] = mag_new(kalloc_inner, kfree_inner, (void*)i);
     }
@@ -134,7 +134,7 @@ void* kalloc(qword size) {
     if (size > kalloc_size_arr[15]) {
         size = (size + 0xfff) & ~0xfff;
         qword this_addr = atomic_fetch_add(&addr, size);
-        for (qword i = 0;i < size;i += 4096) pmap_map(this_addr + i, page_alloc(kRegular));
+        for (qword i = 0;i < size;i += 4096) pmap_map(this_addr + i, page_alloc(PageType_REGULAR));
         return (void*)this_addr;
     }
     qword mag = find_kalloc_mag(size);

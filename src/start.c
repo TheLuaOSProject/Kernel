@@ -29,7 +29,13 @@
 #include "luck/memory/manager.h"
 #include "luck/memory/magazines.h"
 
-attribute(used) noreturn void kernel_start()
+static void call_all(void (*funcs[])(void))
+{
+    for (void (*f)(void) = *funcs; f != nullptr; f = *++funcs)
+        f();
+}
+
+[[gnu::used]] noreturn void kernel_start()
 {
     asm (
         ".intel_syntax noprefix\n"

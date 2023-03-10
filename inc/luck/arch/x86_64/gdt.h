@@ -23,19 +23,20 @@
 
 NONNULL_BEGIN
 
-struct TSSDescriptor {
+struct [[gnu::aligned(4096)]] TSSDescriptor {
     byte tss[0x6B];
-} attribute(aligned(4096));
+};
 
 struct GlobalDescriptorTable {
     uint64_t descriptors[11];
     struct TSSDescriptor task_state_segment;
 };
 
-struct GDTRegister {
+
+struct [[gnu::packed]] GDTRegister {
     word limit;
     qword base;
-} attribute(packed);
+};
 
 void gdt_init(void);
 

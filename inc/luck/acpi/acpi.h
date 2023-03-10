@@ -34,12 +34,13 @@ struct RSDT {
     struct SDTHeader header;
     dword pointers[];
 };
-struct XSDT {
+
+struct [[gnu::packed]] XSDT  {
     struct SDTHeader header;
     qword pointers[];
-} attribute(packed);
+};
 
-struct RSDP {
+struct [[gnu::packed]] RSDP {
     //1.0
     char signature[8];
     byte checksum;
@@ -51,7 +52,7 @@ struct RSDP {
     dword length;
     qword xsdt_address;
     byte extended_checksum, reserved[3];
-} attribute(packed);
+};
 
 struct RSDP *nullable rsdp_init(void);
 struct SDTHeader *nullable sdt_find(const struct RSDP *table, const char id[static 4], int idx);
