@@ -61,8 +61,8 @@ void putchar(char c) {
 
 void *ljsup_alloc(void *ud, void *ptr, size_t osize, size_t nsize) {
 	void* nptr = kalloc(nsize);
-	if (osize < nsize) memory_copy(nptr, ptr, osize);
-	else memory_copy(nptr, ptr, nsize);
+	if (osize < nsize) memcpy(nptr, ptr, osize);
+	else memcpy(nptr, ptr, nsize);
 	if (ptr) kfree(ptr, osize);
 	return nptr;
 }

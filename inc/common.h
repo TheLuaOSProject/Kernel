@@ -35,6 +35,7 @@
 #define closed_enum enum [[clang::enum_extensibility(closed)]]
 
 #define pragma(...) _Pragma(#__VA_ARGS__)
+#define asm __asm__ __volatile__
 
 #define NONNULL_BEGIN    pragma(clang assume_nonnull begin)
 #define NONNULL_END      pragma(clang assume_nonnull end)
@@ -57,7 +58,7 @@ typedef intptr_t    sptr;
 
 inline noreturn void halt()
 {
-    while(true) asm volatile(
+    while(true) asm (
         "CLI\n"
         "HLT\n"
     );

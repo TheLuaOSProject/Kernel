@@ -22,12 +22,12 @@
 
 #include "luck/io/log.h"
 
-[[gnu::interrupt]] void int_div_by_zero(void *);
-[[gnu::interrupt]] void int_breakpoint(void *);
-[[gnu::interrupt]] void int_double_fault(void *);
-[[gnu::interrupt]] void int_general_protection(void *);
-[[gnu::interrupt]] void int_debug(void *);
-[[gnu::interrupt]] void int_invalid_opcode(void *);
+extern void int_div_by_zero(void *);
+extern void int_breakpoint(void *);
+extern void int_double_fault(void *);
+extern void int_general_protection(void *);
+extern void int_debug(void *);
+extern void int_invalid_opcode(void *);
 
 
 static struct IDTEntry idt[256];
@@ -45,18 +45,13 @@ void idt_init()
     idt_register_int(0x1, int_debug);
     idt_register_int(0x6, int_invalid_opcode);
 
-    asm volatile("LIDT %0" :: "m"(idtr));
+    asm("LIDT %0" :: "m"(idtr));
 }
 
-void idt_register_int(byte int_no, [[gnu::interrupt]] void(*routine)(void *))
+void idt_register_int(byte int_no, void(*routine)(void *))
 {
     if (int_no > 255) {
         error("Interrupt number {} is too large", int_no);
-        return;
-    }
-
-    if (routine == nullptr) {
-        error("Interrupt routine {} is NULL", (uintptr_t)routine);
         return;
     }
 
@@ -73,10 +68,11 @@ void idt_register_int(byte int_no, [[gnu::interrupt]] void(*routine)(void *))
     debug("  Registered interrupt {}", int_no);
 }
 
-static void print_cpu_info(CPUContext ctx)
+[[gnu::always_inline]]
+static inline void print_cpu_info(CPUContext ctx)
 {
     info("CPU Info");
-    info("RAX: {} | RBX: {} | RCX: {} | RDX: {} | RSI: {} | RDI: {} |\n"
+    info("\nRAX: {} | RBX: {} | RCX: {} | RDX: {} | RSI: {} | RDI: {} |\n"
          "R8:  {} | R9: {} | R10: {} | R11: {} | R12: {} | R13: {} | R14: {} | R15: {} |\n"
          "RBP: {} | RSP: {} | RIP: {} | RFLAGS: {}\n",
          (void *)ctx.rax, (void *)ctx.rbx, (void *)ctx.rcx, (void *)ctx.rdx, (void *)ctx.rsi, (void *)ctx.rdi,
@@ -87,36 +83,36 @@ static void print_cpu_info(CPUContext ctx)
 // I should have frames, and maybe a more efficent method than this?
 void div_by_zero_handler(CPUContext *cpu)
 {
-    panic("Divide by zero");
     print_cpu_info(*cpu);
+    panic("Divide by zero");
 }
 
 void breakpoint_handler(CPUContext *cpu)
 {
-    panic("Breakpoint");
     print_cpu_info(*cpu);
+    panic("Breakpoint");
 }
 
 void double_fault_handler(CPUContext *cpu)
 {
-    panic("Double fault");
     print_cpu_info(*cpu);
+    panic("Double fault");
 }
 
 void general_protection_handler(CPUContext *cpu)
 {
-    panic("General protection fault");
     print_cpu_info(*cpu);
+    panic("General protection fault");
 }
 
 void debug_handler(CPUContext *cpu)
 {
-    panic("Debug");
     print_cpu_info(*cpu);
+    panic("Debug");
 }
 
 void invalid_opcode_handler(CPUContext *cpu)
 {
-    panic("Invalid opcode");
     print_cpu_info(*cpu);
+    panic("Invalid opcode");
 }

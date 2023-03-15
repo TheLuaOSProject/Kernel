@@ -20,6 +20,7 @@
 #pragma once
 
 #include "common.h"
+#include "memory.h" //Must keep this header!
 
 NONNULL_BEGIN
 
@@ -70,44 +71,5 @@ static char *string_concatenate(char *dest, const char *src)
     size_t len = string_length(src);
     return string_concatenate_n(dest, src, len);
 }
-
-//struct FormatSpecifier {
-//    char fill, align, sign, fill_char, type;
-//    bool group, use_alt_form;
-//    dword width;
-//};
-//
-//#define _string__formatters(X) \
-//    X(char, char) \
-//    X(string, const char*) \
-//    X(signed8, signed char) \
-//    X(signed16, short) \
-//    X(signed32, int) \
-//    X(signedptr, long) \
-//    X(signed64, long long) \
-//    X(unsigned8, unsigned char) \
-//    X(unsigned16, unsigned short) \
-//    X(unsigned32, unsigned int) \
-//    X(unsignedptr, unsigned long) \
-//    X(unsigned64, unsigned long long) \
-//
-//#define _string__defines(name, type) void _string_##name(const char *dest, size_t length, type value);
-//_string__formatters(_string__defines)
-//#undef _string__defines
-//
-//#define _string__eachtype_cb(name, type) , type: _string_##name
-//
-//#define _string__one(_, argument) \
-//    ({ __auto_type _argument = (argument); _Generic(_argument _string__formatters(_string__eachtype_cb))(_dest, _length, _fmt, _argument); })
-//
-//
-//int _string_format(char *dest, size_t length, const char *fmt, ...);
-//#define string_format(dest, length, fmt, ...) ({ char *_dest = (dest); size_t _length = (length); const char *_fmt = (fmt); foreach(_string__one, _ __VA_OPT__(,) __VA_ARGS__); dest; })
-//
-//static void v()
-//{
-//    char buf[256] = {0};
-//    string_format(buf, 256, "{} + {} = {}", 1, 1, 1 + 1);
-//}
 
 NONNULL_END

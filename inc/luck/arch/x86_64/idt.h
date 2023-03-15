@@ -23,8 +23,6 @@
 
 NONNULL_BEGIN
 
-
-
 struct IDTEntry {
     word offset_low, selector;
     byte interrupt_stack_table, flags;

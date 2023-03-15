@@ -119,7 +119,7 @@ qword page_alloc(enum PageType pty) {
 	(void)pty; // for now :P
 
     qword addr = mag_get(page_mag);
-    memory_set(virt(addr, void), 0, 4096);
+    memset(virt(addr, void), 0, 4096);
     return addr;
 }
 
@@ -147,8 +147,8 @@ earlykalloc:
         panic("cannot (yet) kalloc {} [earlykalloc mode], sclass {}", size, kalloc_size_arr[mag]);
     }
     void* b = (void*)mag_get(kalloc_mags[mag]);
-    memory_set(b, 0xcc, kalloc_size_arr[mag]);
-    memory_set(b, 0x00, size);
+    memset(b, 0xcc, kalloc_size_arr[mag]);
+    memset(b, 0x00, size);
     return b;
 }
 void kfree(void* ptr, qword size) {

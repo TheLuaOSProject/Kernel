@@ -27,6 +27,7 @@
 #include "luck/io/console.h"
 #include "luck/arch/x86_64/gdt.h"
 #include "luck/arch/x86_64/idt.h"
+#include "luck/arch/x86_64/lapic.h"
 #include "luck/io/ps2.h"
 #include "luck/memory/manager.h"
 #include "luck/memory/magazines.h"
@@ -94,7 +95,7 @@ static void ps2_gets(char* buf) {
 
 [[gnu::used]] noreturn void kernel_start()
 {
-    asm(
+    asm (
         ".intel_syntax noprefix\n"
         "mov rax, cr0\n"
         "and ax, 0xFFFB\n"
@@ -107,11 +108,11 @@ static void ps2_gets(char* buf) {
     );
 
     qword cr3;
-    asm volatile("MOVQ %%CR3, %0" : "=r"(cr3));
+    asm("MOVQ %%CR3, %0" : "=r"(cr3));
     for (qword i = 0;i < 256;i++) {
         *virt(cr3 + i * 8, qword) = 0;
     }
-    asm volatile("MOVQ %0, %%CR3" :: "r"(cr3) : "memory");
+    asm("MOVQ %0, %%CR3" :: "r"(cr3) : "memory");
 
 
     success("\nStarted LuaOS");
@@ -125,6 +126,7 @@ static void ps2_gets(char* buf) {
     info("Initialising IDT");
     idt_init();
     success("Done");
+    asm("STI");
 
     info("Initialising memory");
     {
@@ -156,7 +158,7 @@ static void ps2_gets(char* buf) {
 
         debug("  Found entry with ID {}", entry->id);
         switch (entry->id) {
-            case MADT_ENTRY_ID_LAPIC: {
+            case MADTEntryID_LAPIC: {
                 struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *) entry;
                 success("  Found LAPIC at core {} (address: {})", core_c++, //lol
                         (void *) lapic);
@@ -168,6 +170,13 @@ static void ps2_gets(char* buf) {
         }
     }
     success("Done");
+
+    info("Initalising LAPIC");
+    lapic_init();
+    info("LAPIC base: {}", (void *)lapic_base);
+    success("Done");
+
+    while (true);
 
     int status;
     lua_State *L;
@@ -208,6 +217,6 @@ static void ps2_gets(char* buf) {
     }
 
     success("Initalisation complete");
-    asm volatile("UD2");
+    asm("UD2");
     halt();
 }

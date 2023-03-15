@@ -46,6 +46,7 @@ override CFLAGS +=       	\
 	-isystem extern/terminal\
 	-Iinc               	\
 	-Wno-unused-function    \
+	-Wno-unused-parameter   \
 	-fno-omit-frame-pointer \
 	-fblocks
 

@@ -22,23 +22,23 @@
 byte port_in_byte(word port)
 {
     byte data;
-    asm volatile("INB %1, %0" : "=a"(data) : "Nd"(port));
+    asm("INB %1, %0" : "=a"(data) : "Nd"(port));
     return data;
 }
 
 void port_out_byte(word port, byte data)
 {
-    asm volatile("OUTB %0, %1" : : "a"(data), "Nd"(port));
+    asm("OUTB %0, %1" : : "a"(data), "Nd"(port));
 }
 
 word port_in_word(word port)
 {
     word data;
-    asm volatile("INW %1, %0" : "=a"(data) : "Nd"(port));
+    asm("INW %1, %0" : "=a"(data) : "Nd"(port));
     return data;
 }
 
 void port_out_word(word port, word data)
 {
-    asm volatile("OUTW %0, %1" : : "a"(data), "Nd"(port));
+    asm("OUTW %0, %1" : : "a"(data), "Nd"(port));
 }

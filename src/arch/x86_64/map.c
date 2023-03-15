@@ -24,7 +24,7 @@ static qword* get_pte(qword addr)
 {
     addr <<= (64 - 48);
     qword cr3;
-    asm volatile("MOVQ %%CR3, %0" : "=r"(cr3));
+    asm("MOVQ %%CR3, %0" : "=r"(cr3));
     qword* mod;
 #define STEP(isfinal) \
     { \
