@@ -18,12 +18,12 @@
  */
 
 #define LAPIC_IMPL
-#include "luck/arch/x86_64/lapic.h"
+#include "luck/arch/x86_64/interrupts/lapic.h"
 
-#include <stdint.h>
+#include "stdint.h"
 
 #include "luck/arch/x86_64/cpu.h"
-#include "luck/arch/x86_64/idt.h"
+#include "luck/arch/x86_64/interrupts/idt.h"
 #include "luck/arch/x86_64/msr.h"
 #include "luck/io/log.h"
 

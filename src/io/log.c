@@ -22,7 +22,7 @@
 
 #include "luck/io/log.h"
 #include "luck/io/console.h"
-#include "luck/io/port.h"
+#include "luck/arch/x86_64/io/port.h"
 #include "common.h"
 
 static atomic_bool console = true;

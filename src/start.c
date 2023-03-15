@@ -26,9 +26,9 @@
 #include "luck/acpi/acpi.h"
 #include "luck/io/console.h"
 #include "luck/arch/x86_64/gdt.h"
-#include "luck/arch/x86_64/idt.h"
-#include "luck/arch/x86_64/lapic.h"
-#include "luck/io/ps2.h"
+#include "luck/arch/x86_64/interrupts/idt.h"
+#include "luck/arch/x86_64/interrupts/lapic.h"
+#include "luck/arch/x86_64/io/ps2.h"
 #include "luck/memory/manager.h"
 #include "luck/memory/magazines.h"
 

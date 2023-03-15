@@ -16,45 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #pragma once
 
-#include "common.h"
+#include "../../../../common.h"
 
 NONNULL_BEGIN
 
-struct SDTHeader {
-    char signature[4];
-    dword length;
-    byte revision, checksum;
-    char oem_id[6], oem_table_id[8];
-    dword oem_revision, creator_id, creator_revision;
+struct IDTEntry {
+    word offset_low, selector;
+    byte interrupt_stack_table, flags;
+    word offset_middle;
+    dword offset_high, reserved;
 };
 
-struct RSDT {
-    struct SDTHeader header;
-    dword pointers[];
+
+struct [[gnu::packed]] IDTRegister {
+    word limit;
+    qword base;
 };
 
-struct [[gnu::packed]] XSDT  {
-    struct SDTHeader header;
-    qword pointers[];
-};
-
-struct [[gnu::packed]] RSDP {
-    //1.0
-    char signature[8];
-    byte checksum;
-    char oem_id[6];
-    byte revision;
-    dword rsdt_address;
-
-    //2.0
-    dword length;
-    qword xsdt_address;
-    byte extended_checksum, reserved[3];
-};
-
-struct RSDP *nullable rsdp_init(void);
-struct SDTHeader *nullable sdt_find(const struct RSDP *table, const char id[static 4], int idx);
+void idt_init(void);
+void idt_register_int(byte int_no, [[gnu::interrupt]] void(*routine)(void*));
 
 NONNULL_END

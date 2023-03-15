@@ -47,7 +47,7 @@ PCB* _get_pcb() { static PCB pcb; return &pcb; }
 void realloc() {panic("todo:realloc");}
 void free() {panic("todo:free");}
 
-_Noreturn void exit(int code){panic("exit");}
+[[noreturn]] void exit(int code){panic("exit");}
 
 size_t fwrite(const void *restrict ptr, size_t size, size_t nitems, FILE *restrict stream) {
 	if (!stream) panic("null stream pointer?");
@@ -61,8 +61,8 @@ void putchar(char c) {
 
 void *ljsup_alloc(void *ud, void *ptr, size_t osize, size_t nsize) {
 	void* nptr = kalloc(nsize);
-	if (osize < nsize) memcpy(nptr, ptr, osize);
-	else memcpy(nptr, ptr, nsize);
+	if (osize < nsize) memory_copy(nptr, ptr, osize);
+	else memory_copy(nptr, ptr, nsize);
 	if (ptr) kfree(ptr, osize);
 	return nptr;
 }
