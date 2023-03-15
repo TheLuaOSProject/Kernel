@@ -83,36 +83,36 @@ static inline void print_cpu_info(CPUContext ctx)
 // I should have frames, and maybe a more efficent method than this?
 void div_by_zero_handler(CPUContext *cpu)
 {
-    panic("Divide by zero");
     print_cpu_info(*cpu);
+    panic("Divide by zero");
 }
 
 void breakpoint_handler(CPUContext *cpu)
 {
-    panic("Breakpoint");
     print_cpu_info(*cpu);
+    panic("Breakpoint");
 }
 
 void double_fault_handler(CPUContext *cpu)
 {
-    error("Double fault");
     print_cpu_info(*cpu);
+    panic("Double fault");
 }
 
 void general_protection_handler(CPUContext *cpu)
 {
-    error("General protection fault");
     print_cpu_info(*cpu);
+    panic("General protection fault");
 }
 
 void debug_handler(CPUContext *cpu)
 {
-    panic("Debug");
     print_cpu_info(*cpu);
+    panic("Debug");
 }
 
 void invalid_opcode_handler(CPUContext *cpu)
 {
-    panic("Invalid opcode");
     print_cpu_info(*cpu);
+    panic("Invalid opcode");
 }

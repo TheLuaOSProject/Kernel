@@ -126,6 +126,7 @@ static void ps2_gets(char* buf) {
     info("Initialising IDT");
     idt_init();
     success("Done");
+    asm("STI");
 
     info("Initialising memory");
     {
@@ -157,7 +158,7 @@ static void ps2_gets(char* buf) {
 
         debug("  Found entry with ID {}", entry->id);
         switch (entry->id) {
-            case MADT_ENTRY_ID_LAPIC: {
+            case MADTEntryID_LAPIC: {
                 struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *) entry;
                 success("  Found LAPIC at core {} (address: {})", core_c++, //lol
                         (void *) lapic);
@@ -171,10 +172,11 @@ static void ps2_gets(char* buf) {
     success("Done");
 
     info("Initalising LAPIC");
-    asm("STI");
     lapic_init();
     info("LAPIC base: {}", (void *)lapic_base);
     success("Done");
+
+    while (true);
 
     int status;
     lua_State *L;

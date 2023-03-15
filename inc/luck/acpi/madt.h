@@ -39,7 +39,10 @@ struct [[gnu::packed]] MADT {
     struct MADTEntryHeader entries[];
 };
 
-#define MADT_ENTRY_ID_LAPIC (0)
+//#define MADT_ENTRY_ID_LAPIC (0)
+enum MADTEntryID {
+    MADTEntryID_LAPIC = 0,
+};
 
 struct [[gnu::packed]] MADTEntry_LAPIC {
     struct MADTEntryHeader header;
