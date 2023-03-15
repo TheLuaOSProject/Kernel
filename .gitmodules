@@ -1,0 +1,10 @@
+[submodule "extern/LuaJIT"]
+	path = extern/LuaJIT
+	url = https://github.com/TheLuaOSProject/LuaJIT.git
+[submodule "extern/limine"]
+	path = extern/limine
+	url = https://github.com/limine-bootloader/limine.git
+	branch = v4.x-branch-binary
+[submodule "extern/terminal"]
+	path = extern/terminal
+	url = https://github.com/limine-bootloader/terminal

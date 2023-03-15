@@ -1,6 +1,6 @@
 build/
-limine/
 compile_commands.json
 .cache/
 luaos.log
 .gdb_history
+extern/ovmf-x64
