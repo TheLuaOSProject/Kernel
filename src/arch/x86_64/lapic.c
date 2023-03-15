@@ -21,8 +21,4 @@
 
 
 void lapic_init()
-{
-
-
-
-NONNULL_END
+{}

@@ -43,11 +43,10 @@ override CFLAGS +=       	\
     -MMD                 	\
 	-target x86_64-elf	 	\
 	-isystem extern/limine	\
-	-Iextern/terminal       \
+	-isystem extern/terminal\
 	-Iinc               	\
 	-Wno-unused-function    \
 	-fno-omit-frame-pointer \
-	-std=gnu2x              \
 	-fblocks
 
 override LDFLAGS +=         \
@@ -85,21 +84,12 @@ extern/ovmf-x64:
 	mkdir -p $@
 	cd $@ && curl -o OVMF-X64.zip https://efi.akeo.ie/OVMF/OVMF-X64.zip && 7z x OVMF-X64.zip
 
-extern/limine:
-	mkdir -p $@
-	git clone https://github.com/limine-bootloader/limine.git --branch=v4.x-branch-binary --depth=1 $@
-	$(MAKE) -C $@
-
-extern/luajit:
-	git clone https://luajit.org/git/luajit.git $@
+extern/limine/limine-deploy:
+	$(MAKE) -C extern/limine
 
 extern/terminal/../luajit/src/lua.h: extern/luajit
 
-extern/terminal:
-	mkdir -p $@
-	git clone https://github.com/limine-bootloader/terminal --depth 1 $@
-
-build/bin/luaos.iso: extern/limine build/bin/luck.elf res/limine.cfg
+build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.elf res/limine.cfg
 	mkdir -p $(dir $@)/iso
 	cp build/bin/luck.elf res/powered-by-lua.bmp res/limine.cfg res/font.bin extern/limine/limine-cd.bin extern/limine/limine.sys extern/limine/limine-cd-efi.bin $(dir $@)/iso
 	xorriso -as mkisofs\
@@ -143,12 +133,5 @@ build/obj/%.asm.o: %.asm
 .PHONY: clean
 clean:
 	rm -rf build extern/luajit/src/*.o
-
-cleanall: clean
-	rm -rf extern
-
-extern/include/limine.h:
-	mkdir -p extern/include/
-	curl https://raw.githubusercontent.com/limine-bootloader/limine/trunk/limine.h -o $@
 
 -include $(CFILES:%.c=build/obj/%.c.d)

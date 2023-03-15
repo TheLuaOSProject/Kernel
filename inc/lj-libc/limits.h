@@ -38,7 +38,7 @@ void clearerr(FILE* fd);
 
 char* getenv(const char* name);
 
-[[noreturn]] void exit(int code);
+_Noreturn void exit(int code);
 
 double acos(double x);
 double asin(double x);

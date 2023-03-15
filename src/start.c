@@ -37,8 +37,16 @@
 #undef stdout
 #undef stderr
 
+///
+/// @category LuaJIT Support
+/// LuaJIT allocator (defined in src/lib/libsupport.c)
+///
 void *ljsup_alloc(void *ud, void *ptr, size_t osize, size_t nsize);
 
+///
+/// @category LuaJIT Support
+///
+///
 int luaL_loadbuffer(lua_State *L, const char *s, size_t len, const char *name);
 
 void luaJIT_version_2_1_0_beta3(void);
@@ -84,7 +92,7 @@ static void ps2_gets(char* buf) {
     }
 }
 
-attribute(used) noreturn void kernel_start()
+[[gnu::used]] noreturn void kernel_start()
 {
     asm(
         ".intel_syntax noprefix\n"
