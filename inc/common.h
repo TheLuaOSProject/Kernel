@@ -31,7 +31,7 @@
 #   define C2X false
 #endif
 
-#define inline [[gnu::always_inline]] static inline
+
 #define closed_enum enum [[clang::enum_extensibility(closed)]]
 
 #define pragma(...) _Pragma(#__VA_ARGS__)

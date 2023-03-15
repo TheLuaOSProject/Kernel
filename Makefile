@@ -47,7 +47,6 @@ override CFLAGS +=       	\
 	-Iinc               	\
 	-Wno-unused-function    \
 	-fno-omit-frame-pointer \
-	-std=gnu2x              \
 	-fblocks
 
 override LDFLAGS +=         \
