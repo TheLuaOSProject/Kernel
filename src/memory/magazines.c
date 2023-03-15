@@ -66,9 +66,9 @@ Magazine *mag_new(qword(*get)(void *ctx), void (*put)(void *ctx, qword item), vo
 	uint64_t mag_id = atomic_fetch_add(&num_static_mag, 1);
 	if (mag_id < max_static_mag) {
 		mag = &static_mags[mag_id];
-		memory_set(mag, 0, sizeof(Magazine));
+		memset(mag, 0, sizeof(Magazine));
 		mag->mag_percpu = &mag_percpu[mag_id * 256];
-		memory_set(mag->mag_percpu, 0, sizeof(MagazinePerCPU) * 256);
+		memset(mag->mag_percpu, 0, sizeof(MagazinePerCPU) * 256);
 		if (*lapic_id >= 256) panic("arch_get_max_cpu_id() >= 256; luaOS supports a maximum of 256 cores!");
 	} else {
 		mag = kalloc(sizeof(Magazine));

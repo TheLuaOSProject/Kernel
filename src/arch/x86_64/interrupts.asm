@@ -15,23 +15,60 @@
 ;
 ; You should have received a copy of the GNU General Public License
 ; along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
-; 
+;
+
 
 [BITS 64]
-
+[SECTION .text]
 %macro INTERRUPT 1
 [EXTERN %1_handler]
 [GLOBAL int_%1]
 int_%1:
+    ;Already pushed:
+    ;PUSH RIP
+    ;PUSH CS
+    ;PUSH RFLAGS
+    ;PUSH RSP
+    ;PUSH SS
 
-    ; Call the interrupt handler
-    CLD
-    CALL %1_handler
+    PUSH    R15
+    PUSH    R14
+    PUSH    R13
+    PUSH    R12
+    PUSH    R11
+    PUSH    R10
+    PUSH    R9
+    PUSH    R8
+    PUSH    RBP
+    PUSH    RDI
+    PUSH    RSI
+    PUSH    RDX
+    PUSH    RCX
+    PUSH    RBX
+    PUSH    RAX
+
+    MOV     RDI, RSP
+    CALL    %1_handler
+
+    POP     RAX
+    POP     RBX
+    POP     RCX
+    POP     RDX
+    POP     RSI
+    POP     RDI
+    POP     RBP
+    POP     R8
+    POP     R9
+    POP     R10
+    POP     R11
+    POP     R12
+    POP     R13
+    POP     R14
+    POP     R15
+    ADD     RSP, 8
 
     IRETQ
-
 %endmacro
-
 
 INTERRUPT div_by_zero
 INTERRUPT breakpoint
@@ -39,3 +76,4 @@ INTERRUPT double_fault
 INTERRUPT general_protection
 INTERRUPT debug
 INTERRUPT invalid_opcode
+INTERRUPT lapic_timer

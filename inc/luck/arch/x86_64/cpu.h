@@ -21,8 +21,11 @@
 
 #include "common.h"
 
+//Used to store the state of the CPU, filled by an interrupt, passed to the handler
 typedef struct [[gnu::packed]] {
-    qword ds, es;
-    qword rax, rbx, rcx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10, r11, r12, r13, r14, r15;
-    qword error, rip, cs, rflags, ss;
+    qword rax, rbx, rcx, rdx, rsi, rdi, rbp, r8, r9, r10, r11, r12, r13, r14, r15;
+    qword rflags, rip, cs, ss, ds, es, fs, gs;
+    qword cr0, cr2, cr3, cr4;
+    qword rsp;
+    qword error;
 } CPUContext;

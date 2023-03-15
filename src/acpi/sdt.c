@@ -29,14 +29,14 @@ struct SDTHeader *sdt_find(const struct RSDP *rsdp, const char id[static 4], int
         size_t nent = (rsdt->header.length - sizeof(struct SDTHeader)) / sizeof(dword);
         for (size_t i = 0;i < nent;i++) {
             struct SDTHeader *sdt = virt(rsdt->pointers[i], struct SDTHeader);
-            if (!memory_compare(sdt->signature, id, 4) && idx-- == 0) return sdt;
+            if (!memcmp(sdt->signature, id, 4) && idx-- == 0) return sdt;
         }
     } else {
         struct XSDT *xsdt = virt(rsdp->xsdt_address, struct XSDT);
         size_t nent = (xsdt->header.length - sizeof(struct SDTHeader)) / sizeof(dword);
         for (size_t i = 0;i < nent;i++) {
             struct SDTHeader *sdt = virt(xsdt->pointers[i], struct SDTHeader);
-            if (!memory_compare(sdt->signature, id, 4) && idx-- == 0) return sdt;
+            if (!memcmp(sdt->signature, id, 4) && idx-- == 0) return sdt;
         }
     }
 

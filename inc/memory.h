@@ -21,27 +21,45 @@
 
 #include <common.h>
 
-static void *memory_copy(void *dest, const void *src, size_t n)
+static void *memory_copy(void *dst, const void *src, size_t n)
 {
-    for (size_t i = 0; i < n; i++) {
-        ((char *)dest)[i] = ((char *)src)[i];
-    }
-    return dest;
+    for (size_t i = 0; i < n; i++)
+        ((byte *)dst)[i] = ((byte *)src)[i];
+
+    return dst;
 }
 
-static void *memory_set(void *dest, int c, size_t n)
+static void *memory_set(void *dst, int c, size_t n)
 {
-    for (size_t i = 0; i < n; i++) {
-        ((char *)dest)[i] = c;
-    }
-    return dest;
+    for (size_t i = 0; i < n; i++)
+        ((byte *)dst)[i] = c;
+
+    return dst;
 }
 
-static int memory_compare(const void *s1, const void *s2, size_t n)
+static int memory_compare(const void *b1, const void *b2, size_t n)
 {
     for (size_t i = 0; i < n; i++) {
-        if (((char *)s1)[i] < ((char *)s2)[i]) return -1;
-        if (((char *)s1)[i] > ((char *)s2)[i]) return 1;
+        if (((byte *)b1)[i] < ((byte *)b2)[i]) return -1;
+        if (((byte *)b1)[i] > ((byte *)b2)[i]) return 1;
     }
+
     return 0;
 }
+
+static void *memory_move(void *dst, const void *src, size_t n)
+{
+    if (src < dst) {
+        for (size_t i = n; i > 0; i--)
+            ((byte *)dst)[i - 1] = ((byte *)src)[i - 1];
+    } else {
+        for (size_t i = 0; i < n; i++)
+            ((byte *)dst)[i] = ((byte *)src)[i];
+    }
+
+    return dst;
+}
+
+void *memcpy(void *dst, const void *src, size_t n);
+void *memset(void *dst, int c, size_t n);
+int memcmp(const void *b1, const void *b2, size_t n);
