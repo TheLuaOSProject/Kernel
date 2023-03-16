@@ -18,20 +18,44 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../../common.h"
+#include "acpi.h"
 
-#define APIC_BASE_MSR 0x1B
 
-static uint64_t read_msr(uint32_t msr)
-{
-    uint32_t low, high;
-    asm("rdmsr" : "=a"(low), "=d"(high) : "c"(msr));
-    return ((uint64_t)high << 32) | low;
-}
+NONNULL_BEGIN
 
-static void write_msr(uint32_t msr, uint64_t value)
-{
-    uint32_t low = value & 0xFFFFFFFF;
-    uint32_t high = value >> 32;
-    asm("wrmsr" : : "a"(low), "d"(high), "c"(msr));
-}
+
+struct [[gnu::packed]] MADTEntryHeader {
+    byte id, length;
+};
+
+
+struct [[gnu::packed]] MADT {
+    struct SDTHeader descriptor;
+
+    dword controller_address, flags;
+
+    /// @warning THIS IS MISLEADING! ENTRIES ARE VARIABLE LENGTH! DO NOT TRY AND INDEX
+    struct MADTEntryHeader entries[];
+};
+
+//#define MADT_ENTRY_ID_LAPIC (0)
+enum MADTEntryID {
+    MADTEntryID_LAPIC = 0,
+};
+
+struct [[gnu::packed]] MADTEntry_LAPIC {
+    struct MADTEntryHeader header;
+
+    byte processor_id, apic_id;
+    dword flags;
+};
+
+struct MADTEntry_IOAPIC {
+    /*TODO*/
+};
+
+struct MADT *nullable madt_init(const struct RSDP *rsdp);
+
+
+NONNULL_END

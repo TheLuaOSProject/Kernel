@@ -19,24 +19,30 @@
 
 #pragma once
 
-#include "common.h"
+#include "../../../../common.h"
 
 NONNULL_BEGIN
 
-struct IDTEntry {
-    word offset_low, selector;
-    byte interrupt_stack_table, flags;
-    word offset_middle;
-    dword offset_high, reserved;
-};
+#define MASTER_PIC      (0x20)
+#define SLAVE_PIC       (0xA0)
+#define MASTER_PIC_CMD  (MASTER_PIC)
+#define MASTER_PIC_DATA (MASTER_PIC + 1)
+#define SLAVE_PIC_CMD   (SLAVE_PIC)
+#define SLAVE_PIC_DATA  (SLAVE_PIC + 1)
+#define PIC_END_OF_INT  (0x20)
 
+#define ICW1_ICW4       (0x01)
+#define ICW1_SINGLE     (0x02)
+#define ICW1_INTERVAL4  (0x04)
+#define ICW1_LEVEL      (0x08)
+#define ICW1_INIT       (0x10)
+#define ICW4_8086       (0x01)
+#define ICW4_AUTO       (0x02)
+#define ICW4_BUF_SLAVE  (0x08)
+#define ICW4_BUF_MASTER (0x0C)
+#define ICW4_SFNM       (0x10)
 
-struct [[gnu::packed]] IDTRegister {
-    word limit;
-    qword base;
-};
-
-void idt_init(void);
-void idt_register_int(byte int_no, [[gnu::interrupt]] void(*routine)(void*));
+void pic_init(int master_offset, int slave_offset);
+void pic_send_eoi(byte irq);
 
 NONNULL_END

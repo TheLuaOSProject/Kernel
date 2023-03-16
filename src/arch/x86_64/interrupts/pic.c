@@ -17,9 +17,9 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "luck/arch/x86_64/pic.h"
+#include "luck/arch/x86_64/interrupts/pic.h"
 
-#include "luck/io/port.h"
+#include "luck/arch/x86_64/io/port.h"
 
 void pic_init(int master_offset, int slave_offset)
 {

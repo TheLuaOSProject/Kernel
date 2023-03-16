@@ -16,29 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "luck/arch/x86_64/interrupts/pit.h"
+#include "luck/arch/x86_64/interrupts/idt.h"
 
-#include "luck/io/port.h"
+#include "luck/arch/x86_64/io/port.h"
 
-byte port_in_byte(word port)
+void pit_set_frequency(dword frequency)
 {
-    byte data;
-    asm("INB %1, %0" : "=a"(data) : "Nd"(port));
-    return data;
+    // The value we send to the PIT is the value to divide it's input clock
+    word divisor = 1193180 / frequency;
+    port_out_byte(0x43, 0x36);
+    port_out_byte(0x40, divisor & 0xFF);
+    port_out_byte(0x40, divisor >> 8);
 }
 
-void port_out_byte(word port, byte data)
+void pit_init()
 {
-    asm("OUTB %0, %1" : : "a"(data), "Nd"(port));
-}
-
-word port_in_word(word port)
-{
-    word data;
-    asm("INW %1, %0" : "=a"(data) : "Nd"(port));
-    return data;
-}
-
-void port_out_word(word port, word data)
-{
-    asm("OUTW %0, %1" : : "a"(data), "Nd"(port));
+    pit_set_frequency(1000);
 }

@@ -16,46 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
-#pragma once
 
-#include "common.h"
-#include "luck/acpi/acpi.h"
+#include "luck/arch/x86_64/io/port.h"
 
+byte port_in_byte(word port)
+{
+    byte data;
+    asm("INB %1, %0" : "=a"(data) : "Nd"(port));
+    return data;
+}
 
-NONNULL_BEGIN
+void port_out_byte(word port, byte data)
+{
+    asm("OUTB %0, %1" : : "a"(data), "Nd"(port));
+}
 
+word port_in_word(word port)
+{
+    word data;
+    asm("INW %1, %0" : "=a"(data) : "Nd"(port));
+    return data;
+}
 
-struct [[gnu::packed]] MADTEntryHeader {
-    byte id, length;
-};
-
-
-struct [[gnu::packed]] MADT {
-    struct SDTHeader descriptor;
-
-    dword controller_address, flags;
-
-    /// @warning THIS IS MISLEADING! ENTRIES ARE VARIABLE LENGTH! DO NOT TRY AND INDEX
-    struct MADTEntryHeader entries[];
-};
-
-//#define MADT_ENTRY_ID_LAPIC (0)
-enum MADTEntryID {
-    MADTEntryID_LAPIC = 0,
-};
-
-struct [[gnu::packed]] MADTEntry_LAPIC {
-    struct MADTEntryHeader header;
-
-    byte processor_id, apic_id;
-    dword flags;
-};
-
-struct MADTEntry_IOAPIC {
-    /*TODO*/
-};
-
-struct MADT *nullable madt_init(const struct RSDP *rsdp);
-
-
-NONNULL_END
+void port_out_word(word port, word data)
+{
+    asm("OUTW %0, %1" : : "a"(data), "Nd"(port));
+}

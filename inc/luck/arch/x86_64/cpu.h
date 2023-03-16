@@ -28,3 +28,6 @@ typedef struct [[gnu::packed]] {
     qword rsp;
     qword error, interrupt_number;
 } CPUContext;
+
+static inline uint64_t ticks2us(uint64_t x)
+{ return (x >> 1) + (x >> 2) + (x >> 4) + (x >> 6) + (x >> 7) + (x >> 9) + (x >> 13) + (x >> 14) + (x >> 16) + (x >> 17) + (x >> 18); }

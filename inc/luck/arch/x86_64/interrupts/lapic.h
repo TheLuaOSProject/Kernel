@@ -18,8 +18,8 @@
  */
 #pragma once
 
-#include "common.h"
-#include "luck/memory/manager.h"
+#include "../../../../common.h"
+#include "../../../memory/manager.h"
 
 NONNULL_BEGIN
 

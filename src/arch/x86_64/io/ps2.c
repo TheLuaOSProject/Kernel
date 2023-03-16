@@ -1,8 +1,8 @@
 #include "luck/io/log.h"
-#include <stdint.h>
-#include <stdbool.h>
-#include <luck/io/ps2.h>
-#include <luck/io/port.h>
+#include "stdint.h"
+#include "stdbool.h"
+#include "luck/arch/x86_64/io/ps2.h"
+#include "luck/arch/x86_64/io/port.h"
 
 static const uint8_t key_codes[] = {
     0, /*todo:escape*/ 0,
