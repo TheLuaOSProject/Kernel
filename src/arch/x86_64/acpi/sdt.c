@@ -17,7 +17,7 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "luck/acpi/acpi.h"
+#include "luck/arch/x86_64/acpi/acpi.h"
 
 #include "memory.h"
 #include "luck/io/log.h"

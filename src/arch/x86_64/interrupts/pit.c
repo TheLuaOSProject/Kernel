@@ -33,4 +33,6 @@ void pit_set_frequency(dword frequency)
 void pit_init()
 {
     pit_set_frequency(1000);
+
+
 }
