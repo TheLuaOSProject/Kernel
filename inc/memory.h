@@ -62,13 +62,10 @@ static void *memory_move(void *dst, const void *src, size_t n)
     return dst;
 }
 
-[[gnu::deprecated("Use memory_copy instead")]]
 void *memcpy(void *dst, const void *src, size_t n);
 
-[[gnu::deprecated("Use memory_set instead")]]
 void *memset(void *dst, int c, size_t n);
 
-[[gnu::deprecated("Use memory_move instead")]]
 int memcmp(const void *b1, const void *b2, size_t n);
 
 NONNULL_END

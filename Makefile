@@ -18,7 +18,7 @@
 override CC := clang
 override LD := ld.lld
 
-GDB = x86_64-elf-gdb
+GDB := x86_64-elf-gdb
 
 CFLAGS ?= -g -Og -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-microsoft
 NASMFLAGS ?= -F dwarf -g -f elf64
@@ -48,6 +48,7 @@ override CFLAGS +=       	\
 	-Wno-unused-function    \
 	-Wno-unused-parameter   \
 	-fno-omit-frame-pointer \
+	-Wno-deprecated-attributes\
 	-fblocks
 
 override LDFLAGS +=         \
@@ -80,6 +81,8 @@ uefi: extern/ovmf-x64 build/bin/luaos.iso
 bios: build/bin/luaos.iso
 	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d $(QDF)
 
+extern/luajit/libluajit_luck.o:
+	$(MAKE) -C extern/luajit
 
 extern/ovmf-x64:
 	mkdir -p $@
@@ -107,12 +110,7 @@ build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.el
 
 	extern/limine/limine-deploy $@
 
-
-
-extern/luajit/src/libluajit_luck.o: extern/luajit
-	sh makelj.sh
-
-build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/luajit/src/libluajit_luck.o
+build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/luajit/libluajit_luck.o
 	@/usr/bin/printf "\x1b[35mLinking $@\n\x1b[0m"
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
@@ -135,6 +133,7 @@ build/obj/%.asm.o: %.asm
 
 .PHONY: clean
 clean:
-	rm -rf build extern/luajit/src/*.o
+	rm -rf build
+	find . -type f -name '*.o' -delete
 
 -include $(CFILES:%.c=build/obj/%.c.d)

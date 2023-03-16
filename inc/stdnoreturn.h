@@ -1,3 +1,3 @@
 #pragma once
 
-//#define noreturn _Noreturn
+#define noreturn _Noreturn

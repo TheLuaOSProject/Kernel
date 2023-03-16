@@ -17,8 +17,8 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "luck/acpi/acpi.h"
-#include "luck/acpi/madt.h"
+#include "luck/arch/x86_64/acpi/acpi.h"
+#include "luck/arch/x86_64/acpi/madt.h"
 
 struct MADT *madt_init(const struct RSDP *rsdp)
 {

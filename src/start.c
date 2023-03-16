@@ -22,8 +22,8 @@
 #include "lj-libc/limits.h"
 #include "luck/io/log.h"
 
-#include "luck/acpi/madt.h"
-#include "luck/acpi/acpi.h"
+#include "luck/arch/x86_64/acpi/madt.h"
+#include "luck/arch/x86_64/acpi/acpi.h"
 #include "luck/io/console.h"
 #include "luck/arch/x86_64/gdt.h"
 #include "luck/arch/x86_64/interrupts/idt.h"
