@@ -18,10 +18,12 @@
  */
 #pragma once
 
-#include "../../../../common.h"
-#include "../../../memory/manager.h"
+#include "common.h"
+#include "luck/memory/manager.h"
 
 NONNULL_BEGIN
+
+#define PIT_DIVIDEND ((qword)(0x1234DE))
 
 closed_enum LAPICRegister: dword {
     LAPICRegister_IN_SERVICE        = 0x10,
@@ -42,8 +44,17 @@ extern volatile dword *lapic_base;
 #   define lapic_base ((const dword *const)lapic_base)
 #endif
 
+static inline qword read_tsc(void)
+{
+    qword tsc;
+    asm("RDTSC" : "=A"(tsc));
+    return tsc;
+}
+
 void lapic_init(void);
 dword lapic_read(enum LAPICRegister reg);
 void lapic_write(enum LAPICRegister reg, dword value);
+
+void pit_set_frequency(dword frequency);
 
 NONNULL_END

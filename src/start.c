@@ -160,8 +160,7 @@ static void ps2_gets(char* buf) {
         switch (entry->id) {
             case MADTEntryID_LAPIC: {
                 struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *) entry;
-                success("  Found LAPIC at core {} (address: {})", core_c++, //lol
-                        (void *) lapic);
+                success("  Found LAPIC at core {} (address: {})", core_c++, lapic);
                 debug("    Processor ID: {}", lapic->processor_id);
                 debug("    APIC ID: {}", lapic->apic_id);
                 debug("    Flags: {}", lapic->flags);
@@ -173,10 +172,8 @@ static void ps2_gets(char* buf) {
 
     info("Initalising LAPIC");
     lapic_init();
-    info("LAPIC base: {}", (void *)lapic_base);
+    info("LAPIC base: {}", lapic_base);
     success("Done");
-
-    while (true);
 
     int status;
     lua_State *L;

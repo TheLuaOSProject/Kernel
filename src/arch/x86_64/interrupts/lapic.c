@@ -20,17 +20,18 @@
 #define LAPIC_IMPL
 #include "luck/arch/x86_64/interrupts/lapic.h"
 
-#include "stdint.h"
+#include <stdint.h>
 
 #include "luck/arch/x86_64/cpu.h"
 #include "luck/arch/x86_64/interrupts/idt.h"
 #include "luck/arch/x86_64/msr.h"
+#include "luck/arch/x86_64/io/port.h"
 #include "luck/io/log.h"
 
 #define VECTOR_ID (0xEF)
 #define TIMER_DIV (0x10)
 
-static volatile dword *lapic_base = 0;
+static volatile dword counter, *lapic_base;
 extern void int_lapic_timer(void *);
 
 dword lapic_read(enum LAPICRegister reg)
@@ -39,7 +40,28 @@ dword lapic_read(enum LAPICRegister reg)
 void lapic_write(enum LAPICRegister reg, dword value)
 { lapic_base[reg / 4] = value; }
 
-static volatile qword counter;
+static word pit_count(void)
+{
+    port_out_byte(0x43, 0x00);
+    return port_in_byte(0x40) | (port_in_byte(0x40) << 8);
+}
+
+static void set_pit(word count)
+{
+    port_out_byte(0x43, 0x30);
+    port_out_byte(0x40, count & 0xFF);
+    port_out_byte(0x40, count >> 8);
+}
+
+void pit_set_frequency(dword frequency)
+{
+    qword div = PIT_DIVIDEND / frequency;
+    if (PIT_DIVIDEND % frequency > frequency / 2)
+        div++;
+
+    set_pit(div);
+}
+
 [[gnu::used]]
 void lapic_timer_handler(CPUContext *ctx)
 {
@@ -48,8 +70,12 @@ void lapic_timer_handler(CPUContext *ctx)
 
     if (counter % 100 == 0) {
         counter = 0;
-        debug("LAPIC Timer!");
     }
+}
+
+[[gnu::used]]
+void pit_timer_handler(CPUContext *ctx)
+{
 }
 
 void lapic_init(void)
@@ -72,9 +98,14 @@ void lapic_init(void)
     //setup for div config
     dword divcfg = lapic_read(LAPICRegister_DIVIDE_CONFIG);
     divcfg &= 0b1011; //clear these bits because intel
-    divcfg |= ((TIMER_DIV - 1) & 0b1011) << 1;
+    divcfg |= ((TIMER_DIV - 1) & 0b1011) << 1; 
     lapic_write(LAPICRegister_DIVIDE_CONFIG, divcfg);
 
     //Set the init count to smth big
     lapic_write(LAPICRegister_INITAL_COUNT, 1000000);
+
+    // Initalise PIT and sync with it
+    pit_set_frequency(1000);
+
+    
 }

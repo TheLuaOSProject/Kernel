@@ -17,7 +17,6 @@
 ; along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
 ;
 
-
 [BITS 64]
 [SECTION .text]
 %macro INTERRUPT 1

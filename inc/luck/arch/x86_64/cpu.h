@@ -21,6 +21,8 @@
 
 #include "common.h"
 
+#include <string.h>
+
 typedef struct [[gnu::packed]] {
     qword rax, rbx, rcx, rdx, rsi, rdi, rbp, r8, r9, r10, r11, r12, r13, r14, r15;
     qword rflags, rip, cs, ss, ds, es, fs, gs;
@@ -28,6 +30,28 @@ typedef struct [[gnu::packed]] {
     qword rsp;
     qword error, interrupt_number;
 } CPUContext;
+
+closed_enum CPUVendor {
+    CPUVendor_INTEL,
+    CPUVendor_AMD,
+    CPUVendor_QEMU,
+    CPUVendor_KVM,
+    CPUVendor_VMWARE,
+    CPUVendor_VIRTUALBOX,
+    CPUVendor_UNKNOWN,
+};
+
+static const char *CPU_VENDORS[] = {
+    [CPUVendor_INTEL]       = "GenuineIntel",
+    [CPUVendor_AMD]         = "AuthenticAMD",
+    [CPUVendor_QEMU]        = "QEMU",
+    [CPUVendor_KVM]         = "KVM",
+    [CPUVendor_VMWARE]      = "VMWare",
+    [CPUVendor_VIRTUALBOX]  = "VirtualBox",
+    [CPUVendor_UNKNOWN]     = "Unknown",
+};
+
+enum CPUVendor cpu_get_vendor(void);
 
 static inline uint64_t ticks2us(uint64_t x)
 { return (x >> 1) + (x >> 2) + (x >> 4) + (x >> 6) + (x >> 7) + (x >> 9) + (x >> 13) + (x >> 14) + (x >> 16) + (x >> 17) + (x >> 18); }

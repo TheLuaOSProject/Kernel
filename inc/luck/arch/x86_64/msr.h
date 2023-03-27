@@ -22,16 +22,16 @@
 
 #define APIC_BASE_MSR 0x1B
 
-static uint64_t read_msr(uint32_t msr)
+static inline qword read_msr(register dword msr)
 {
-    uint32_t low, high;
-    asm("rdmsr" : "=a"(low), "=d"(high) : "c"(msr));
-    return ((uint64_t)high << 32) | low;
+    register dword low, high;
+    asm("RDMSR" : "=a"(low), "=d"(high) : "c"(msr));
+    return ((qword)high << 32) | low;
 }
 
-static void write_msr(uint32_t msr, uint64_t value)
+static inline void write_msr(register dword msr, qword value)
 {
-    uint32_t low = value & 0xFFFFFFFF;
-    uint32_t high = value >> 32;
-    asm("wrmsr" : : "a"(low), "d"(high), "c"(msr));
+    register dword low = value & 0xFFFFFFFF;
+    register dword high = value >> 32;
+    asm("WRMSR" : : "a"(low), "d"(high), "c"(msr));
 }

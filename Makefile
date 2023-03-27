@@ -15,43 +15,47 @@
 # You should have received a copy of the GNU General Public License
 # along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
 
-override CC := clang
-override LD := ld.lld
+CC = clang
+LD = ld.lld
 
 GDB := x86_64-elf-gdb
 
-CFLAGS ?= -g -Og -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-microsoft
-NASMFLAGS ?= -F dwarf -g -f elf64
+CFLAGS = -g -Og -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-microsoft
+NASMFLAGS = -F dwarf -g -f elf64
 
-override CFLAGS +=       	\
-    -std=gnu2x           	\
-    -ffreestanding       	\
-    -fno-stack-protector 	\
-    -fno-stack-check     	\
-    -fno-lto             	\
-    -fno-pie             	\
-    -fno-pic             	\
-    -m64                 	\
-    -march=x86-64        	\
-    -mabi=sysv           	\
-    -mno-80387           	\
-    -mno-mmx             	\
-    -mno-sse             	\
-    -mno-sse2            	\
-    -mno-red-zone        	\
-    -mcmodel=kernel      	\
-    -MMD                 	\
-	-target x86_64-elf	 	\
-	-isystem extern/limine	\
-	-isystem extern/terminal\
-	-Iinc               	\
-	-Wno-unused-function    \
-	-Wno-unused-parameter   \
-	-fno-omit-frame-pointer \
-	-Wno-deprecated-attributes\
+CFLAGS +=       				\
+    -std=gnu2x           		\
+    -ffreestanding       		\
+    -fno-stack-protector 		\
+    -fno-stack-check     		\
+    -fno-lto             		\
+    -fno-pie             		\
+    -fno-pic             		\
+    -m64                 		\
+    -march=x86-64        		\
+    -mabi=sysv           		\
+    -mno-80387           		\
+    -mno-mmx             		\
+    -mno-sse             		\
+    -mno-sse2            		\
+    -mno-red-zone        		\
+    -mcmodel=kernel      		\
+    -MMD                 		\
+	-target x86_64-elf	 		\
+	-isystem extern/limine		\
+	-isystem extern/terminal	\
+	-Iinc               		\
+	-Wanon-enum-enum-conversion	\
+	-Wassign-enum				\
+	-Wenum-conversion			\
+	-Wenum-enum-conversion		\
+	-Wno-unused-function    	\
+	-Wno-unused-parameter   	\
+	-fno-omit-frame-pointer 	\
+	-Wno-deprecated-attributes	\
 	-fblocks
 
-override LDFLAGS +=         \
+LDFLAGS +=         			\
     -nostdlib               \
     -static                 \
     -m elf_x86_64           \
@@ -59,13 +63,13 @@ override LDFLAGS +=         \
     -T res/linker.ld		\
 	-no-pie
 
-override ASFLAGS += -f elf64
+ASFLAGS = -f elf64
 
-override CFILES := $(shell find ./src -type f -name '*.c') extern/terminal/term.c extern/terminal/backends/framebuffer.c
-override ASFILES := $(shell find ./src -type f -name '*.asm')
+CFILES := $(shell find ./src -type f -name '*.c') extern/terminal/term.c extern/terminal/backends/framebuffer.c
+ASFILES := $(shell find ./src -type f -name '*.asm')
 
-override COBJS := $(addprefix build/obj/,$(CFILES:.c=.c.o))
-override ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.asm.o))
+COBJS := $(addprefix build/obj/,$(CFILES:.c=.c.o))
+ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.asm.o))
 
 override QEMUFLAGS := -smp 2 -m 2G -monitor stdio -serial file:luaos.log
 QDF ?= -s
@@ -130,10 +134,10 @@ build/obj/%.asm.o: %.asm
 	@mkdir -p $(dir $@)
 	nasm $(NASMFLAGS) $^ -o $@
 
-
 .PHONY: clean
 clean:
 	rm -rf build
 	find . -type f -name '*.o' -delete
+	$(MAKE) -C extern/limine clean
 
 -include $(CFILES:%.c=build/obj/%.c.d)

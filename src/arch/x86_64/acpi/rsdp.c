@@ -33,16 +33,13 @@ struct RSDP *rsdp_init(void)
 {
     struct limine_rsdp_response *resp = request.response;
 
-    //Possible UB?
     if (resp == nullptr || resp->address == nullptr)
         return nullptr;
 
     struct RSDP *rsdp = resp->address;
 
-    if (rsdp->revision < 2) {
+    if (rsdp->revision < 2)
         info("  XSDT not supported on this machine; using RSDT");
-        return rsdp;
-    }
 
     return rsdp;
 }

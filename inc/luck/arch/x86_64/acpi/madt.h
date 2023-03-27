@@ -52,7 +52,11 @@ struct [[gnu::packed]] MADTEntry_LAPIC {
 };
 
 struct MADTEntry_IOAPIC {
-    /*TODO*/
+    struct MADTEntryHeader header;
+
+    byte id;
+    byte reserved;
+    dword address, global_system_interrupt_base;
 };
 
 struct MADT *nullable madt_init(const struct RSDP *rsdp);

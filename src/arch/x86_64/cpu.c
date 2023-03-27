@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2023 Amrit Bhogal
+ * Copyright (C) 2023 Amrit Bhogal, pitust
  *
  * This file is part of LuaOS.
  *
@@ -16,11 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
-#pragma once
 
-#include "../../../../common.h"
+#include "luck/arch/x86_64/cpu.h"
 
-void pit_init();
-void pit_set_frequency(dword frequency);
-void pit_wait(dword ticks);
-word pit_get_counter();
+enum CPUVendor cpu_get_vendor()
+{
+    char vendor[13];
+    asm("mov $0, %%eax" : : : "eax");
+    asm("cpuid" : "=b"(vendor[0]), "=d"(vendor[4]), "=c"(vendor[8]) : : "eax");
+    vendor[12] = '\0';
+    for (int i = 0; i < CPUVendor_UNKNOWN; i++) {
+        if (string_compare(vendor, CPU_VENDORS[i]) == 0)
+            return (enum CPUVendor) i;
+    }
+    return CPUVendor_UNKNOWN;
+}

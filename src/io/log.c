@@ -433,3 +433,15 @@ void _log_voidptr(const char **fmtref, void *ptr)
 
     log_emit(fs, str);
 }
+
+void _log_cpuinfo(const char **fmtref, CPUContext cpu)
+{
+//    "\nRAX: {} | RBX: {} | RCX: {} | RDX: {} | RSI: {} | RDI: {} |\n"
+//         "R8:  {} | R9: {} | R10: {} | R11: {} | R12: {} | R13: {} | R14: {} | R15: {} |\n"
+//         "RBP: {} | RSP: {} | RIP: {} | RFLAGS: {}\n",
+//         (void *)ctx.rax, (void *)ctx.rbx, (void *)ctx.rcx, (void *)ctx.rdx, (void *)ctx.rsi, (void *)ctx.rdi,
+//         (void *)ctx.r8, (void *)ctx.r9, (void *)ctx.r10, (void *)ctx.r11, (void *)ctx.r12, (void *)ctx.r13, (void *)ctx.r14, (void *)ctx.r15,
+//         (void *)ctx.rbp, (void *)ctx.rsp, (void *)ctx.rip, (void *)ctx.rflags
+
+
+}

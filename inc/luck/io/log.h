@@ -23,6 +23,8 @@
 #include "macro_util.h"
 #include "string.h"
 
+#include "luck/arch/x86_64/cpu.h"
+
 NONNULL_BEGIN
 
 void _log_level_success(void);
@@ -56,7 +58,8 @@ noreturn void _log_level_panic_end(const char *nonnull *nonnull fmtref);
     X(unsigned32, unsigned int) \
     X(unsignedptr, unsigned long) \
     X(unsigned64, unsigned long long) \
-    X(voidptr, void *) \
+    X(cpucontext, CPUContext)\
+    X(voidptr, void *)      \
 
 #define _log__defines(name, type) void _log_##name(const char *nonnull *nonnull fmtref, type value);
 _log__formatters(_log__defines)
@@ -65,7 +68,11 @@ _log__formatters(_log__defines)
 #define _log__eachtype_cb(name, type) , type: _log_##name
 
 #define _log__one(_, argument) \
-    { __auto_type _argument = (argument); _Generic(_argument _log__formatters(_log__eachtype_cb), char *: _log_string)(&_fmt, _argument); }
+    {\
+        __auto_type _argument = (argument);\
+        _Generic(_argument _log__formatters(_log__eachtype_cb), char *: _log_string, \
+                 default: _log_voidptr)(&_fmt, _argument);\
+    }
 
 #define write_log(level, fmt, ...) ({ \
         _log_level_##level(); \

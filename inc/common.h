@@ -49,14 +49,14 @@ typedef uint32_t dword;
 typedef uint64_t qword;
 
 typedef int8_t sbyte;
+/**
+ * @attention This is literally the only reason why I forced usage of *word, because then we can have "sword" and thats really cool
+ */
 typedef int16_t sword;
 typedef int32_t sdword;
 typedef int64_t sqword;
 
-typedef uintptr_t   ptr;
-typedef intptr_t    sptr;
-
-inline noreturn void halt()
+static inline noreturn void halt()
 {
     while(true) asm (
         "CLI\n"
