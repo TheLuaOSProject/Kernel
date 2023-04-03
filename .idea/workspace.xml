@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="Kernel" targetName="bios" />
+      <config projectName="Kernel" targetName="uefi" />
+      <config projectName="Kernel" targetName="all" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a281778f-9bf2-4f25-b6b2-44fd55c5d450" name="Changes" comment="feat(cleanup): Cleanup and inital cpuid support">
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extern/limine" beforeDir="false" afterPath="$PROJECT_DIR$/extern/limine" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extern/limine/limine-deploy.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/extern/limine/limine-enroll-config.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/cpu.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/cpu.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/msr.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/msr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/luck/io/log.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/io/log.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/stddef.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/stddef.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/string.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/string.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/cpu.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/cpu.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/interrupts/lapic.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/interrupts/lapic.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/io/console.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/console.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/io/log.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/log.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/string.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/string.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/start.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/start.c" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="EmbeddedSvdWindowState">
+    <option name="columnWidths">
+      <list>
+        <option value="212" />
+        <option value="92" />
+        <option value="1326" />
+      </list>
+    </option>
+    <option name="columnOrder">
+      <list>
+        <option value="Name" />
+        <option value="Value" />
+        <option value="Description" />
+      </list>
+    </option>
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="pqnr0tjv" />
+  </component>
+  <component name="MakefileLocalSettings">
+    <option name="availableProjects">
+      <map>
+        <entry>
+          <key>
+            <ExternalProjectPojo>
+              <option name="name" value="Kernel" />
+              <option name="path" value="$PROJECT_DIR$" />
+            </ExternalProjectPojo>
+          </key>
+          <value>
+            <list>
+              <ExternalProjectPojo>
+                <option name="name" value="Kernel" />
+                <option name="path" value="$PROJECT_DIR$" />
+              </ExternalProjectPojo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="projectSyncType">
+      <map>
+        <entry key="$PROJECT_DIR$" value="RE_IMPORT" />
+      </map>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="NamedScopeManager">
+    <scope name="Kernel" pattern="!ext:*&amp;&amp;!ext:*/&amp;&amp;!file[Kernel]:*/||file[Kernel]:src/*" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2022" />
+    <option name="minorVersion" value="3.3" />
+  </component>
+  <component name="ProjectId" id="2NIJHNzUyoigleXiRmKdXEsYIuH" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.build.tools.auto.reload": "ALL",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/lib" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Embedded GDB Server.Debug">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="bios" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="bios" CONFIG_NAME="bios" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="uefi" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="uefi" CONFIG_NAME="uefi" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Debug" type="com.jetbrains.cidr.embedded.customgdbserver.type" factoryName="com.jetbrains.cidr.embedded.customgdbserver.factory" PROGRAM_PARAMS="-smp 2 -m 2G -serial stdio -machine q35 -gdb -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d tcp::7777 -S" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="$PROJECT_DIR$/build/bin/luck.elf">
+      <custom-gdb-server version="1" gdb-connect="tcp::7777" executable="/usr/local/bin/qemu-system-x86_64" warmup-ms="0" download-type="UPDATED_ONLY" reset-cmd="monitor system_reset" reset-type="AFTER_DOWNLOAD">
+        <debugger kind="GDB" isBundled="true" />
+      </custom-gdb-server>
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Embedded GDB Server.Debug" />
+      <item itemvalue="Makefile Application.all" />
+      <item itemvalue="Makefile Application.bios" />
+      <item itemvalue="Makefile Application.uefi" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a281778f-9bf2-4f25-b6b2-44fd55c5d450" name="Changes" comment="" />
+      <created>1679345573619</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1679345573619</updated>
+      <workItem from="1679345575153" duration="86000" />
+      <workItem from="1679345673474" duration="456000" />
+      <workItem from="1679411973634" duration="6734000" />
+      <workItem from="1679422268712" duration="2872000" />
+      <workItem from="1679938179232" duration="5800000" />
+      <workItem from="1679964645540" duration="508000" />
+      <workItem from="1679965188684" duration="147000" />
+      <workItem from="1680555599642" duration="143000" />
+      <workItem from="1680555770922" duration="625000" />
+    </task>
+    <task id="LOCAL-00001" summary="feat(cleanup): Cleanup and inital cpuid support">
+      <created>1679941478918</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1679941478918</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat(cleanup): Cleanup and inital cpuid support" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(cleanup): Cleanup and inital cpuid support" />
+  </component>
+</project>
