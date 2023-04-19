@@ -23,36 +23,41 @@ GDB := x86_64-elf-gdb
 CFLAGS = -g -Og -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-microsoft
 NASMFLAGS = -F dwarf -g -f elf64
 
-CFLAGS +=       				\
-    -std=gnu2x           		\
-    -ffreestanding       		\
-    -fno-stack-protector 		\
-    -fno-stack-check     		\
-    -fno-lto             		\
-    -fno-pie             		\
-    -fno-pic             		\
-    -m64                 		\
-    -march=x86-64        		\
-    -mabi=sysv           		\
-    -mno-80387           		\
-    -mno-mmx             		\
-    -mno-sse             		\
-    -mno-sse2            		\
-    -mno-red-zone        		\
-    -mcmodel=kernel      		\
-    -MMD                 		\
-	-target x86_64-elf	 		\
-	-isystem extern/limine		\
-	-isystem extern/terminal	\
-	-Iinc               		\
-	-Wanon-enum-enum-conversion	\
-	-Wassign-enum				\
-	-Wenum-conversion			\
-	-Wenum-enum-conversion		\
-	-Wno-unused-function    	\
-	-Wno-unused-parameter   	\
-	-fno-omit-frame-pointer 	\
-	-Wno-deprecated-attributes	\
+CFLAGS +=       						\
+    -std=gnu2x           				\
+    -ffreestanding       				\
+    -fno-stack-protector 				\
+    -fno-stack-check     				\
+    -fno-lto             				\
+    -fno-pie             				\
+    -fno-pic             				\
+    -m64                 				\
+    -march=x86-64        				\
+    -mabi=sysv           				\
+    -mno-80387           				\
+    -mno-mmx             				\
+    -mno-sse             				\
+    -mno-sse2            				\
+    -mno-red-zone        				\
+    -mcmodel=kernel      				\
+    -MMD                 				\
+	-target x86_64-elf	 				\
+	-isystem extern/limine				\
+	-isystem extern/terminal			\
+	-Iinc               				\
+	-Wno-unused-command-line-argument	\
+	-Wanon-enum-enum-conversion			\
+	-Wassign-enum						\
+	-Wenum-conversion					\
+	-Wenum-enum-conversion				\
+	-Wno-unused-function    			\
+	-Wno-unused-parameter   			\
+	-Wnull-dereference      			\
+	-Wnull-conversion       			\
+	-Wnullability-completeness			\
+	-Wnullable-to-nonnull-conversion	\
+	-fno-omit-frame-pointer 			\
+	-Wno-deprecated-attributes			\
 	-fblocks
 
 LDFLAGS +=         			\
@@ -86,7 +91,7 @@ bios: build/bin/luaos.iso
 	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d $(QDF)
 
 extern/luajit/libluajit_luck.o:
-	$(MAKE) -C extern/luajit
+	$(MAKE) -C extern/luajit CC=$(CC -Wno-implicit-function-declaration)
 
 extern/ovmf-x64:
 	mkdir -p $@

@@ -19,19 +19,20 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a281778f-9bf2-4f25-b6b2-44fd55c5d450" name="Changes" comment="feat(cleanup): Cleanup and inital cpuid support">
+    <list default="true" id="a281778f-9bf2-4f25-b6b2-44fd55c5d450" name="Changes" comment="feat(IDE): Add .idea files">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine" beforeDir="false" afterPath="$PROJECT_DIR$/extern/limine" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/limine/limine-deploy.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine/limine-enroll-config.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/common.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/common.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/cpu.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/cpu.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/msr.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/msr.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inc/luck/io/log.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/io/log.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/memory.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/memory.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inc/stddef.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/stddef.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inc/string.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/string.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/arch/x86_64/cpu.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/cpu.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/arch/x86_64/interrupts/lapic.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/interrupts/lapic.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/console.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/console.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/io/log.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/log.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lib/string.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/string.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/start.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/start.c" afterDir="false" />
@@ -105,7 +106,7 @@
     <scope name="Kernel" pattern="!ext:*&amp;&amp;!ext:*/&amp;&amp;!file[Kernel]:*/||file[Kernel]:src/*" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
@@ -117,37 +118,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.build.tools.auto.reload": "ALL",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.build.tools.auto.reload&quot;: &quot;ALL&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/lib" />
     </key>
   </component>
   <component name="RunManager" selected="Embedded GDB Server.Debug">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
@@ -194,7 +190,9 @@
       <workItem from="1679964645540" duration="508000" />
       <workItem from="1679965188684" duration="147000" />
       <workItem from="1680555599642" duration="143000" />
-      <workItem from="1680555770922" duration="625000" />
+      <workItem from="1680555770922" duration="2817000" />
+      <workItem from="1680672027301" duration="882000" />
+      <workItem from="1680707724263" duration="38000" />
     </task>
     <task id="LOCAL-00001" summary="feat(cleanup): Cleanup and inital cpuid support">
       <created>1679941478918</created>
@@ -203,14 +201,39 @@
       <option name="project" value="LOCAL" />
       <updated>1679941478918</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat(IDE): Add .idea files">
+      <created>1680557946799</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1680557946799</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VCPKGProject">
+    <isAutomaticEditVcpkgJson value="false" />
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticFoundErrors value="true" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat(cleanup): Cleanup and inital cpuid support" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(cleanup): Cleanup and inital cpuid support" />
+    <MESSAGE value="feat(IDE): Add .idea files" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(IDE): Add .idea files" />
   </component>
 </project>

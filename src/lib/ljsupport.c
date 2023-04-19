@@ -36,7 +36,7 @@ void fputc() {panic("todo:fputc");}
 void fread() {panic("todo:fread");}
 void fflush() {panic("todo:fflush");}
 void fgets() {panic("todo:fgets");}
-void strncpy() {panic("todo:strncpy");}
+// void strncpy() {panic("todo:strncpy");}
 void memchr() {panic("todo:memchr");}
 void strstr() {panic("todo:strstr");}
 void strerror() {panic("todo:strerror");}

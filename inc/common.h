@@ -19,10 +19,10 @@
 
 #pragma once
 
-#include <stddef.h>
-#include <stdint.h>
 #include <stdbool.h>
 #include <stdatomic.h>
+#include <stdint.h>
+#include <stddef.h>
 #include <stdnoreturn.h>
 
 #if __STDC_VERSION__ > 201710L
@@ -39,9 +39,6 @@
 
 #define NONNULL_BEGIN    pragma(clang assume_nonnull begin)
 #define NONNULL_END      pragma(clang assume_nonnull end)
-
-#define nullable _Nullable
-#define nonnull _Nonnull
 
 typedef uint8_t byte;
 typedef uint16_t word;

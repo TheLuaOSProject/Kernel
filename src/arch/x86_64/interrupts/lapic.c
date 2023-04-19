@@ -31,7 +31,8 @@
 #define VECTOR_ID (0xEF)
 #define TIMER_DIV (0x10)
 
-static volatile dword counter, *lapic_base;
+static volatile dword counter;
+volatile dword *lapic_base;
 extern void int_lapic_timer(void *);
 
 dword lapic_read(enum LAPICRegister reg)
@@ -80,9 +81,9 @@ void pit_timer_handler(CPUContext *ctx)
 
 void lapic_init(void)
 {
-    qword apic_base_msr = read_msr(APIC_BASE_MSR);
+    qword apic_base_msr = read_msr(ModelSpecificRegister_APIC_BASE);
     apic_base_msr |= (1 << 11);
-    write_msr(APIC_BASE_MSR, apic_base_msr);
+    write_msr(ModelSpecificRegister_APIC_BASE, apic_base_msr);
 
     lapic_base = (volatile dword *)((apic_base_msr & 0xFFFFF000) + 0xFFFF800000000000);
 
@@ -98,7 +99,7 @@ void lapic_init(void)
     //setup for div config
     dword divcfg = lapic_read(LAPICRegister_DIVIDE_CONFIG);
     divcfg &= 0b1011; //clear these bits because intel
-    divcfg |= ((TIMER_DIV - 1) & 0b1011) << 1; 
+    divcfg |= ((TIMER_DIV - 1) & 0b1011) << 1;
     lapic_write(LAPICRegister_DIVIDE_CONFIG, divcfg);
 
     //Set the init count to smth big
@@ -107,5 +108,5 @@ void lapic_init(void)
     // Initalise PIT and sync with it
     pit_set_frequency(1000);
 
-    
+
 }

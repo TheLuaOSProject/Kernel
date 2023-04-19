@@ -42,8 +42,8 @@ closed_enum CPUVendor {
 };
 
 static const char *CPU_VENDORS[] = {
-    [CPUVendor_INTEL]       = "GenuineIntel",
-    [CPUVendor_AMD]         = "AuthenticAMD",
+    [CPUVendor_INTEL]       = "Intel",
+    [CPUVendor_AMD]         = "AMD",
     [CPUVendor_QEMU]        = "QEMU",
     [CPUVendor_KVM]         = "KVM",
     [CPUVendor_VMWARE]      = "VMWare",
@@ -53,5 +53,5 @@ static const char *CPU_VENDORS[] = {
 
 enum CPUVendor cpu_get_vendor(void);
 
-static inline uint64_t ticks2us(uint64_t x)
+static inline qword ticks_to_nanoseconds(qword x)
 { return (x >> 1) + (x >> 2) + (x >> 4) + (x >> 6) + (x >> 7) + (x >> 9) + (x >> 13) + (x >> 14) + (x >> 16) + (x >> 17) + (x >> 18); }

@@ -54,10 +54,11 @@ void luaJIT_version_2_1_0_beta3(void);
 
 void LJDBG(const char* msg) {success("lj: {}", msg);}
 
-#define _lua_openmodule(mname, module) \
+#define _lua_openmodule(mname, module) ({\
     lua_pushcfunction(L, luaopen_##module); \
     lua_pushstring(L, mname); \
-    lua_call(L, 1, 0);
+    lua_call(L, 1, 0);                   \
+})
 #define lua_openmodule(module) _lua_openmodule(#module, module)
 
 LUALIB_API int luaopen_base(lua_State *L);
@@ -73,8 +74,9 @@ void stdout_write(const char *str, int siz) {
         siz--;
     }
 }
+
 static void ps2_gets(char* buf) {
-    char* start = buf;
+    char *start = buf;
     while (true) {
         char c = ps2_getc();
         if (c == '\n') {
@@ -109,9 +111,9 @@ static void ps2_gets(char* buf) {
 
     qword cr3;
     asm("MOVQ %%CR3, %0" : "=r"(cr3));
-    for (qword i = 0;i < 256;i++) {
+    for (qword i = 0; i < 256; i++)
         *virt(cr3 + i * 8, qword) = 0;
-    }
+
     asm("MOVQ %0, %%CR3" :: "r"(cr3) : "memory");
 
 
@@ -206,11 +208,10 @@ static void ps2_gets(char* buf) {
         ps2_gets(buf);
 
         int v = luaL_loadbuffer(L, buf, string_length(buf), "stdin");
-        if (v != 0) {
+        if (v != 0)
             error("fail {}", lua_tostring(L, -1));
-        } else {
+        else
             lua_call(L, 0, 0);
-        }
     }
 
     success("Initalisation complete");

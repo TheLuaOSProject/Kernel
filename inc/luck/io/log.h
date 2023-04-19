@@ -59,7 +59,7 @@ noreturn void _log_level_panic_end(const char *nonnull *nonnull fmtref);
     X(unsignedptr, unsigned long) \
     X(unsigned64, unsigned long long) \
     X(cpucontext, CPUContext)\
-    X(voidptr, void *)      \
+    X(voidptr, const void *)
 
 #define _log__defines(name, type) void _log_##name(const char *nonnull *nonnull fmtref, type value);
 _log__formatters(_log__defines)

@@ -21,13 +21,13 @@
 
 enum CPUVendor cpu_get_vendor()
 {
-    char vendor[13];
+    char vendor[13] = {0};
     asm("mov $0, %%eax" : : : "eax");
     asm("cpuid" : "=b"(vendor[0]), "=d"(vendor[4]), "=c"(vendor[8]) : : "eax");
     vendor[12] = '\0';
-    for (int i = 0; i < CPUVendor_UNKNOWN; i++) {
+    for (enum CPUVendor i = 0; i < CPUVendor_UNKNOWN; i++) {
         if (string_compare(vendor, CPU_VENDORS[i]) == 0)
-            return (enum CPUVendor) i;
+            return i;
     }
     return CPUVendor_UNKNOWN;
 }

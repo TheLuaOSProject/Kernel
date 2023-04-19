@@ -24,6 +24,7 @@
 
 NONNULL_BEGIN
 
+
 static size_t string_length(const char *str)
 {
     size_t len = 0;
@@ -33,9 +34,8 @@ static size_t string_length(const char *str)
 
 static int string_compare(const char *str1, const char *str2)
 {
-    size_t len1 = string_length(str1);
-    size_t len2 = string_length(str2);
-    size_t len = len1 < len2 ? len1 : len2;
+    size_t len1 = string_length(str1), len2 = string_length(str2),
+           len = len1 < len2 ? len1 : len2;
     for (size_t i = 0; i < len; i++) {
         if (str1[i] < str2[i]) return -1;
         if (str1[i] > str2[i]) return 1;
@@ -47,9 +47,9 @@ static int string_compare(const char *str1, const char *str2)
 
 static void string_copy_n(char *dest, const char *src, size_t n)
 {
-    for (size_t i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++)
         dest[i] = src[i];
-    }
+
     dest[n] = '\0';
 }
 
@@ -71,5 +71,11 @@ static char *string_concatenate(char *dest, const char *src)
     size_t len = string_length(src);
     return string_concatenate_n(dest, src, len);
 }
+
+//libc compat
+size_t strlen(const char *str);
+int strcmp(const char *str1, const char *str2);
+char *strcpy(char *dest, const char *src),
+     *strncpy(char *dest, const char *src, size_t n);
 
 NONNULL_END
