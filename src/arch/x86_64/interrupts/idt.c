@@ -36,36 +36,25 @@ static struct IDTRegister idtr = {
     .base = (qword)idt,
 };
 
+qword* get_idt_targets(void);
+
 void idt_init()
 {
-    idt_register_int(0x0, int_div_by_zero);
-    idt_register_int(0x3, int_breakpoint);
-    idt_register_int(0x8, int_double_fault);
-    idt_register_int(0xD, int_general_protection);
-    idt_register_int(0x1, int_debug);
-    idt_register_int(0x6, int_invalid_opcode);
-
-    asm("LIDT %0" :: "m"(idtr));
-}
-
-void idt_register_int(byte int_no, void(*routine)(void *))
-{
-    if (int_no > 255) {
-        error("Interrupt number {} is too large", int_no);
-        return;
+    qword* handlers = get_idt_targets();
+    for (int i = 0;i < 256;i++) {
+        qword handler = handlers[i];
+        idt[i] = (struct IDTEntry) {
+            .offset_low = (dword)handler,
+            .selector = 0x28,
+            .interrupt_stack_table = 0,
+            .flags = 0x8E,
+            .offset_middle = handler >> 16,
+            .offset_high = handler >> 32,
+            .reserved = 0
+        };
     }
 
-    qword handler = (qword)routine;
-    idt[int_no] = (struct IDTEntry) {
-        .offset_low = (dword)handler,
-        .selector = 0x28,
-        .interrupt_stack_table = 0,
-        .flags = 0x8E,
-        .offset_middle = handler >> 16,
-        .offset_high = handler >> 32,
-        .reserved = 0
-    };
-    debug("  Registered interrupt {}", int_no);
+    asm("LIDT %0" :: "m"(idtr));
 }
 
 [[gnu::always_inline]]
@@ -74,44 +63,18 @@ static inline void print_cpu_info(CPUContext ctx)
     info("CPU Info");
     info("RAX: {} | RBX: {} | RCX: {} | RDX: {}", (void *)ctx.rax, (void *)ctx.rbx, (void *)ctx.rcx, (void *)ctx.rdx);
     info("RSI: {} | RDI: {} | RSP: {} | RBP: {}", (void *)ctx.rsi, (void *)ctx.rdi, (void *)ctx.rsp, (void *)ctx.rbp);
-    info("R8:  {} | R9: {}  | R10: {} | R11: {}", (void *)ctx.r8, (void *)ctx.r9, (void *)ctx.r10, (void *)ctx.r11);
+    info("R8:  {} | R9:  {} | R10: {} | R11: {}", (void *)ctx.r8, (void *)ctx.r9, (void *)ctx.r10, (void *)ctx.r11);
     info("R12: {} | R13: {} | R14: {} | R15: {}", (void *)ctx.r12, (void *)ctx.r13, (void *)ctx.r14, (void *)ctx.r15);
-    info("RIP: {} | RFL: {} | ERR: {}", (void *)ctx.rip, (void *)ctx.rflags, (void*)ctx.error);
+    info("RIP: {} | RFL: {} | ERR: {} | ISR: {}", (void *)ctx.rip, (void *)ctx.rflags, (void*)ctx.error, (void*)ctx.interrupt_number);
 }
 
-// I should have frames, and maybe a more efficent method than this?
-void div_by_zero_handler(CPUContext *cpu)
+void handle_lapic_irq(CPUContext *ctx);
+void handle_interrupt(CPUContext *cpu)
 {
+    if (cpu->interrupt_number == 0xEF) {
+        handle_lapic_irq(cpu);
+        return;
+    }
     print_cpu_info(*cpu);
-    panic("Divide by zero");
-}
-
-void breakpoint_handler(CPUContext *cpu)
-{
-    print_cpu_info(*cpu);
-    panic("Breakpoint");
-}
-
-void double_fault_handler(CPUContext *cpu)
-{
-    print_cpu_info(*cpu);
-    panic("Double fault");
-}
-
-void general_protection_handler(CPUContext *cpu)
-{
-    print_cpu_info(*cpu);
-    panic("General protection fault");
-}
-
-void debug_handler(CPUContext *cpu)
-{
-    print_cpu_info(*cpu);
-    panic("Debug");
-}
-
-void invalid_opcode_handler(CPUContext *cpu)
-{
-    print_cpu_info(*cpu);
-    panic("Invalid opcode");
+    panic("unexpected interrupt!");
 }

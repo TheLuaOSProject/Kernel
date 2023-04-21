@@ -20,6 +20,7 @@
 #include <limine.h>
 
 #include "lj-libc/limits.h"
+#include "luck/arch/x86_64/interrupts/pic.h"
 #include "luck/io/log.h"
 
 #include "luck/arch/x86_64/acpi/madt.h"
@@ -29,53 +30,24 @@
 #include "luck/arch/x86_64/interrupts/idt.h"
 #include "luck/arch/x86_64/interrupts/lapic.h"
 #include "luck/arch/x86_64/io/ps2.h"
+#include "luck/lua/lua.h"
 #include "luck/memory/manager.h"
 #include "luck/memory/magazines.h"
-
-#include "../luajit/src/lua.h"
 
 #undef stdin
 #undef stdout
 #undef stderr
 
-///
-/// @category LuaJIT Support
-/// LuaJIT allocator (defined in src/lib/libsupport.c)
-///
-void *ljsup_alloc(void *ud, void *ptr, size_t osize, size_t nsize);
-
-///
-/// @category LuaJIT Support
-///
-///
-int luaL_loadbuffer(lua_State *L, const char *s, size_t len, const char *name);
-
-void luaJIT_version_2_1_0_beta3(void);
-
-void LJDBG(const char* msg) {success("lj: {}", msg);}
-
-#define _lua_openmodule(mname, module) ({\
-    lua_pushcfunction(L, luaopen_##module); \
-    lua_pushstring(L, mname); \
-    lua_call(L, 1, 0);                   \
-})
-#define lua_openmodule(module) _lua_openmodule(#module, module)
-
-LUALIB_API int luaopen_base(lua_State *L);
-LUALIB_API int luaopen_math(lua_State *L);
-LUALIB_API int luaopen_string(lua_State *L);
-LUALIB_API int luaopen_table(lua_State *L);
-LUALIB_API int luaopen_debug(lua_State *L);
-LUALIB_API int luaopen_bit(lua_State *L);
-
-void stdout_write(const char *str, int siz) {
+void stdout_write(const char *str, int siz)
+{
     while (siz) {
         console_write_char(*str++);
         siz--;
     }
 }
 
-static void ps2_gets(char* buf) {
+static void ps2_gets(char* buf)
+{
     char *start = buf;
     while (true) {
         char c = ps2_getc();
@@ -94,6 +66,8 @@ static void ps2_gets(char* buf) {
         stdout_write(&c, 1);
     }
 }
+
+static volatile __attribute__((used)) struct limine_module_request module_req = {LIMINE_MODULE_REQUEST, 0, nullptr};
 
 [[gnu::used]] noreturn void kernel_start()
 {
@@ -176,45 +150,21 @@ static void ps2_gets(char* buf) {
     lapic_init();
     info("LAPIC base: {}", lapic_base);
     success("Done");
-
-    int status;
-    lua_State *L;
-
-
-    L = lua_newstate(ljsup_alloc, nullptr); // open Lua
-    if (!L) {
-        panic("cant open lua");
-    }
-    
-    _lua_openmodule("", base);
-    lua_openmodule(table);
-    lua_openmodule(string);
-    lua_openmodule(math);
-    lua_openmodule(debug);
-    lua_openmodule(bit);
     FILE* stdout = _get_pcb()->stdout = kalloc(sizeof(FILE));
     stdout->write = stdout_write;
 
-    const char *in = "print('what is the best language? it\\'s LUA, of course!')";
-    int v = luaL_loadbuffer(L, in, string_length(in), "entry");
-    if (v != 0) {
-        panic("fail {}", lua_tostring(L, -1));
-    }
-    lua_call(L, 0, 0);
+    if (!module_req.response) panic("no modules available!");
+    if (module_req.response->module_count == 0) panic("more than one module available!");
 
-    while (true) {
-        char buf[4096];
-        stdout_write("> ", 2);
-        ps2_gets(buf);
+    sched_init();
 
-        int v = luaL_loadbuffer(L, buf, string_length(buf), "stdin");
-        if (v != 0)
-            error("fail {}", lua_tostring(L, -1));
-        else
-            lua_call(L, 0, 0);
-    }
+    struct limine_file *m0 = module_req.response->modules[0];
+    if (string_compare(m0->cmdline, "init.lua")) panic("module 0 is called {} not init.lua!", m0->cmdline);
+    init_thread(m0->address, m0->size, "init.lua");
 
     success("Initalisation complete");
-    asm("UD2");
+    while (true) {
+        asm("STI; HLT");
+    }
     halt();
 }

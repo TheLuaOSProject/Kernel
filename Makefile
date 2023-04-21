@@ -102,9 +102,13 @@ extern/limine/limine-deploy:
 
 extern/terminal/../luajit/src/lua.h: extern/luajit
 
-build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.elf res/limine.cfg
+build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.elf res/limine.cfg src/init.lua
 	mkdir -p $(dir $@)/iso
-	cp build/bin/luck.elf res/powered-by-lua.bmp res/limine.cfg res/font.bin extern/limine/limine-cd.bin extern/limine/limine.sys extern/limine/limine-cd-efi.bin $(dir $@)/iso
+	cp \
+		build/bin/luck.elf res/powered-by-lua.bmp res/limine.cfg \
+		res/font.bin extern/limine/limine-cd.bin extern/limine/limine.sys \
+		extern/limine/limine-cd-efi.bin src/init.lua \
+		$(dir $@)/iso
 	xorriso -as mkisofs\
 			-b limine-cd.bin\
 			-no-emul-boot\

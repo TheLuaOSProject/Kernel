@@ -17,6 +17,7 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "luck/lua/lua.h"
 #define LAPIC_IMPL
 #include "luck/arch/x86_64/interrupts/lapic.h"
 
@@ -63,22 +64,14 @@ void pit_set_frequency(dword frequency)
     set_pit(div);
 }
 
-[[gnu::used]]
-void lapic_timer_handler(CPUContext *ctx)
+void handle_lapic_irq(CPUContext *ctx)
 {
     counter++;
     lapic_write(LAPICRegister_END_OF_INTERRUPT, 0x0);
     lapic_write(LAPICRegister_INITAL_COUNT, 1000000); // re-arm timeout
 
-    info("timer");
-    if (counter % 100 == 0) {
-        counter = 0;
-    }
-}
-
-[[gnu::used]]
-void pit_timer_handler(CPUContext *ctx)
-{
+    info("still alive");
+    reschedule(ctx);
 }
 
 void lapic_init(void)
@@ -92,7 +85,6 @@ void lapic_init(void)
     // Set task priority to the lowest (allow all interrupts)
     lapic_write(LAPICRegister_PRIORITY, 0);
 
-    idt_register_int(VECTOR_ID, &int_lapic_timer);
     dword timer = lapic_read(LAPICRegister_LVT_TIMER);
     timer &= ~(1 << 16); //clear mask to enable interrupt
     timer |= VECTOR_ID;

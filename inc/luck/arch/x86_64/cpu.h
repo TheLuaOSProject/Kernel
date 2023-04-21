@@ -24,11 +24,29 @@
 #include <string.h>
 
 typedef struct [[gnu::packed]] {
-    qword rax, rbx, rcx, rdx, rsi, rdi, rbp, r8, r9, r10, r11, r12, r13, r14, r15;
-    qword rflags, rip, cs, ss, ds, es, fs, gs;
-    qword cr0, cr2, cr3, cr4;
+    qword r15;
+    qword r14;
+    qword r13;
+    qword r12;
+    qword r11;
+    qword r10;
+    qword r9;
+    qword r8;
+    qword rdi;
+    qword rsi;
+    qword rdx;
+    qword rcx;
+    qword rbx;
+    qword rax;
+    qword rbp;
+
+    qword interrupt_number;
+    qword error;
+    qword rip;
+    qword cs;
+    qword rflags;
     qword rsp;
-    qword error, interrupt_number;
+    qword ss;
 } CPUContext;
 
 closed_enum CPUVendor {

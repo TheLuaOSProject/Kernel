@@ -1,5 +1,5 @@
 ; 
-; Copyright (C) 2023 Amrit Bhogal
+; Copyright (C) 2023 pitust
 ;
 ; This file is part of LuaOS.
 ;
@@ -17,62 +17,96 @@
 ; along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
 ;
 
-[BITS 64]
-[SECTION .text]
-%macro INTERRUPT 1
-[EXTERN %1_handler]
-[GLOBAL int_%1]
-int_%1:
-    ;Already pushed:
-    ;PUSH RIP
-    ;PUSH CS
-    ;PUSH RFLAGS
-    ;PUSH RSP
-    ;PUSH SS
+bits 64
 
-    PUSH    R15
-    PUSH    R14
-    PUSH    R13
-    PUSH    R12
-    PUSH    R11
-    PUSH    R10
-    PUSH    R9
-    PUSH    R8
-    PUSH    RBP
-    PUSH    RDI
-    PUSH    RSI
-    PUSH    RDX
-    PUSH    RCX
-    PUSH    RBX
-    PUSH    RAX
+extern handle_interrupt
 
-    MOV     RDI, RSP
-    CALL    %1_handler
-
-    POP     RAX
-    POP     RBX
-    POP     RCX
-    POP     RDX
-    POP     RSI
-    POP     RDI
-    POP     RBP
-    POP     R8
-    POP     R9
-    POP     R10
-    POP     R11
-    POP     R12
-    POP     R13
-    POP     R14
-    POP     R15
-;    ADD     RSP, 16
-
-    IRETQ
+%macro idtend 1
+    dq isr%1
 %endmacro
 
-INTERRUPT div_by_zero
-INTERRUPT breakpoint
-INTERRUPT double_fault
-INTERRUPT general_protection
-INTERRUPT debug
-INTERRUPT invalid_opcode
-INTERRUPT lapic_timer
+%macro isrgen 1
+
+isr%1:
+%if (%1 >= 0x8 && %1 <= 0xE) || %1 == 0x11 || %1 == 0x1E
+    ; i'm a expert at the morgan's tehorems or whatever theyre called
+%else
+    push 0
+%endif
+    push %1
+    push rbp
+    push rax
+    push rbx
+    push rcx
+    push rdx
+    push rsi
+    push rdi
+    push r8
+    push r9
+    push r10
+    push r11
+    push r12
+    push r13
+    push r14
+    push r15
+
+    xor rbp, rbp
+    xor rax, rax
+    xor rbx, rbx
+    xor rcx, rcx
+    xor rdx, rdx
+    xor rsi, rsi
+    xor rdi, rdi
+    xor r8, r8
+    xor r9, r9
+    xor r10, r10
+    xor r11, r11
+    xor r12, r12
+    xor r13, r13
+    xor r14, r14
+    xor r15, r15
+
+    lea rdi, [rsp]
+    call handle_interrupt
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop r11
+    pop r10
+    pop r9
+    pop r8
+    pop rdi
+    pop rsi
+    pop rdx
+    pop rcx
+    pop rbx
+    pop rax
+    pop rbp
+    add rsp, 16
+    iretq
+
+%endmacro
+
+section .text
+
+global get_idt_targets
+get_idt_targets:
+    lea rax, [rel idt_targets]
+    ret
+
+%assign i 0
+%rep 256
+isrgen i
+%assign i i+1
+%endrep
+
+section .rodata
+
+global idt_targets
+idt_targets:
+%assign i 0
+%rep 256
+    idtend i
+%assign i i+1
+%endrep
