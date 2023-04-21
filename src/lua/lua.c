@@ -40,7 +40,8 @@ static void thread_entry(Thread *t)
 {
     lua_State *L = t->L;
     lua_call(L, 0, 0);
-    panic("todo: exit thread");
+    t->kill = true;
+    while (true) asm("HLT");
 }
 
 static void ttas_lock(atomic_bool *b) {
@@ -125,6 +126,7 @@ static qword get_lapic_addr_dyn(void) {
 
 static Thread *threads[256];
 static CPUContext idle_tasks[256];
+static bool was_threadsweeping[256];
 void sched_init(void)
 {
     lapic_id = virt(get_lapic_addr_dyn() & ~0xfff, dword);
@@ -135,12 +137,31 @@ static void idle_task(void)
     info("welcome to the luaOS idle task for whatever core i'm on. I'm just chillin' here...");
     while (true) asm("hlt");
 }
+static atomic_bool threadsweeper_lock;
+static __attribute__((aligned(16))) uint8_t threadsweeper_stack[16384];
+
+static void threadsweeper(Thread *t) {
+    uint64_t lapic = *lapic_id >> 24;
+
+    ttas_lock(&t->lock);
+    lua_close(t->L);
+    t->ctx.rip = 0xdeadbeefdeadbeef;
+    kfree(t->stack_base, 16384);
+    kfree(t, sizeof(Thread));
+    ttas_unlock(&t->lock);
+    asm("MOVQ $0, (%%RDI)\n1: INT3\njmp 1b" :: "D"(&threadsweeper_lock));
+}
 
 void reschedule(CPUContext* ctx)
 {
     if (atomic_load(&sched_lock)) return;
     ttas_lock(&sched_lock);
     uint64_t lapic = *lapic_id >> 24;
+    if (ctx->interrupt_number == 3) {
+        if (!was_threadsweeping[lapic]) {
+            panic("invalid int3!");
+        }
+    }
     if (threads[lapic]) {
         Thread *told = threads[lapic];
         if (atomic_load(&told->lock)) return;
@@ -160,7 +181,7 @@ void reschedule(CPUContext* ctx)
         }
         ttas_unlock(&threads[lapic]->lock);
     } else {
-        idle_tasks[lapic] = *ctx;
+        if (!was_threadsweeping[lapic]) idle_tasks[lapic] = *ctx;
     }
     if (ready) {
         Thread *tnew = ready;
@@ -171,16 +192,28 @@ void reschedule(CPUContext* ctx)
             ready = tnew->sched_next;
             tnew->sched_next = nullptr;
         } else {
-            ready_tail = nullptr;
+            ready_tail = ready = nullptr;
         }
         threads[lapic] = tnew;
         *ctx = tnew->ctx;
         if (!tnew->ready) panic("how is a non-ready task on the ready list?");
+        if (tnew->kill) {
+            ttas_lock(&threadsweeper_lock);
+            ctx->rip = (uint64_t)(threadsweeper);
+            ctx->rsp = (uint64_t)(threadsweeper_stack + 16384);
+            ctx->rdi = (uint64_t)(tnew);
+            ctx->rflags = 0x2;
+            was_threadsweeping[lapic] = true;
+            threads[lapic] = nullptr;
+        } else {
+            ctx->rflags = 0x202;
+        }
         ttas_unlock(&tnew->lock);
     } else {
     idle:
         *ctx = idle_tasks[lapic];
         threads[lapic] = nullptr;
+        ctx->rflags = 0x202;
     }
     ttas_unlock(&sched_lock);
 }

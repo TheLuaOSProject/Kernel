@@ -125,7 +125,7 @@ qword page_alloc(enum PageType pty) {
 
 static qword find_kalloc_mag(qword size) {
     if (size > kalloc_size_arr[15]) panic("cannot kalloc() or kfree() more than {} bytes! (attempted to kalloc/kfree {})", kalloc_size_arr[15], size);
-    for (qword i = 0;i < 32;i++) {
+    for (qword i = 0;i < 16;i++) {
         if (kalloc_size_arr[i] >= size) return i;
     }
     panic("wtf");
@@ -152,6 +152,15 @@ earlykalloc:
     return b;
 }
 void kfree(void* ptr, qword size) {
+    if (size > kalloc_size_arr[15]) {
+        size = (size + 0xfff) & ~0xfff;
+        // for (qword i = 0;i < size;i += 4096) {
+
+        // }
+        warning("leaking {} bytes at {}", size, ptr);
+        return;
+    }
+    memset(ptr, 0xa5, size);
     qword mag = find_kalloc_mag(size);
     mag_put(kalloc_mags[mag], (qword)ptr);
 }

@@ -13,7 +13,7 @@ typedef struct Thread {
 	struct Thread* sched_next;
 	struct Thread* sched_prev;
 	lua_State *L;
-	bool ready;
+	bool ready, kill;
 	atomic_bool lock;
 } Thread;
 

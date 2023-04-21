@@ -71,7 +71,8 @@ static inline void print_cpu_info(CPUContext ctx)
 void handle_lapic_irq(CPUContext *ctx);
 void handle_interrupt(CPUContext *cpu)
 {
-    if (cpu->interrupt_number == 0xEF) {
+    // INT3 is used by the threadsweeper (the special pseudo-thread we spawn when a thread is gonna die with a fixed 16k stack)
+    if (cpu->interrupt_number == 0xEF || cpu->interrupt_number == 0x03) {
         handle_lapic_irq(cpu);
         return;
     }
