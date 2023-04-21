@@ -68,7 +68,9 @@ void lapic_timer_handler(CPUContext *ctx)
 {
     counter++;
     lapic_write(LAPICRegister_END_OF_INTERRUPT, 0x0);
+    lapic_write(LAPICRegister_INITAL_COUNT, 1000000); // re-arm timeout
 
+    info("timer");
     if (counter % 100 == 0) {
         counter = 0;
     }
@@ -97,10 +99,9 @@ void lapic_init(void)
     lapic_write(LAPICRegister_LVT_TIMER, timer);
 
     //setup for div config
-    dword divcfg = lapic_read(LAPICRegister_DIVIDE_CONFIG);
-    divcfg &= 0b1011; //clear these bits because intel
-    divcfg |= ((TIMER_DIV - 1) & 0b1011) << 1;
-    lapic_write(LAPICRegister_DIVIDE_CONFIG, divcfg);
+    // no, i do *not* know what 0x03 does. it worked for xtrix so it must work here
+    // https://git.sr.ht/~pitust/xtrix/tree/trunk/item/src/xtrm/interrupt/lapic.d#L29
+    lapic_write(LAPICRegister_DIVIDE_CONFIG, 0x03);
 
     //Set the init count to smth big
     lapic_write(LAPICRegister_INITAL_COUNT, 1000000);
