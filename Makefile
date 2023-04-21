@@ -91,7 +91,7 @@ bios: build/bin/luaos.iso
 	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d $(QDF)
 
 extern/luajit/libluajit_luck.o:
-	$(MAKE) -C extern/luajit CC=$(CC -Wno-implicit-function-declaration)
+	$(MAKE) -C extern/luajit CC="$(CC) -Wno-implicit-function-declaration"
 
 extern/ovmf-x64:
 	mkdir -p $@
