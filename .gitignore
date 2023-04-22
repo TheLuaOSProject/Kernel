@@ -4,3 +4,4 @@ compile_commands.json
 luaos.log
 .gdb_history
 extern/ovmf-x64
+Kernel.sublime-workspace

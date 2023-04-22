@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"LSP": {
+			"LSP-lua": {
+				"settings": {
+					"Lua.diagnostics.globals": ["_llchannel"]
+				}
+			}
+		}
+	}
+}
