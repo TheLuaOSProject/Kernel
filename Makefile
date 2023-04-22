@@ -93,23 +93,23 @@ bios: build/bin/luaos.iso
 
 extern/LuaJIT/libluajit_luck.o:
 	@/usr/bin/printf "[\033[1;35mKernel - extern\033[0m] \033[32mBuilding LuaJIT\n\033[0m"
-	$(MAKE) -C extern/LuaJIT CC="$(CC) -Wno-implicit-function-declaration"
+	@$(MAKE) -C extern/LuaJIT CC="$(CC) -Wno-implicit-function-declaration"
 
 extern/ovmf-x64:
 	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mDownloading OVMF\n\033[0m"
-	mkdir -p $@
+	@mkdir -p $@
 	cd $@ && curl -o OVMF-X64.zip https://efi.akeo.ie/OVMF/OVMF-X64.zip && 7z x OVMF-X64.zip
 
 extern/limine/limine-deploy:
 	@/usr/bin/printf "[\033[1;35mKernel - extern\033[0m] \033[32mBuilding Limine\n\033[0m"
-	$(MAKE) -C extern/limine
+	@$(MAKE) -C extern/limine
 
 extern/LuaJIT/src/lua.h: extern/LuaJIT
 
 build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.elf res/limine.cfg src/init.lua
 	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mBuilding ISO\n\033[0m"
-	mkdir -p $(dir $@)/iso
-	cp \
+	@mkdir -p $(dir $@)/iso
+	@cp \
 		build/bin/luck.elf res/powered-by-lua.bmp res/limine.cfg \
 		res/font.bin extern/limine/limine-cd.bin extern/limine/limine.sys \
 		extern/limine/limine-cd-efi.bin src/init.lua \
@@ -124,10 +124,10 @@ build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.el
 			--efi-boot-image\
 			--protective-msdos-label\
 			$(dir $@)/iso -o $@
-	rm -rf $(dir $@)/iso
+	@rm -rf $(dir $@)/iso
 
 	extern/limine/limine-deploy $@
-	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mISO built at $@\n\033[0m"
+	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mISO built at \033[33m$@\n\033[0m"
 
 build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/LuaJIT/libluajit_luck.o
 	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mLinking $@\n\033[0m"
@@ -135,17 +135,17 @@ build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/LuaJIT/libluajit_luck.o
 	$(LD) $(LDFLAGS) -o $@ $^
 
 build/obj/extern/%.c.o: extern/limine extern/terminal extern/LuaJIT
-	@/usr/bin/printf "[\033[1;35mKernel - extern\033[0m] \033[32mCompiling $<\n\033[0m"
+	@/usr/bin/printf "[\033[1;35mKernel - extern\033[0m] \033[32mCompiling \033[33m$<\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $(shell echo "$@" | sed 's/build\/obj\///g' | sed 's/\.o//g') -o $@
 
 build/obj/./src/%.c.o: src/%.c extern/limine extern/terminal extern/LuaJIT
-	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mCompiling $<\n\033[0m"
+	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mCompiling \033[33m$<\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/obj/%.asm.o: %.asm
-	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mAssembling $^\n\033[0m"
+	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mAssembling \033[33m$^\n\033[0m"
 	@mkdir -p $(dir $@)
 	nasm $(NASMFLAGS) $^ -o $@
 
