@@ -92,18 +92,22 @@ bios: build/bin/luaos.iso
 	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d $(QDF)
 
 extern/LuaJIT/libluajit_luck.o:
+	@/usr/bin/printf "[\033[1;35mKernel - extern\033[0m] \033[32mBuilding LuaJIT\n\033[0m"
 	$(MAKE) -C extern/LuaJIT CC="$(CC) -Wno-implicit-function-declaration"
 
 extern/ovmf-x64:
+	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mDownloading OVMF\n\033[0m"
 	mkdir -p $@
 	cd $@ && curl -o OVMF-X64.zip https://efi.akeo.ie/OVMF/OVMF-X64.zip && 7z x OVMF-X64.zip
 
 extern/limine/limine-deploy:
+	@/usr/bin/printf "[\033[1;35mKernel - extern\033[0m] \033[32mBuilding Limine\n\033[0m"
 	$(MAKE) -C extern/limine
 
 extern/LuaJIT/src/lua.h: extern/LuaJIT
 
 build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.elf res/limine.cfg src/init.lua
+	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mBuilding ISO\n\033[0m"
 	mkdir -p $(dir $@)/iso
 	cp \
 		build/bin/luck.elf res/powered-by-lua.bmp res/limine.cfg \
@@ -123,24 +127,25 @@ build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.el
 	rm -rf $(dir $@)/iso
 
 	extern/limine/limine-deploy $@
+	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mISO built at $@\n\033[0m"
 
 build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/LuaJIT/libluajit_luck.o
-	@/usr/bin/printf "\033[35mLinking $@\n\033[0m"
+	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mLinking $@\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 
 build/obj/extern/%.c.o: extern/limine extern/terminal extern/LuaJIT
-	@/usr/bin/printf "\033[32mCompiling $<\n\033[0m"
+	@/usr/bin/printf "[\033[1;35mKernel - extern\033[0m] \033[32mCompiling $<\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $(shell echo "$@" | sed 's/build\/obj\///g' | sed 's/\.o//g') -o $@
 
 build/obj/./src/%.c.o: src/%.c extern/limine extern/terminal extern/LuaJIT
-	@/usr/bin/printf "\033[32mCompiling $<\n\033[0m"
+	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mCompiling $<\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/obj/%.asm.o: %.asm
-	@/usr/bin/printf "\033[32mAssembling $^\n\033[0m"
+	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mAssembling $^\n\033[0m"
 	@mkdir -p $(dir $@)
 	nasm $(NASMFLAGS) $^ -o $@
 

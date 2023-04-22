@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "../../../../common.h"
+#include "common.h"
 
 NONNULL_BEGIN
 
