@@ -1,4 +1,4 @@
-#include "../luajit/src/lua.h"
+#include "../LuaJIT/src/lua.h"
 #include "string.h"
 
 #include "luck/arch/x86_64/cpu.h"

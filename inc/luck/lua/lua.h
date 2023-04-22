@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 #include "luck/arch/x86_64/cpu.h"
-#include "../luajit/src/lua.h"
+#include "../LuaJIT/src/lua.h"
 
 typedef struct Thread {
 	char name[64];
