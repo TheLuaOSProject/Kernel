@@ -124,22 +124,22 @@ build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.el
 	extern/limine/limine-deploy $@
 
 build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/luajit/libluajit_luck.o
-	@/usr/bin/printf "\x1b[35mLinking $@\n\x1b[0m"
+	@/usr/bin/printf "\033[35mLinking $@\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 
 build/obj/extern/%.c.o: extern/limine extern/terminal extern/luajit
-	@/usr/bin/printf "\x1b[32mCompiling $<\n\x1b[0m"
+	@/usr/bin/printf "\033[32mCompiling $<\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $(shell echo "$@" | sed 's/build\/obj\///g' | sed 's/\.o//g') -o $@
 
 build/obj/./src/%.c.o: src/%.c extern/limine extern/terminal extern/luajit
-	@/usr/bin/printf "\x1b[32mCompiling $<\n\x1b[0m"
+	@/usr/bin/printf "\033[32mCompiling $<\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/obj/%.asm.o: %.asm
-	@/usr/bin/printf "\x1b[32mAssembling $^\n\x1b[0m"
+	@/usr/bin/printf "\033[32mAssembling $^\n\033[0m"
 	@mkdir -p $(dir $@)
 	nasm $(NASMFLAGS) $^ -o $@
 
