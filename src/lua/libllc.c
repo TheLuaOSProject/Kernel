@@ -31,8 +31,8 @@ static int func(lua_State *L) {
 }
 
 static luaL_Reg llc[] = {
-    {"func", func},
-    {nullptr, nullptr}
+    { "func", func },
+    { nullptr, nullptr }
 };
 
 void luaopen_llc(lua_State* L) {

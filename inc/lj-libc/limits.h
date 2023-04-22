@@ -1,20 +1,22 @@
 #pragma once
 
+#pragma clang assume_nonnull begin
+
 #define EXIT_FAILURE 1
 #define BUFSIZ 4096
 
 typedef struct {
-	void (*read)(const char* buf, int count);
-	void (*write)(const char* buf, int count);
+	void (*read)(const char *buf, int count);
+	void (*write)(const char *buf, int count);
 } FILE;
 
 typedef struct {
 	int errno;
-	FILE* stdin;
-	FILE* stdout;
-	FILE* stderr;
+	FILE *stdin;
+	FILE *stdout;
+	FILE *stderr;
 } PCB;
-extern PCB* _get_pcb();
+extern PCB *_get_pcb();
 
 #define errno 	(_get_pcb()->errno)
 #define stdin 	(_get_pcb()->stdin)
@@ -81,4 +83,4 @@ double pow(double x, double y);
 // memchr memcmp memcpy memmove memset
 // putchar setvbuf strchr strcmp strcpy strerror strlen strncpy strrchr strstr strtoul  tmpfile ungetc
 
-
+#pragma clang assume_nonnull end

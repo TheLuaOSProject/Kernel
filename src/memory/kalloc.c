@@ -130,7 +130,7 @@ static qword find_kalloc_mag(qword size) {
     }
     panic("wtf");
 }
-void* kalloc(qword size) {
+void *kalloc(qword size) {
     if (size > kalloc_size_arr[15]) {
         size = (size + 0xfff) & ~0xfff;
         qword this_addr = atomic_fetch_add(&addr, size);

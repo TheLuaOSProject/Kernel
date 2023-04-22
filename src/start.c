@@ -19,6 +19,7 @@
 
 #include <limine/limine.h>
 
+#include "common.h"
 #include "lj-libc/limits.h"
 #include "luck/arch/x86_64/interrupts/pic.h"
 #include "luck/io/log.h"
@@ -38,6 +39,8 @@
 #undef stdout
 #undef stderr
 
+NONNULL_BEGIN
+
 void stdout_write(const char *str, int siz)
 {
     while (siz) {
@@ -46,7 +49,7 @@ void stdout_write(const char *str, int siz)
     }
 }
 
-static void ps2_gets(char* buf)
+static void ps2_gets(char *buf)
 {
     char *start = buf;
     while (true) {
@@ -121,12 +124,8 @@ static volatile struct limine_module_request module_req [[gnu::used]] = {
     initalise_terminal();
 
     info("Initialising APIC");
-    struct RSDP *rsdp = rsdp_init();
-    if (rsdp == nullptr)
-        panic("Could not find RSDP");
-
-    struct MADT *madt = madt_init(rsdp);
-    if (madt == nullptr) panic("Could not find MADT");
+    auto rsdp = assert_nonnull(rsdp_init())(panic("No RSDP found"));
+    auto madt = assert_nonnull(madt_init(rsdp))(panic("No MADT found"));
 
     size_t core_c = 0;
 
@@ -152,21 +151,22 @@ static volatile struct limine_module_request module_req [[gnu::used]] = {
     lapic_init();
     info("LAPIC base: {}", lapic_base);
     success("Done");
-    FILE* stdout = _get_pcb()->stdout = kalloc(sizeof(FILE));
+    FILE *stdout = _get_pcb()->stdout = kalloc(sizeof(FILE));
     stdout->write = stdout_write;
 
-    if (!module_req.response) panic("no modules available!");
+    if (module_req.response == nullptr) panic("no modules available!");
     if (module_req.response->module_count == 0) panic("more than one module available!");
 
+    info("Initialising scheduler");
     sched_init();
+    success("Done");
 
     struct limine_file *m0 = module_req.response->modules[0];
     if (string_compare(m0->cmdline, "init.lua")) panic("module 0 is called {} not init.lua!", m0->cmdline);
     init_thread(m0->address, m0->size, "init.lua");
 
     success("Initalisation complete");
-    while (true) {
-        asm("STI; HLT");
-    }
     halt();
 }
+
+NONNULL_END

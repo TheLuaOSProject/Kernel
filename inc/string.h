@@ -72,6 +72,28 @@ static char *string_concatenate(char *dest, const char *src)
     return string_concatenate_n(dest, src, len);
 }
 
+static char *integer_to_string(size_t length, char dest[static length], sqword i)
+{
+    size_t len = 0;
+    bool negative = false;
+    if (i < 0) {
+        negative = true;
+        i = -i;
+    }
+    do {
+        dest[len++] = '0' + i % 10;
+        i /= 10;
+    } while (i != 0);
+    if (negative) dest[len++] = '-';
+    dest[len] = '\0';
+    for (size_t i = 0; i < len / 2; i++) {
+        char temp = dest[i];
+        dest[i] = dest[len - i - 1];
+        dest[len - i - 1] = temp;
+    }
+    return dest;
+}
+
 //libc compat
 size_t strlen(const char *str);
 int strcmp(const char *str1, const char *str2);

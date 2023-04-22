@@ -109,7 +109,7 @@ extern/LuaJIT/src/lua.h: extern/LuaJIT
 build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.elf res/limine.cfg src/init.lua
 	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mBuilding ISO\n\033[0m"
 	@mkdir -p $(dir $@)/iso
-	@cp \
+	cp \
 		build/bin/luck.elf res/powered-by-lua.bmp res/limine.cfg \
 		res/font.bin extern/limine/limine-cd.bin extern/limine/limine.sys \
 		extern/limine/limine-cd-efi.bin src/init.lua \
@@ -124,13 +124,13 @@ build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.el
 			--efi-boot-image\
 			--protective-msdos-label\
 			$(dir $@)/iso -o $@
-	@rm -rf $(dir $@)/iso
+	rm -rf $(dir $@)/iso
 
 	extern/limine/limine-deploy $@
 	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mISO built at \033[33m$@\n\033[0m"
 
 build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/LuaJIT/libluajit_luck.o
-	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mLinking $@\n\033[0m"
+	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mLinking \033[33m$@\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 

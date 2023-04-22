@@ -23,10 +23,11 @@ int luaopen_table(lua_State *L);
 int luaopen_debug(lua_State *L);
 int luaopen_bit(lua_State *L);
 int luaopen_llc(lua_State *L);
+int luaopen_kernel(lua_State *L);
 
-static void thread_entry(Thread *t)
+static void thread_entry(Thread *nonnull t)
 {
-    lua_State *L = t->L;
+    lua_State *L = t->lua;
 
     if (lua_pcall(L, 0, 0, 0) == LUA_OK) {
         lua_pop(L, lua_gettop(L));
@@ -38,7 +39,7 @@ static void thread_entry(Thread *t)
     while (true) asm("HLT");
 }
 
-static void ttas_lock(atomic_bool *b) {
+static void ttas_lock(atomic_bool *nonnull b) {
     bool scc = false;
     do {
         while (atomic_load_explicit(b, memory_order_relaxed)) { scc = true; asm("pause"); }
@@ -48,22 +49,21 @@ static void ttas_unlock(atomic_bool *b) {
     atomic_store(b, false);
 }
 static atomic_bool sched_lock = false;
-static Thread* ready = nullptr;
-static Thread* ready_tail = nullptr;
-static Thread* idle = nullptr;
+static Thread *nullable ready = nullptr;
+static Thread *nullable ready_tail = nullptr;
+static Thread *nullable idle = nullptr;
 
-Thread *init_thread(void* addr, size_t size, const char* name)
+Thread *init_thread(void *addr, size_t size, const char *name)
 {
     Thread *t = kalloc(sizeof(Thread));
-    if (!t) return NULL;
+    if (t == nullptr) return nullptr;
 
     int status;
     lua_State *L;
 
-    L = t->L = lua_newstate(ljsup_alloc, nullptr);
-    if (!L) {
-        panic("cant open lua");
-    }
+    L = t->lua = lua_newstate(ljsup_alloc, nullptr);
+    if (L == nullptr)
+        return nullptr;
 
     _lua_openmodule("", base);
     lua_openmodule(table);
@@ -72,6 +72,7 @@ Thread *init_thread(void* addr, size_t size, const char* name)
     lua_openmodule(debug);
     lua_openmodule(bit);
     luaopen_llc(L);
+    luaopen_kernel(L);
 
     if (string_length(name) < 64) {
         string_copy(t->name, name);
@@ -119,7 +120,7 @@ static qword get_lapic_addr_dyn(void) {
     asm ("retq");
 }
 
-static Thread *threads[256];
+static Thread *nullable threads[256];
 static CPUContext idle_tasks[256];
 static bool was_threadsweeping[256];
 void sched_init(void)
@@ -135,11 +136,11 @@ static void idle_task(void)
 static atomic_bool threadsweeper_lock;
 static __attribute__((aligned(16))) uint8_t threadsweeper_stack[16384];
 
-static void threadsweeper(Thread *t) {
+static void threadsweeper(Thread *nonnull t) {
     uint64_t lapic = *lapic_id >> 24;
 
     ttas_lock(&t->lock);
-    lua_close(t->L);
+    lua_close(t->lua);
     t->ctx.rip = 0xdeadbeefdeadbeef;
     kfree(t->stack_base, 16384);
     kfree(t, sizeof(Thread));
@@ -147,7 +148,7 @@ static void threadsweeper(Thread *t) {
     asm("MOVQ $0, (%%RDI)\n1: INT3\njmp 1b" :: "D"(&threadsweeper_lock));
 }
 
-void reschedule(CPUContext* ctx)
+void reschedule(CPUContext *nonnull ctx)
 {
     if (atomic_load(&sched_lock)) return;
     ttas_lock(&sched_lock);
@@ -179,7 +180,12 @@ void reschedule(CPUContext* ctx)
         if (!was_threadsweeping[lapic]) idle_tasks[lapic] = *ctx;
     }
     if (ready) {
-        Thread *tnew = ready;
+        Thread *nonnull tnew = assert_nonnull(ready)(({
+            ready = ready->sched_next;
+            if (ready != nullptr) ready->sched_prev = nullptr;
+            else ready_tail = nullptr;
+        }));
+
         if (atomic_load(&tnew->lock)) goto idle;
         ttas_lock(&tnew->lock);
         if (tnew->sched_next) {

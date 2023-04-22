@@ -40,6 +40,16 @@
 #define NONNULL_BEGIN    pragma(clang assume_nonnull begin)
 #define NONNULL_END      pragma(clang assume_nonnull end)
 
+#define auto __auto_type
+
+#define _ASSERT_NONNULL(...) { (__VA_ARGS__); }\
+    (typeof(typeof(*_val) *nonnull))_val;\
+})
+
+#define assert_nonnull(...) ({\
+    auto _val = (__VA_ARGS__);\
+    if (_val == nullptr) _ASSERT_NONNULL
+
 typedef uint8_t byte;
 typedef uint16_t word;
 typedef uint32_t dword;
@@ -53,10 +63,11 @@ typedef int16_t sword;
 typedef int32_t sdword;
 typedef int64_t sqword;
 
+[[noreturn]]
 static inline noreturn void halt()
 {
     while(true) asm (
-        "CLI\n"
+        "STI\n"
         "HLT\n"
     );
     __builtin_unreachable();
