@@ -91,8 +91,8 @@ uefi: extern/ovmf-x64 build/bin/luaos.iso
 bios: build/bin/luaos.iso
 	qemu-system-x86_64 -M q35 $(QEMUFLAGS) -cdrom build/bin/luaos.iso -boot d $(QDF)
 
-extern/luajit/libluajit_luck.o:
-	$(MAKE) -C extern/luajit CC="$(CC) -Wno-implicit-function-declaration"
+extern/LuaJIT/libluajit_luck.o:
+	$(MAKE) -C extern/LuaJIT CC="$(CC) -Wno-implicit-function-declaration"
 
 extern/ovmf-x64:
 	mkdir -p $@
@@ -101,7 +101,7 @@ extern/ovmf-x64:
 extern/limine/limine-deploy:
 	$(MAKE) -C extern/limine
 
-extern/terminal/../luajit/src/lua.h: extern/luajit
+extern/terminal/../luajit/src/lua.h: extern/LuaJIT
 
 build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.elf res/limine.cfg src/init.lua
 	mkdir -p $(dir $@)/iso
@@ -124,17 +124,17 @@ build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.el
 
 	extern/limine/limine-deploy $@
 
-build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/luajit/libluajit_luck.o
+build/bin/luck.elf: $(COBJS) $(ASOBJS) extern/LuaJIT/libluajit_luck.o
 	@/usr/bin/printf "\033[35mLinking $@\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^
 
-build/obj/extern/%.c.o: extern/limine extern/terminal extern/luajit
+build/obj/extern/%.c.o: extern/limine extern/terminal extern/LuaJIT
 	@/usr/bin/printf "\033[32mCompiling $<\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $(shell echo "$@" | sed 's/build\/obj\///g' | sed 's/\.o//g') -o $@
 
-build/obj/./src/%.c.o: src/%.c extern/limine extern/terminal extern/luajit
+build/obj/./src/%.c.o: src/%.c extern/limine extern/terminal extern/LuaJIT
 	@/usr/bin/printf "\033[32mCompiling $<\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
