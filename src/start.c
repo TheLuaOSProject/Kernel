@@ -17,7 +17,7 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <limine.h>
+#include <limine/limine.h>
 
 #include "lj-libc/limits.h"
 #include "luck/arch/x86_64/interrupts/pic.h"
@@ -67,7 +67,9 @@ static void ps2_gets(char* buf)
     }
 }
 
-static volatile __attribute__((used)) struct limine_module_request module_req = {LIMINE_MODULE_REQUEST, 0, nullptr};
+static volatile struct limine_module_request module_req [[gnu::used]] = {
+    LIMINE_MODULE_REQUEST, 0, nullptr
+};
 
 [[gnu::used]] noreturn void kernel_start()
 {

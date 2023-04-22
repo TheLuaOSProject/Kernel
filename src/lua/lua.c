@@ -1,4 +1,4 @@
-#include "../LuaJIT/src/lua.h"
+#include <LuaJIT/src/lua.h>
 #include "string.h"
 
 #include "luck/arch/x86_64/cpu.h"
@@ -64,7 +64,7 @@ Thread *init_thread(void* addr, size_t size, const char* name)
     if (!L) {
         panic("cant open lua");
     }
-    
+
     _lua_openmodule("", base);
     lua_openmodule(table);
     lua_openmodule(string);
@@ -72,7 +72,7 @@ Thread *init_thread(void* addr, size_t size, const char* name)
     lua_openmodule(debug);
     lua_openmodule(bit);
     luaopen_llc(L);
-    
+
     if (string_length(name) < 64) {
         string_copy(t->name, name);
     } else {

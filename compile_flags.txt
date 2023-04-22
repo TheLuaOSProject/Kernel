@@ -1,7 +1,6 @@
 -Iinc
--Iextern/limine
+-Iextern/
 -target
 x86_64-elf
--Iextern/terminal
 -ffreestanding
 -std=gnu2x

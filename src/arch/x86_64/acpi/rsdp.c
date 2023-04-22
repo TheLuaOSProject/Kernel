@@ -20,7 +20,7 @@
 #include "luck/arch/x86_64/acpi/acpi.h"
 #include "luck/io/log.h"
 
-#include <limine.h>
+#include <limine/limine.h>
 #include "string.h"
 
 static volatile struct limine_rsdp_request request = {

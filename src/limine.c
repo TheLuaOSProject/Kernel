@@ -19,7 +19,7 @@
 
 #include "luck/io/log.h"
 
-#include <limine.h>
+#include <limine/limine.h>
 
 qword VIRTUAL_MEMORY_HIGH = 0;
 

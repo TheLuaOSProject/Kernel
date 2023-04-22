@@ -1,4 +1,4 @@
-#include "../LuaJIT/src/lua.h"
+#include <LuaJIT/src/lua.h>
 #include "luck/io/log.h"
 
 typedef struct luaL_Reg {

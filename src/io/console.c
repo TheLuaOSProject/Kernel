@@ -17,14 +17,14 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <limine.h>
+#include <limine/limine.h>
 #include <string.h>
+#include <terminal/backends/framebuffer.h>
+#include <terminal/term.h>
 
 #include "luck/io/console.h"
 #include "luck/memory/manager.h"
 
-#include "term.h"
-#include "backends/framebuffer.h"
 
 static const volatile struct limine_framebuffer_request fb_request = {
     .id = LIMINE_FRAMEBUFFER_REQUEST

@@ -17,7 +17,7 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <limine.h>
+#include <limine/limine.h>
 #include "common.h"
 #include "memory.h"
 

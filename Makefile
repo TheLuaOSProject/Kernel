@@ -43,8 +43,7 @@ CFLAGS +=       						\
     -MMD                 				\
 	-target x86_64-elf	 				\
 	-nostdinc							\
-	-isystem extern/limine				\
-	-isystem extern/terminal			\
+	-isystem extern/					\
 	-Iinc               				\
 	-Wno-unused-command-line-argument	\
 	-Wanon-enum-enum-conversion			\
@@ -57,6 +56,7 @@ CFLAGS +=       						\
 	-Wnull-conversion       			\
 	-Wnullability-completeness			\
 	-Wnullable-to-nonnull-conversion	\
+	-Wno-missing-field-initializers		\
 	-fno-omit-frame-pointer 			\
 	-Wno-deprecated-attributes			\
 	-fblocks
@@ -101,7 +101,7 @@ extern/ovmf-x64:
 extern/limine/limine-deploy:
 	$(MAKE) -C extern/limine
 
-extern/terminal/../luajit/src/lua.h: extern/LuaJIT
+extern/LuaJIT/src/lua.h: extern/LuaJIT
 
 build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.elf res/limine.cfg src/init.lua
 	mkdir -p $(dir $@)/iso
