@@ -1,45 +1,39 @@
-#include "luck/arch/x86_64/cpu.h"
-#include "luck/io/log.h"
 #include "../luajit/src/lua.h"
-#include "luck/lua/lua.h"
-#include "luck/memory/manager.h"
 #include "string.h"
 
-///
-/// @category LuaJIT Support
-/// LuaJIT allocator (defined in src/lib/libsupport.c)
-///
+#include "luck/arch/x86_64/cpu.h"
+#include "luck/io/log.h"
+#include "luck/lua/lua.h"
+#include "luck/memory/manager.h"
+
 void *ljsup_alloc(void *ud, void *ptr, size_t osize, size_t nsize);
-
-///
-/// @category LuaJIT Support
-///
-///
 int luaL_loadbuffer(lua_State *L, const char *s, size_t len, const char *name);
-
-void luaJIT_version_2_1_0_beta3(void);
-
-void LJDBG(const char* msg)
-{ success("lj: {}", msg); }
 
 #define _lua_openmodule(mname, module) ({ \
     lua_pushcfunction(L, luaopen_##module); \
     lua_pushstring(L, mname); \
-    lua_call(L, 1, 0);                   \
+    lua_call(L, 1, 0); \
 })
 #define lua_openmodule(module) _lua_openmodule(#module, module)
 
-LUALIB_API int luaopen_base(lua_State *L);
-LUALIB_API int luaopen_math(lua_State *L);
-LUALIB_API int luaopen_string(lua_State *L);
-LUALIB_API int luaopen_table(lua_State *L);
-LUALIB_API int luaopen_debug(lua_State *L);
-LUALIB_API int luaopen_bit(lua_State *L);
+int luaopen_base(lua_State *L);
+int luaopen_math(lua_State *L);
+int luaopen_string(lua_State *L);
+int luaopen_table(lua_State *L);
+int luaopen_debug(lua_State *L);
+int luaopen_bit(lua_State *L);
+int luaopen_llc(lua_State *L);
 
 static void thread_entry(Thread *t)
 {
     lua_State *L = t->L;
-    lua_call(L, 0, 0);
+
+    if (lua_pcall(L, 0, 0, 0) == LUA_OK) {
+        lua_pop(L, lua_gettop(L));
+    } else {
+        error("lua error: {}", lua_tostring(L, lua_gettop(L)));
+        lua_pop(L, lua_gettop(L));
+    }
     t->kill = true;
     while (true) asm("HLT");
 }
@@ -77,6 +71,7 @@ Thread *init_thread(void* addr, size_t size, const char* name)
     lua_openmodule(math);
     lua_openmodule(debug);
     lua_openmodule(bit);
+    luaopen_llc(L);
     
     if (string_length(name) < 64) {
         string_copy(t->name, name);

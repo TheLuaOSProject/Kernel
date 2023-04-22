@@ -66,11 +66,11 @@ void pit_set_frequency(dword frequency)
 
 void handle_lapic_irq(CPUContext *ctx)
 {
-    counter++;
-    lapic_write(LAPICRegister_END_OF_INTERRUPT, 0x0);
-    lapic_write(LAPICRegister_INITAL_COUNT, 1000000); // re-arm timeout
+    if (ctx->interrupt_number == 0xEF) {
+        lapic_write(LAPICRegister_END_OF_INTERRUPT, 0x0);
+        lapic_write(LAPICRegister_INITAL_COUNT, 1000000); // re-arm timeout
+    }
 
-    info("still alive");
     reschedule(ctx);
 }
 

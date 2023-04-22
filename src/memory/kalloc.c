@@ -154,9 +154,6 @@ earlykalloc:
 void kfree(void* ptr, qword size) {
     if (size > kalloc_size_arr[15]) {
         size = (size + 0xfff) & ~0xfff;
-        // for (qword i = 0;i < size;i += 4096) {
-
-        // }
         warning("leaking {} bytes at {}", size, ptr);
         return;
     }

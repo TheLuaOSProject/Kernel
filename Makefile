@@ -42,6 +42,7 @@ CFLAGS +=       						\
     -mcmodel=kernel      				\
     -MMD                 				\
 	-target x86_64-elf	 				\
+	-nostdinc							\
 	-isystem extern/limine				\
 	-isystem extern/terminal			\
 	-Iinc               				\
