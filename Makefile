@@ -15,8 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
 
+
+
 CC = clang
 LD = ld.lld
+LUA= lua
+
 
 GDB := x86_64-elf-gdb
 
@@ -112,16 +116,13 @@ extern/limine/limine-deploy:
 
 extern/LuaJIT/src/lua.h: extern/LuaJIT
 
-user-land:
+user-land: build-userland.lua
 	@/usr/bin/printf "[\033[1;35mUserland\033[0m] \033[32mBuilding userland\n\033[0m"
-	cd Userland
-	./luarocks make
-	cd ..
+	@$(LUA) build-userland.lua
 
-res/limine.cfg: limine.cfg.lua
-	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mBuilding limine.cfg\n\033[0m"
-	@mkdir -p $(dir $@)
-	lua limine.cfg.lua
+
+
+res/limine.cfg: user-land
 
 build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.elf res/limine.cfg user-land
 	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mBuilding ISO\n\033[0m"

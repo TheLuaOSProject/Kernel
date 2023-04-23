@@ -38,13 +38,46 @@ TERM_WALLPAPER=boot:///powered-by-lua.bmp
     MODULE_CMDLINE=init.lua
 ]]
 
+---@param proc string
+---@param ... string
+---@return fun(): string
+local function exec(proc, ...)
+    local cmd = table.concat({proc, ...}, " ")
+    print("\x1b[34m$ \x1b[0m"..cmd.."\x1b[0m")
+
+    local proc = assert(io.popen(cmd, "r"))
+    return coroutine.wrap(function()
+        for line in proc:lines() do coroutine.yield(line) end
+    end)
+end
+
+debug.setmetatable(function() end, {
+    __index = {
+        ---@generic T
+        ---@param self fun(): T
+        ---@return T[]
+        collect = function(self)
+            local vals = {}
+            for val in self do vals[#vals+1] = val end
+            return vals
+        end,
+
+        print = function(self)
+            for val in self do print(val) end
+        end
+    }
+})
+
 ---Gets all lua files in Userland/lua_modules/share/lua/5.1/
 ---@return string[]
 local function get_userland()
     local files = {}
 
-    local proc = assert(io.popen("find Userland/lua_modules/share/lua/5.1/ -type f -name '*.lua'", "r"))
-    for file in proc:lines() do
+    -- local proc = assert(io.popen("find Userland/lua_modules/share/lua/5.1/ -type f -name '*.lua'", "r"))
+    -- for file in proc:lines() do
+    --     files[#files+1] = file
+    -- end
+    for file in exec("find", "Userland/lua_modules/share/lua/5.1/", "-type", "f", "-name", "'*.lua'") do
         files[#files+1] = file
     end
 
@@ -108,14 +141,14 @@ local config = {
             protocol = "limine",
             kernel_path = "luck.elf",
 
-            -- { "Userland/lua_modules/share/lua/5.1/sub/blah.lua" } -> { ["sub/blah.lua"] = "blah.lua" }
             modules = map(get_userland(), function(file)
-                local path = file:match("Userland/lua_modules/share/lua/5.1/(.*)")
-                return path
+                return file:match("Userland/lua_modules/share/lua/5.1/(.*)")
             end)
         }
     }
 }
+
+print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mBuilding \x1b[34mres/limine.cfg\n\x1b[0m")
 
 -- Dump the config to res/limine.cfg
 local file = assert(io.open("res/limine.cfg", "w"))
@@ -154,3 +187,14 @@ for name, target in pairs(config.targets) do
 end
 
 file:close()
+
+os.execute("cd Userland && ./luarocks make && cd ..")
+
+-- Copy over the modules into the `build/iso/
+print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mCopying modules to \x1b[34mbuild/iso/boot/\x1b[0m")
+for name, file in pairs(config.targets["LuaOS"].modules) do
+    --[[@cast name string]]
+    exec("mkdir", "-p", "build/iso/boot/"..name:match("(.*)/")):collect()
+    exec("cp", file, "build/iso/boot/"..name)
+    print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mCopied \x1b[34m"..file.."\x1b[32m to \x1b[34mbuild/iso/boot/"..name.."\x1b[0m")
+end

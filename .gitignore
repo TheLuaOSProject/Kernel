@@ -6,4 +6,4 @@ luaos.log
 extern/ovmf-x64
 Kernel.sublime-workspace
 
-# res/limine.cfg
+res/limine.cfg
