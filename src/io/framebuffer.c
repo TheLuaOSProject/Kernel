@@ -21,10 +21,17 @@
 #include "luck/io/framebuffer.h"
 #include "luck/bootloader/limine.h"
 
+#include "memory.h"
+#include "luck/memory/manager.h"
 #include "lj-libc/limits.h"
 #include <lauxlib.h>
 
 #define CANVAS_T "OliveCanvas"
+
+enum {
+    /*Largest framebuffer supported*/
+    Framebuffer_SAVE_SIZE = 1280 * 1280
+};
 
 Olivec_Canvas framebuffer_init()
 {
@@ -118,6 +125,22 @@ static int libframebuffer_canvas_draw_circle(lua_State *L)
     return 0;
 }
 
+static int libframebuffer_canvas_draw_triangle(lua_State *L)
+{
+    Olivec_Canvas *canvas = luaL_checkudata(L, 1, CANVAS_T);
+    auto x1 = (sdword)luaL_checkinteger(L, 2);
+    auto y1 = (sdword)luaL_checkinteger(L, 3);
+    auto x2 = (sdword)luaL_checkinteger(L, 4);
+    auto y2 = (sdword)luaL_checkinteger(L, 5);
+    auto x3 = (sdword)luaL_checkinteger(L, 6);
+    auto y3 = (sdword)luaL_checkinteger(L, 7);
+    dword colour = luaL_checkinteger(L, 8);
+
+    olivec_triangle(*canvas, x1, y1, x2, y2, x3, y3, colour);
+
+    return 0;
+}
+
 static int libframebuffer_canvas_draw_text(lua_State *L)
 {
     Olivec_Canvas *canvas = luaL_checkudata(L, 1, CANVAS_T);
@@ -133,32 +156,8 @@ static int libframebuffer_canvas_draw_text(lua_State *L)
     return 0;
 }
 
-// framebuffer:test_pitch()
-static int libframebuffer_test_pitch(lua_State *L)
-{
-    Olivec_Canvas *canvas = luaL_checkudata(L, 1, CANVAS_T);
-
-    for (size_t i = 0; i < (size_t)-1; i++) {
-        canvas->stride = i;
-        olivec_fill(*canvas, 0xFFFFFFFF);
-    }
-
-    return 0;
-}
-
-// function framebuffer:set_pitch(pitch)
-static int libframebuffer_set_pitch(lua_State *L)
-{
-    Olivec_Canvas *canvas = luaL_checkudata(L, 1, CANVAS_T);
-    dword pitch = luaL_checkinteger(L, 2);
-
-    canvas->stride = pitch;
-
-    return 0;
-}
-
 // function framebuffer:get_dimensions()
-static int libframebuffer_get_dimensions(lua_State *L)
+static int libframebuffer_dimensions(lua_State *L)
 {
     Olivec_Canvas *canvas = luaL_checkudata(L, 1, CANVAS_T);
 
@@ -181,6 +180,25 @@ static int libframebuffer_get(lua_State *L)
     return 1;
 }
 
+static _Atomic dword save_buffer[Framebuffer_SAVE_SIZE];
+
+static int libframebuffer_canvas_save(lua_State *L)
+{
+    Olivec_Canvas *canvas = luaL_checkudata(L, 1, CANVAS_T);
+
+    memory_copy(save_buffer, canvas->pixels, canvas->width * canvas->height * sizeof(dword));
+    return 0;
+}
+
+static int libframebuffer_canvas_load(lua_State *L)
+{
+    Olivec_Canvas *canvas = luaL_checkudata(L, 1, CANVAS_T);
+
+    memory_copy(canvas->pixels, save_buffer, canvas->width * canvas->height * sizeof(dword));
+
+    return 0;
+}
+
 static const luaL_Reg libframebuffer_canvas[] = {
     { "fill", libframebuffer_canvas_fill },
     { "set_pixel", libframebuffer_canvas_set_pixel },
@@ -188,10 +206,11 @@ static const luaL_Reg libframebuffer_canvas[] = {
     { "draw_line", libframebuffer_canvas_draw_line },
     { "draw_rect", libframebuffer_canvas_draw_rect },
     { "draw_circle", libframebuffer_canvas_draw_circle },
+    { "draw_triangle", libframebuffer_canvas_draw_triangle },
     { "draw_text", libframebuffer_canvas_draw_text },
-    { "test_pitch", libframebuffer_test_pitch },
-    { "set_pitch", libframebuffer_set_pitch },
-    { "get_dimensions", libframebuffer_get_dimensions },
+    { "dimensions", libframebuffer_dimensions },
+    { "save", libframebuffer_canvas_save },
+    { "load", libframebuffer_canvas_load },
     { nullptr, nullptr }
 };
 

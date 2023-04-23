@@ -1,4 +1,5 @@
 {
     "licenser.projectName": "LuaOS",
-    "licenser.license": "GPLv3"
+    "licenser.license": "GPLv3",
+    "Lua.runtime.version": "LuaJIT"
 }
