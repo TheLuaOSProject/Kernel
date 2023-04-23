@@ -23,16 +23,50 @@
 #include "lj-libc/limits.h"
 #include <LuaJIT/src/lauxlib.h>
 
-// kernel.log.info("Hello, world!");
+#include "luck/io/framebuffer.h"
+#include "luck/io/console.h"
+#include "luck/arch/x86_64/io/ps2.h"
+#include "string.h"
+
 
 #define lua_write_log(source, line, func, level, fmt, ...) ({ \
-        char buf[512] = {};\
+        char buf[32] = {0};\
         _log_level_##level(); \
-        _log_begin(source, integer_to_string(512, buf, line), func); \
+        _log_begin(source, integer_to_string(32, buf, line), func); \
         const char* _fmt = (fmt); \
         foreach(_log__one, _ __VA_OPT__(,) __VA_ARGS__) \
         _log_level_##level##_end(&_fmt); \
     })
+
+static void stdout_write(const char *str, size_t siz)
+{
+    while (siz) {
+        console_write_char(*str++);
+        siz--;
+    }
+}
+
+static void ps2_gets(char *buf)
+{
+    char *start = buf;
+    while (true) {
+        char c = ps2_getc();
+        if (c == '\n') {
+            stdout_write("\n", 1);
+            *buf = 0;
+            return;
+        }
+        if (c == '\b') {
+            if (buf == start) continue;
+            buf--;
+            stdout_write("\b \b", 3);
+            continue;
+        }
+        *buf++ = c;
+        stdout_write(&c, 1);
+    }
+}
+
 
 static int kernel_log_debug(lua_State *L)
 {
@@ -93,7 +127,25 @@ static const luaL_Reg libkernel_log[] = {
     { nullptr, nullptr }
 };
 
+static int kernel_write(lua_State *L)
+{
+    const char *str = luaL_checkstring(L, 1);
+    stdout_write(str, string_length(str));
+
+    return LUA_OK;
+}
+
+static int kernel_read(lua_State *L)
+{
+    static char buf[1024 * 1024] = {0};
+    ps2_gets(buf);
+    lua_pushstring(L, buf);
+    return 1;
+}
+
 static const luaL_Reg libkernel[] = {
+    { "write", kernel_write },
+    { "read", kernel_read },
     { nullptr, nullptr }
 };
 
@@ -105,6 +157,10 @@ int luaopen_kernel(lua_State *L)
     lua_getglobal(L, "kernel");
     luaL_newlib(L, libkernel_log);
     lua_setfield(L, -2, "log");
+
+    lua_getglobal(L, "kernel");
+    luaopen_framebuffer(L);
+    lua_setfield(L, -2, "framebuffer");
 
     return 0;
 }

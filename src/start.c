@@ -21,12 +21,12 @@
 
 #include "common.h"
 #include "lj-libc/limits.h"
-#include "luck/arch/x86_64/interrupts/pic.h"
 #include "luck/io/log.h"
 
 #include "luck/arch/x86_64/acpi/madt.h"
 #include "luck/arch/x86_64/acpi/acpi.h"
 #include "luck/io/console.h"
+#include "luck/io/framebuffer.h"
 #include "luck/arch/x86_64/gdt.h"
 #include "luck/arch/x86_64/interrupts/idt.h"
 #include "luck/arch/x86_64/interrupts/lapic.h"
@@ -73,6 +73,11 @@ static void ps2_gets(char *buf)
 static volatile struct limine_module_request module_req [[gnu::used]] = {
     LIMINE_MODULE_REQUEST, 0, nullptr
 };
+
+static const volatile struct limine_framebuffer_request fb_request = {
+    .id = LIMINE_FRAMEBUFFER_REQUEST
+};
+
 
 [[gnu::used]] noreturn void kernel_start()
 {
@@ -121,7 +126,13 @@ static volatile struct limine_module_request module_req [[gnu::used]] = {
     }
     success("Done");
 
-    initalise_terminal();
+    if (fb_request.response == nullptr || fb_request.response->framebuffer_count == 0)
+        panic("No framebuffer found!");
+
+    auto fb = fb_request.response->framebuffers[0];
+
+    terminal_init(fb);
+    framebuffer_init(fb);
 
     info("Initialising APIC");
     auto rsdp = assert_nonnull(rsdp_init())(panic("No RSDP found"));

@@ -77,7 +77,10 @@ ASFILES := $(shell find ./src -type f -name '*.asm')
 COBJS := $(addprefix build/obj/,$(CFILES:.c=.c.o))
 ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.asm.o))
 
-override QEMUFLAGS := -smp 2 -m 2G -monitor stdio -serial file:luaos.log
+QEMU_WIDTH := 1024
+QEMU_HEIGHT := 768
+override QEMUFLAGS := -smp 2 -m 2G -monitor stdio -serial file:luaos.log -vga std
+
 QDF ?= -s
 
 .PHONY: all
