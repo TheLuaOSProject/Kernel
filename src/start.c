@@ -43,15 +43,12 @@ NONNULL_BEGIN
 
 static const char *nullable extension(size_t buflen, const char buf[buflen])
 {
-    const char *dot = nullptr;
-    for (size_t i = 0; i < buflen; i++) {
-        if (buf[i] == '.') {
-            dot = buf + i;
-            break;
-        }
-    }
-    if (dot == nullptr) return nullptr;
-    return dot + 1;
+    //Find the last dot
+    size_t i = buflen;
+    while (i > 0 && buf[i] != '.') i--;
+
+    if (i == 0) return nullptr;
+    return &buf[i + 1];
 }
 
 static void stdout_write(const char *str, int siz)
@@ -185,12 +182,14 @@ static const volatile struct limine_framebuffer_request fb_request = {
     scheduler_init();
     success("Done");
 
+    info("Loading {} programs", module_req.response->module_count);
     Thread *nonnull active_threads[module_req.response->module_count];
     for (size_t i = 0; i < module_req.response->module_count; i++) {
         struct limine_file *m = module_req.response->modules[i];
         auto ext = assert_nonnull(extension(string_length(m->cmdline), m->cmdline))({ continue; });
         if (string_compare(string_length(ext), ext, 3, "lua") != 0) continue;
 
+        info("  Loading {}...", m->cmdline);
         active_threads[i] = assert_nonnull(spawn_thread(m->address, m->size, m->cmdline)) ({
             panic("Failed to load lua module {}!", m->cmdline);
         });

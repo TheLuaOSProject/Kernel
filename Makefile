@@ -175,6 +175,10 @@ build/obj/%.asm.o: %.asm
 clean:
 	rm -rf build
 	find . -type f -name '*.o' -delete
+	rm -rf Userland/.luarocks
+	rm -rf Userland/lua_modules
+	rm -rf Userland/lua
+	rm -rf Userland/luarocks
 	$(MAKE) -C extern/limine clean
 
 -include $(CFILES:%.c=build/obj/%.c.d)
