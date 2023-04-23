@@ -57,9 +57,9 @@ typedef struct Thread {
     struct Thread *nullable next_mutex;
 } Thread;
 
-int wait_for_thread(Thread *thread);
-int wake_mutex(Futex *mtx);
-int wake_all_mutexes(Futex *mutexes);
+void wait_for_thread(Thread *thread);
+void wake_futex(Futex *mtx);
+void wake_all_futexes(Futex *mutexes);
 
 Thread *nullable spawn_thread(void *addr, size_t size, const char *vpi);
 void reschedule(CPUContext *ctx);

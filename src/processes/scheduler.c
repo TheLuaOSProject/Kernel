@@ -198,11 +198,11 @@ void reschedule(CPUContext *nonnull ctx)
         if (!was_threadsweeping[lapic]) idle_tasks[lapic] = *ctx;
     }
     if (ready) {
-        Thread *nonnull tnew = assert_nonnull(ready)(({
+        Thread *nonnull tnew = assert_nonnull(ready)({
             ready = ready->next_task;
             if (ready != nullptr) ready->previous_task = nullptr;
             else ready_tail = nullptr;
-        }));
+        });
 
         if (atomic_load(&tnew->lock)) goto idle;
         ttas_lock(&tnew->lock);
@@ -237,13 +237,25 @@ void reschedule(CPUContext *nonnull ctx)
     ttas_unlock(&sched_lock);
 }
 
-int wait_for_thread(Thread *thread) { return 0; }
-int wake_mutex(Futex *mtx) { return 0; }
-int wake_all_mutexes(Futex *mutexes) { return 0; }
+void wait_for_thread(Thread *thread)
+{
+
+}
+
+void wake_futex(Futex *mtx)
+{
+
+}
+
+void wake_all_futexes(Futex *mutexes)
+{
+
+}
 
 // function scheduler.spawn(modulename: string, ...: string): Thread
 static int libscheduler_spawn(lua_State *nonnull L)
 {
+
 
     return 1;
 }
