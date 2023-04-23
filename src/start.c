@@ -31,7 +31,7 @@
 #include "luck/arch/x86_64/interrupts/idt.h"
 #include "luck/arch/x86_64/interrupts/lapic.h"
 #include "luck/arch/x86_64/io/ps2.h"
-#include "luck/lua/lua.h"
+#include "luck/processes/scheduler.h"
 #include "luck/memory/manager.h"
 #include "luck/memory/magazines.h"
 
@@ -41,7 +41,17 @@
 
 NONNULL_BEGIN
 
-void stdout_write(const char *str, int siz)
+static const char *nullable extension(size_t buflen, const char buf[buflen])
+{
+    //Find the last dot
+    size_t i = buflen;
+    while (i > 0 && buf[i] != '.') i--;
+
+    if (i == 0) return nullptr;
+    return &buf[i + 1];
+}
+
+static void stdout_write(const char *str, int siz)
 {
     while (siz) {
         console_write_char(*str++);
@@ -135,8 +145,8 @@ static const volatile struct limine_framebuffer_request fb_request = {
     framebuffer_init(fb);
 
     info("Initialising APIC");
-    auto rsdp = assert_nonnull(rsdp_init())(panic("No RSDP found"));
-    auto madt = assert_nonnull(madt_init(rsdp))(panic("No MADT found"));
+    auto rsdp = assert_nonnull(rsdp_init())({ panic("No RSDP found"); });
+    auto madt = assert_nonnull(madt_init(rsdp))({ panic("No MADT found"); });
 
     size_t core_c = 0;
 
@@ -169,12 +179,17 @@ static const volatile struct limine_framebuffer_request fb_request = {
     if (module_req.response->module_count == 0) panic("more than one module available!");
 
     info("Initialising scheduler");
-    sched_init();
+    scheduler_init();
     success("Done");
 
-    struct limine_file *m0 = module_req.response->modules[0];
-    if (string_compare(m0->cmdline, "init.lua")) panic("module 0 is called {} not init.lua!", m0->cmdline);
-    init_thread(m0->address, m0->size, "init.lua");
+    Thread *nullable active_threads[module_req.response->module_count];
+    for (size_t i = 0; i < module_req.response->module_count; i++) {
+        struct limine_file *m = module_req.response->modules[i];
+        auto ext = assert_nonnull(extension(string_length(m->cmdline), m->cmdline))({ continue; });
+        if (string_compare(string_length(ext), ext, 3, "lua") != 0) continue;
+
+        active_threads[i] = spawn_thread(m->address, m->size, m->cmdline);
+    }
 
     success("Initalisation complete");
     halt();

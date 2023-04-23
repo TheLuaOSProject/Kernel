@@ -32,16 +32,19 @@ char *strrchr(const char *s, int c)
 }
 size_t strlen(const char *s)
 { return string_length(s); }
+
 int strcmp(const char *s1, const char *s2)
-{ return string_compare(s1, s2); }
+{ return string_compare(string_length(s1), s1, string_length(s2), s2); }
+
 char *strcpy(char *dst, const char *src)
 {
-    string_copy(dst, src);
+    size_t bufsiz = string_length(src) + 1;
+    string_copy(bufsiz, dst, bufsiz, src);
     return dst;
 }
 
 char *strncpy(char *dst, const char *src, size_t n)
 {
-    string_copy(dst, src);
+    string_copy(n, dst, n, src);
     return dst;
 }

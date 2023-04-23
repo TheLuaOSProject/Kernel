@@ -58,7 +58,7 @@ canvas:set_pitch(x)
 -- Boxes of every colour
 local i = 0
 for k, v in pairs(colours) do
-    canvas:draw_rect(i * 64, y / 2, 64, 64, v)
+    canvas:draw_rect(x - 64, i * 64, 64, 64, v)
     i = i + 1
 end
 

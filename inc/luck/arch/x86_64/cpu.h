@@ -24,29 +24,9 @@
 #include <string.h>
 
 typedef struct [[gnu::packed]] {
-    qword r15;
-    qword r14;
-    qword r13;
-    qword r12;
-    qword r11;
-    qword r10;
-    qword r9;
-    qword r8;
-    qword rdi;
-    qword rsi;
-    qword rdx;
-    qword rcx;
-    qword rbx;
-    qword rax;
-    qword rbp;
+    qword r15, r14, r13, r12, r11, r10, r9, r8, rdi, rsi, rdx, rcx, rbx, rax, rbp;
 
-    qword interrupt_number;
-    qword error;
-    qword rip;
-    qword cs;
-    qword rflags;
-    qword rsp;
-    qword ss;
+    qword interrupt_number, error, rip, cs, rflags, rsp, ss;
 } CPUContext;
 
 closed_enum CPUVendor {
@@ -59,7 +39,7 @@ closed_enum CPUVendor {
     CPUVendor_UNKNOWN,
 };
 
-static const char *CPU_VENDORS[] = {
+static const char CPU_VENDORS[][12] = {
     [CPUVendor_INTEL]       = "Intel",
     [CPUVendor_AMD]         = "AMD",
     [CPUVendor_QEMU]        = "QEMU",

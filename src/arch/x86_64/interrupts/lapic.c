@@ -17,12 +17,12 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "luck/lua/lua.h"
 #define LAPIC_IMPL
 #include "luck/arch/x86_64/interrupts/lapic.h"
 
 #include <stdint.h>
 
+#include "luck/processes/scheduler.h"
 #include "luck/arch/x86_64/cpu.h"
 #include "luck/arch/x86_64/interrupts/idt.h"
 #include "luck/arch/x86_64/msr.h"

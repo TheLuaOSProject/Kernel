@@ -31,12 +31,12 @@ struct SDTHeader {
 };
 
 struct RSDT {
-    struct SDTHeader header;
+    struct SDTHeader;
     dword pointers[];
 };
 
-struct [[gnu::packed]] XSDT  {
-    struct SDTHeader header;
+struct [[gnu::packed]] XSDT {
+    struct SDTHeader;
     qword pointers[];
 };
 

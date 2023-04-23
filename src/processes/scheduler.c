@@ -1,10 +1,34 @@
+/**
+ * Copyright (C) 2023 pitulst
+ *
+ * This file is part of LuaOS.
+ *
+ * LuaOS is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LuaOS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "luck/processes/scheduler.h"
+
 #include <LuaJIT/src/lua.h>
 #include "string.h"
 
 #include "luck/arch/x86_64/cpu.h"
 #include "luck/io/log.h"
-#include "luck/lua/lua.h"
 #include "luck/memory/manager.h"
+
+
+#include "lj-libc/limits.h"
+#include <LuaJIT/src/lua.h>
 
 void *ljsup_alloc(void *ud, void *ptr, size_t osize, size_t nsize);
 int luaL_loadbuffer(lua_State *L, const char *s, size_t len, const char *name);
@@ -22,7 +46,6 @@ int luaopen_string(lua_State *L);
 int luaopen_table(lua_State *L);
 int luaopen_debug(lua_State *L);
 int luaopen_bit(lua_State *L);
-int luaopen_llc(lua_State *L);
 int luaopen_kernel(lua_State *L);
 
 static void thread_entry(Thread *nonnull t)
@@ -35,33 +58,32 @@ static void thread_entry(Thread *nonnull t)
         error("lua error: {}", lua_tostring(L, lua_gettop(L)));
         lua_pop(L, lua_gettop(L));
     }
+
+    debug("Killing thread {}", t->name);
     t->kill = true;
     while (true) asm("HLT");
 }
 
-static void ttas_lock(atomic_bool *nonnull b) {
+static void ttas_lock(Lock *nonnull b)
+{
     bool scc = false;
     do {
         while (atomic_load_explicit(b, memory_order_relaxed)) { scc = true; asm("pause"); }
     } while (atomic_exchange(b, true));
 }
-static void ttas_unlock(atomic_bool *b) {
-    atomic_store(b, false);
-}
-static atomic_bool sched_lock = false;
+static void ttas_unlock(Lock *nonnull b)
+{ atomic_store(b, false); }
+
+static Lock sched_lock = false;
 static Thread *nullable ready = nullptr;
 static Thread *nullable ready_tail = nullptr;
 static Thread *nullable idle = nullptr;
 
-Thread *init_thread(void *addr, size_t size, const char *name)
+Thread *spawn_thread(void *addr, size_t size, const char *name)
 {
     Thread *t = kalloc(sizeof(Thread));
-    if (t == nullptr) return nullptr;
 
-    int status;
-    lua_State *L;
-
-    L = t->lua = lua_newstate(ljsup_alloc, nullptr);
+    lua_State *L = t->lua = lua_newstate(ljsup_alloc, nullptr);
     if (L == nullptr)
         return nullptr;
 
@@ -71,22 +93,22 @@ Thread *init_thread(void *addr, size_t size, const char *name)
     lua_openmodule(math);
     lua_openmodule(debug);
     lua_openmodule(bit);
-    luaopen_llc(L);
     luaopen_kernel(L);
 
+    size_t name_len = string_length(name);
     if (string_length(name) < 64) {
-        string_copy(t->name, name);
+        string_copy(64, t->name, name_len, name);
     } else {
         memory_copy(t->name, name, 63);
         t->name[63] = 0;
     }
     int v = luaL_loadbuffer(L, addr, size, t->name);
-    if (v != 0) {
-        panic("fail {}", lua_tostring(L, -1));
-    }
-    t->stack_base = kalloc(16384);
+    if (v != 0)
+        panic("Could not spawn thread! Reason: {}", lua_tostring(L, -1));
+
+    t->stack_base = kalloc(Thread_STACKSIZE);
     if (!t->stack_base) panic("failed to allocate stack");
-    t->ctx.rsp = (uint64_t)(t->stack_base + 16384);
+    t->ctx.rsp = (uint64_t)(t->stack_base + Thread_STACKSIZE);
     t->ctx.rip = (uint64_t)(thread_entry);
     t->ctx.rdi = (uint64_t)(t);
     t->ctx.rflags = 0x202; // all the flags that we need
@@ -95,9 +117,9 @@ Thread *init_thread(void *addr, size_t size, const char *name)
     t->ready = true;
 
     ttas_lock(&sched_lock);
-    t->sched_next = ready;
+    t->next_task = ready;
     if (ready) {
-        ready->sched_prev = t;
+        ready->previous_task = t;
     } else {
         // TODO: in debug (or some kind of "safe") mode only
         if (ready_tail) panic("i'm an expert at linked lists");
@@ -123,7 +145,7 @@ static qword get_lapic_addr_dyn(void) {
 static Thread *nullable threads[256];
 static CPUContext idle_tasks[256];
 static bool was_threadsweeping[256];
-void sched_init(void)
+void scheduler_init(void)
 {
     lapic_id = virt(get_lapic_addr_dyn() & ~0xfff, dword);
 }
@@ -165,14 +187,14 @@ void reschedule(CPUContext *nonnull ctx)
         told->ctx = *ctx;
         if (told->ready) {
             if (ready_tail) {
-                ready_tail->sched_next = told;
-                told->sched_prev = ready_tail;
+                ready_tail->next_task = told;
+                told->previous_task = ready_tail;
             } else {
                 ready = ready_tail = told;
             }
         } else {
-            if (idle) idle->sched_prev = told;
-            told->sched_next = idle;
+            if (idle) idle->previous_task = told;
+            told->next_task = idle;
             idle = told;
         }
         ttas_unlock(&threads[lapic]->lock);
@@ -181,17 +203,17 @@ void reschedule(CPUContext *nonnull ctx)
     }
     if (ready) {
         Thread *nonnull tnew = assert_nonnull(ready)(({
-            ready = ready->sched_next;
-            if (ready != nullptr) ready->sched_prev = nullptr;
+            ready = ready->next_task;
+            if (ready != nullptr) ready->previous_task = nullptr;
             else ready_tail = nullptr;
         }));
 
         if (atomic_load(&tnew->lock)) goto idle;
         ttas_lock(&tnew->lock);
-        if (tnew->sched_next) {
-            tnew->sched_next->sched_prev = nullptr;
-            ready = tnew->sched_next;
-            tnew->sched_next = nullptr;
+        if (tnew->next_task) {
+            tnew->next_task->previous_task = nullptr;
+            ready = tnew->next_task;
+            tnew->next_task = nullptr;
         } else {
             ready_tail = ready = nullptr;
         }
@@ -219,3 +241,6 @@ void reschedule(CPUContext *nonnull ctx)
     ttas_unlock(&sched_lock);
 }
 
+int wait_for_thread(Thread *thread) { return 0; }
+int wake_mutex(Futex *mtx) { return 0; }
+int wake_all_mutexes(Futex *mutexes) { return 0; }

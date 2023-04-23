@@ -59,6 +59,7 @@ CFLAGS +=       						\
 	-Wno-missing-field-initializers		\
 	-fno-omit-frame-pointer 			\
 	-Wno-deprecated-attributes			\
+	-fms-extensions\
 	-fblocks
 
 LDFLAGS +=         			\
