@@ -188,7 +188,7 @@ end
 
 file:close()
 
-os.execute("cd Userland && ./luarocks make && cd ..")
+os.execute("cd Userland && luarocks make && cd ..")
 
 -- Copy over the modules into the `build/iso/
 print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mCopying modules to \x1b[34mbuild/iso/boot/\x1b[0m")
