@@ -182,13 +182,15 @@ static const volatile struct limine_framebuffer_request fb_request = {
     scheduler_init();
     success("Done");
 
-    Thread *nullable active_threads[module_req.response->module_count];
+    Thread *nonnull active_threads[module_req.response->module_count];
     for (size_t i = 0; i < module_req.response->module_count; i++) {
         struct limine_file *m = module_req.response->modules[i];
         auto ext = assert_nonnull(extension(string_length(m->cmdline), m->cmdline))({ continue; });
         if (string_compare(string_length(ext), ext, 3, "lua") != 0) continue;
 
-        active_threads[i] = spawn_thread(m->address, m->size, m->cmdline);
+        active_threads[i] = assert_nonnull(spawn_thread(m->address, m->size, m->cmdline)) ({
+            panic("Failed to load lua module {}!", m->cmdline);
+        });
     }
 
     success("Initalisation complete");

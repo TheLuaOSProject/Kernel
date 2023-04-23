@@ -8,3 +8,6 @@
 [submodule "extern/terminal"]
 	path = extern/terminal
 	url = https://github.com/limine-bootloader/terminal
+[submodule "Userland"]
+	path = Userland
+	url = https://github.com/TheLuaOSProject/Userland.git
