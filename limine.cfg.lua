@@ -1,0 +1,156 @@
+-- Copyright (C) 2023 Amrit Bhogal
+--
+-- This file is part of LuaOS.
+--
+-- LuaOS is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- LuaOS is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
+
+--- Auto generation of limine.cfg
+
+--[[
+TIMEOUT=0
+
+TERM_PALETTE=161A21;F8485D;4FD93D;FF9B28;0CB2FF;CA87FF;65E0B8;BBBBBB
+TERM_PALETTE_BRIGHT=565555;FF4D62;8ED71C;ECA02D;18B7FF;CA87FF;6AE6BE;FEFFFF
+TERM_BACKGROUND=0B0E13
+TERM_FOREGROUND=DBDBDB
+
+TERM_FONT=boot:///font.bin
+TERM_FONT_SIZE=8x20
+
+TERM_WALLPAPER=boot:///powered-by-lua.bmp
+
+:LuaOS
+    PROTOCOL=limine
+    KERNEL_PATH=boot:///luck.elf
+
+    MODULE_PATH=boot:///init.lua
+    MODULE_CMDLINE=init.lua
+]]
+
+---Gets all lua files in Userland/lua_modules/share/lua/5.1/
+---@return string[]
+local function get_userland()
+    local files = {}
+
+    local proc = assert(io.popen("find Userland/lua_modules/share/lua/5.1/ -type f -name '*.lua'", "r"))
+    for file in proc:lines() do
+        files[#files+1] = file
+    end
+
+    return files
+end
+
+---@generic K, V
+---@param array V[]
+---@param key K | fun(v: V): K
+---@return { [K]: V }
+local function map(array, key)
+    local map = {}
+
+    for _, v in ipairs(array) do
+        local k = type(key) == "function" and key(v) or v[key]
+        map[k] = v
+    end
+
+    return map
+end
+
+local config = {
+    timeout = 0,
+
+    term = {
+        pallette = {
+            normal = {
+                0x161A21,
+                0xF8485D,
+                0x4FD93D,
+                0xFF9B28,
+                0x0CB2FF,
+                0xCA87FF,
+                0x65E0B8,
+                0xBBBBBB
+            },
+            bright = {
+                0x565555,
+                0xFF4D62,
+                0x8ED71C,
+                0xECA02D,
+                0x18B7FF,
+                0xCA87FF,
+                0x6AE6BE,
+                0xFEFFFF
+            }
+        },
+        background = 0x0B0E13,
+        foreground = 0xDBDBDB,
+
+        font = {
+            path = "font.bin",
+            size = "8x20"
+        },
+
+        wallpaper = "powered-by-lua.bmp"
+    },
+
+    targets = {
+        ["LuaOS"] = {
+            protocol = "limine",
+            kernel_path = "luck.elf",
+
+            -- { "Userland/lua_modules/share/lua/5.1/sub/blah.lua" } -> { ["sub/blah.lua"] = "blah.lua" }
+            modules = map(get_userland(), function(file)
+                local path = file:match("Userland/lua_modules/share/lua/5.1/(.*)")
+                return path
+            end)
+        }
+    }
+}
+
+-- Dump the config to res/limine.cfg
+local file = assert(io.open("res/limine.cfg", "w"))
+
+---Write a line to the limine config
+---@nodiscard
+---@param ... any
+---@return fun(...: any)
+local function wl(...)
+    file:write(table.concat({...}, ' '))
+    return function(...) file:write(table.concat({...}, ' ')..'\n') end
+end
+
+wl "TIMEOUT=" (config.timeout)
+
+wl "TERM_PALETTE="(table.concat(config.term.pallette.normal, ";"))
+wl "TERM_PALETTE_BRIGHT="(table.concat(config.term.pallette.bright, ";"))
+wl "TERM_BACKGROUND="(config.term.background)
+wl "TERM_FOREGROUND="(config.term.foreground)
+
+wl "TERM_FONT=boot:///"(config.term.font.path)
+
+wl "TERM_FONT_SIZE="(config.term.font.size)
+
+wl "TERM_WALLPAPER=boot:///"(config.term.wallpaper)
+
+for name, target in pairs(config.targets) do
+    wl ":"(name)
+    wl "    PROTOCOL="(target.protocol)
+    wl "    KERNEL_PATH=boot:///"(target.kernel_path)
+
+    for path, module in pairs(target.modules) do
+        wl "    MODULE_PATH=boot:///"(path)
+        wl "    MODULE_CMDLINE="(module)
+    end
+end
+
+file:close()

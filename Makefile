@@ -75,12 +75,14 @@ ASFLAGS = -f elf64
 CFILES := $(shell find ./src -type f -name '*.c') extern/terminal/term.c extern/terminal/backends/framebuffer.c
 ASFILES := $(shell find ./src -type f -name '*.asm')
 
+USERLAND_FILES := $(shell find ./Userland -type f -name '*.lua')
+
 COBJS := $(addprefix build/obj/,$(CFILES:.c=.c.o))
 ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.asm.o))
 
 QEMU_WIDTH := 1024
 QEMU_HEIGHT := 768
-override QEMUFLAGS := -smp 2 -m 2G -monitor stdio -serial file:luaos.log -vga std
+QEMUFLAGS := -smp 2 -m 2G -monitor stdio -serial file:luaos.log -vga std
 
 QDF ?= -s
 
@@ -110,13 +112,28 @@ extern/limine/limine-deploy:
 
 extern/LuaJIT/src/lua.h: extern/LuaJIT
 
-build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.elf res/limine.cfg src/init.lua
+user-land:
+	@/usr/bin/printf "[\033[1;35mUserland\033[0m] \033[32mBuilding userland\n\033[0m"
+	cd Userland
+	./luarocks make
+	cd ..
+
+res/limine.cfg: limine.cfg.lua
+	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mBuilding limine.cfg\n\033[0m"
+	@mkdir -p $(dir $@)
+	lua limine.cfg.lua
+
+build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.elf res/limine.cfg user-land
 	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mBuilding ISO\n\033[0m"
 	@mkdir -p $(dir $@)/iso
+
+# All files in Userland/lua_modules/share/lua/5.1/ will be copied to the root of the ISO
+	cp -r Userland/lua_modules/share/lua/5.1/* $(dir $@)/iso
+
 	cp \
 		build/bin/luck.elf res/powered-by-lua.bmp res/limine.cfg \
 		res/font.bin extern/limine/limine-cd.bin extern/limine/limine.sys \
-		extern/limine/limine-cd-efi.bin src/init.lua \
+		extern/limine/limine-cd-efi.bin\
 		$(dir $@)/iso
 	xorriso -as mkisofs\
 			-b limine-cd.bin\
