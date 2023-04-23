@@ -34,6 +34,7 @@
 #include "luck/processes/scheduler.h"
 #include "luck/memory/manager.h"
 #include "luck/memory/magazines.h"
+#include "luck/bootloader/limine.h"
 
 #undef stdin
 #undef stdout
@@ -80,15 +81,6 @@ static void ps2_gets(char *buf)
     }
 }
 
-static volatile struct limine_module_request module_req [[gnu::used]] = {
-    LIMINE_MODULE_REQUEST, 0, nullptr
-};
-
-static const volatile struct limine_framebuffer_request fb_request = {
-    .id = LIMINE_FRAMEBUFFER_REQUEST
-};
-
-
 [[gnu::used]] noreturn void kernel_start()
 {
     asm (
@@ -111,9 +103,11 @@ static const volatile struct limine_framebuffer_request fb_request = {
     asm("MOVQ %0, %%CR3" :: "r"(cr3) : "memory");
 
 
-    success("\nStarted LuaOS");
-    info("{} + {} = {}", 2, 2, 2 + 2);
-    info("Hello, {}", "World!");
+    success("Started LuaOS");
+
+    info("Initialising bootloader");
+    bootloader_init();
+    success("Done");
 
     info("Initialising GDT");
     gdt_init();
@@ -136,13 +130,11 @@ static const volatile struct limine_framebuffer_request fb_request = {
     }
     success("Done");
 
-    if (fb_request.response == nullptr || fb_request.response->framebuffer_count == 0)
+    terminal_init();
+    framebuffer_init();
+
+    if (bootloader_framebuffer == nullptr || bootloader_framebuffer->framebuffer_count == 0)
         panic("No framebuffer found!");
-
-    auto fb = fb_request.response->framebuffers[0];
-
-    terminal_init(fb);
-    framebuffer_init(fb);
 
     info("Initialising APIC");
     auto rsdp = assert_nonnull(rsdp_init())({ panic("No RSDP found"); });
@@ -175,17 +167,17 @@ static const volatile struct limine_framebuffer_request fb_request = {
     FILE *stdout = _get_pcb()->stdout = kalloc(sizeof(FILE));
     stdout->write = stdout_write;
 
-    if (module_req.response == nullptr) panic("no modules available!");
-    if (module_req.response->module_count == 0) panic("more than one module available!");
+    if (bootloader_module== nullptr) panic("no modules available!");
+    if (bootloader_module->module_count == 0) panic("more than one module available!");
 
     info("Initialising scheduler");
     scheduler_init();
     success("Done");
 
-    info("Loading {} programs", module_req.response->module_count);
-    Thread *nonnull active_threads[module_req.response->module_count];
-    for (size_t i = 0; i < module_req.response->module_count; i++) {
-        struct limine_file *m = module_req.response->modules[i];
+    info("Loading {} programs", bootloader_module->module_count);
+    Thread *nonnull active_threads[bootloader_module->module_count];
+    for (size_t i = 0; i < bootloader_module->module_count; i++) {
+        struct limine_file *m = bootloader_module->modules[i];
         auto ext = assert_nonnull(extension(string_length(m->cmdline), m->cmdline))({ continue; });
         if (string_compare(string_length(ext), ext, 3, "lua") != 0) continue;
 

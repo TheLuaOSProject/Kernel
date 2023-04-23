@@ -19,17 +19,16 @@
 
 #define OLIVEC_IMPLEMENTATION
 #include "luck/io/framebuffer.h"
+#include "luck/bootloader/limine.h"
 
 #include "lj-libc/limits.h"
-#include <LuaJIT/src/lauxlib.h>
+#include <lauxlib.h>
 
 #define CANVAS_T "OliveCanvas"
 
-static struct limine_framebuffer *nullable framebuffer = nullptr;
-
-Olivec_Canvas framebuffer_init(struct limine_framebuffer *fb)
+Olivec_Canvas framebuffer_init()
 {
-    framebuffer = fb;
+    struct limine_framebuffer *nonnull fb = bootloader_framebuffer->framebuffers[0];
     return olivec_canvas(fb->address, fb->width, fb->height, fb->width);
 }
 
@@ -169,19 +168,12 @@ static int libframebuffer_get_dimensions(lua_State *L)
     return 2;
 }
 
-static int libframebuffer_create(lua_State *L)
+static int libframebuffer_get(lua_State *L)
 {
-    if (framebuffer == nullptr) {
-        lua_pushnil(L);
-        lua_pushstring(L, "framebuffer not initialized");
-        return 2;
-    }
+    struct limine_framebuffer *nonnull fb = bootloader_framebuffer->framebuffers[0];
 
-    struct limine_framebuffer *fb = framebuffer;
-    Olivec_Canvas canvas = olivec_canvas(fb->address, fb->width, fb->height, fb->pitch);
-
-    Olivec_Canvas *canvas_ptr = lua_newuserdata(L, sizeof(Olivec_Canvas));
-    *canvas_ptr = canvas;
+    Olivec_Canvas *canvas = lua_newuserdata(L, sizeof(Olivec_Canvas));
+    *canvas = olivec_canvas(fb->address, fb->width, fb->height, fb->width);
 
     luaL_getmetatable(L, CANVAS_T);
     lua_setmetatable(L, -2);
@@ -204,7 +196,7 @@ static const luaL_Reg libframebuffer_canvas[] = {
 };
 
 static const luaL_Reg libframebuffer[] = {
-    { "create", libframebuffer_create },
+    { "get", libframebuffer_get },
     { nullptr, nullptr }
 };
 

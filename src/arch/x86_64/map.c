@@ -19,6 +19,7 @@
 
 #include "common.h"
 #include "luck/memory/manager.h"
+#include "luck/bootloader/limine.h"
 
 static qword* get_pte(qword addr)
 {

@@ -17,22 +17,8 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "luck/arch/x86_64/acpi/acpi.h"
+#pragma once
 
-#include "memory.h"
-#include "luck/io/log.h"
-#include "luck/bootloader/limine.h"
+#include <lua.h>
 
-struct SDTHeader *sdt_find(const struct RSDP *rsdp, const char id[static 4], int idx)
-{
-    struct RSDT *rsdt = virt(rsdp->rsdt_address, struct RSDT);
-    size_t nent = (rsdt->length - sizeof(struct SDTHeader)) / sizeof(dword);
-    for (size_t i = 0;i < nent;i++) {
-        struct SDTHeader *sdt = virt(rsdt->pointers[i], struct SDTHeader);
-        if (!memcmp(sdt->signature, id, 4) && idx-- == 0) return sdt;
-    }
-
-    return nullptr;
-}
-
-
+int luaopen_kernel(lua_State *L);

@@ -19,8 +19,8 @@
 
 #include <limine/limine.h>
 #include "common.h"
-#include "memory.h"
 
+#include "luck/bootloader/limine.h"
 #include "luck/memory/manager.h"
 #include "luck/memory/magazines.h"
 #include "luck/io/log.h"
@@ -48,12 +48,11 @@ static qword kalloc_size_arr[16] = {kalloc_sizes};
 #define convert_pg(X) virt(X, qword)
 #define convert_kalloc(X) ((qword*)(void*)(X))
 
-static volatile struct limine_memmap_request map = {LIMINE_MEMMAP_REQUEST, 0, nullptr};
 static qword current_region = 0;
 
 raw_slabs(page, convert_pg, {
-    while (current_region < map.response->entry_count) {
-        struct limine_memmap_entry *region = map.response->entries[current_region];
+    while (current_region < bootloader_memmap->entry_count) {
+        struct limine_memmap_entry *region = bootloader_memmap->entries[current_region];
         if (region->type == LIMINE_MEMMAP_USABLE) {
             if (region->length >= 0x1000 && (region->base & 0xfff) == 0) {
                 region->base += 0x1000;

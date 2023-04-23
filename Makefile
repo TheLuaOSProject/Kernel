@@ -48,6 +48,7 @@ CFLAGS +=       						\
 	-target x86_64-elf	 				\
 	-nostdinc							\
 	-isystem extern/					\
+	-isystem extern/LuaJIT/src			\
 	-Iinc               				\
 	-Wno-unused-command-line-argument	\
 	-Wanon-enum-enum-conversion			\

@@ -19,13 +19,11 @@
 
 #include "common.h"
 #include "stdatomic.h"
-#include "memory.h"
-#include "macro_util.h"
-
 
 #define _EVAL(...) __VA_ARGS__
 #define EVAL(...) _EVAL(__VA_ARGS__)
 
+#include "luck/bootloader/limine.h"
 #include "luck/io/log.h"
 #include "luck/memory/magazines.h"
 #include "luck/memory/manager.h"
@@ -83,7 +81,7 @@ static qword *alloc_mag(void) {
 	if (static_mag_alloc_idx >= 32) panic("out of static magazine allocation space!");
 	return &static_mag_alloc[static_mag_alloc_idx++ * mag_each_size + 1];
 }
-static void free_mag(qword *mag) {
+static void free_mag(const qword *mag) {
 	(void)mag;
 	panic("TODO: free magazines (needs kmalloc)");
 }

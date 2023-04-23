@@ -19,19 +19,21 @@
 
 #include "luck/processes/scheduler.h"
 
-#include <LuaJIT/src/lua.h>
+#include <lua.h>
 #include "string.h"
 
 #include "luck/arch/x86_64/cpu.h"
 #include "luck/io/log.h"
 #include "luck/memory/manager.h"
+#include "luck/bootloader/limine.h"
 
 
 #include "lj-libc/limits.h"
-#include <LuaJIT/src/lua.h>
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 
 void *ljsup_alloc(void *ud, void *ptr, size_t osize, size_t nsize);
-int luaL_loadbuffer(lua_State *L, const char *s, size_t len, const char *name);
 
 #define _lua_openmodule(mname, module) ({ \
     lua_pushcfunction(L, luaopen_##module); \
@@ -40,12 +42,6 @@ int luaL_loadbuffer(lua_State *L, const char *s, size_t len, const char *name);
 })
 #define lua_openmodule(module) _lua_openmodule(#module, module)
 
-int luaopen_base(lua_State *L);
-int luaopen_math(lua_State *L);
-int luaopen_string(lua_State *L);
-int luaopen_table(lua_State *L);
-int luaopen_debug(lua_State *L);
-int luaopen_bit(lua_State *L);
 int luaopen_kernel(lua_State *L);
 
 static void thread_entry(Thread *nonnull t)
@@ -244,3 +240,21 @@ void reschedule(CPUContext *nonnull ctx)
 int wait_for_thread(Thread *thread) { return 0; }
 int wake_mutex(Futex *mtx) { return 0; }
 int wake_all_mutexes(Futex *mutexes) { return 0; }
+
+// function scheduler.spawn(modulename: string, ...: string): Thread
+static int libscheduler_spawn(lua_State *nonnull L)
+{
+
+    return 1;
+}
+
+static const luaL_Reg libscheduler[] = {
+    { "spawn", libscheduler_spawn },
+    { nullptr, nullptr }
+};
+
+int luaopen_scheduler(lua_State *nonnull L)
+{
+
+    return 1;
+}

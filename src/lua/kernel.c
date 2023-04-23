@@ -17,13 +17,14 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <LuaJIT/src/lua.h>
+#include <lua.h>
 #include "luck/io/log.h"
 
 #include "lj-libc/limits.h"
-#include <LuaJIT/src/lauxlib.h>
+#include <lauxlib.h>
 
 #include "luck/io/framebuffer.h"
+#include "luck/processes/scheduler.h"
 #include "luck/io/console.h"
 #include "luck/arch/x86_64/io/ps2.h"
 #include "string.h"
@@ -161,6 +162,10 @@ int luaopen_kernel(lua_State *L)
     lua_getglobal(L, "kernel");
     luaopen_framebuffer(L);
     lua_setfield(L, -2, "framebuffer");
+
+    lua_getglobal(L, "kernel");
+    luaopen_scheduler(L);
+    lua_setfield(L, -2, "scheduler");
 
     return 0;
 }

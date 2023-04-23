@@ -23,11 +23,11 @@
 
 #include <limine/limine.h>
 
-#include <LuaJIT/src/lua.h>
+#include <lua.h>
 
 NONNULL_BEGIN
 
-Olivec_Canvas framebuffer_init(struct limine_framebuffer *fb);
+Olivec_Canvas framebuffer_init();
 
 
 /// Gets the lua table for the framebuffer, for `luaopen_kernel` to add it to `kernel` table.

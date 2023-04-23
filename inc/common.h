@@ -77,10 +77,3 @@ static inline noreturn void halt() {
             "HLT\n");
     __builtin_unreachable();
 }
-
-qword _limine__virt_to_phys(qword virt);
-qword _limine__phys_to_virt(qword phys);
-
-#define phys(value) _limine__virt_to_phys((qword)(value))
-#define virt(value, ...)                                                       \
-  (__VA_OPT__((__VA_ARGS__ *))(qword) _limine__phys_to_virt(value))

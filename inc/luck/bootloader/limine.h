@@ -17,22 +17,31 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "luck/arch/x86_64/acpi/acpi.h"
+#include <limine/limine.h>
 
-#include "memory.h"
-#include "luck/io/log.h"
-#include "luck/bootloader/limine.h"
+#include "common.h"
 
-struct SDTHeader *sdt_find(const struct RSDP *rsdp, const char id[static 4], int idx)
-{
-    struct RSDT *rsdt = virt(rsdp->rsdt_address, struct RSDT);
-    size_t nent = (rsdt->length - sizeof(struct SDTHeader)) / sizeof(dword);
-    for (size_t i = 0;i < nent;i++) {
-        struct SDTHeader *sdt = virt(rsdt->pointers[i], struct SDTHeader);
-        if (!memcmp(sdt->signature, id, 4) && idx-- == 0) return sdt;
-    }
+NONNULL_BEGIN
 
-    return nullptr;
-}
+#define BOOTLOADER_MODULE(name) \
+    extern const volatile struct limine_##name##_response *nullable bootloader_##name
 
+BOOTLOADER_MODULE(hhdm);
+BOOTLOADER_MODULE(kernel_address);
+BOOTLOADER_MODULE(module);
+BOOTLOADER_MODULE(framebuffer);
+BOOTLOADER_MODULE(rsdp);
+BOOTLOADER_MODULE(memmap);
 
+#undef BOOTLOADER_MODULE
+
+void bootloader_init(void);
+
+qword limine_virt_to_phys(qword virt);
+qword limine_phys_to_virt(qword phys);
+
+#define phys(value) limine_virt_to_phys((qword)(value))
+#define virt(value, ...)                                                       \
+  (__VA_OPT__((__VA_ARGS__ *))(qword) limine_phys_to_virt(value))
+
+NONNULL_END

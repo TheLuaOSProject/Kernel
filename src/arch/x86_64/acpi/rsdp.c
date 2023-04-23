@@ -23,20 +23,14 @@
 #include <limine/limine.h>
 #include "string.h"
 
-static volatile struct limine_rsdp_request request = {
-    .id = LIMINE_RSDP_REQUEST,
-    .revision = 0
-};
-
+#include "luck/bootloader/limine.h"
 
 struct RSDP *rsdp_init(void)
 {
-    struct limine_rsdp_response *resp = request.response;
-
-    if (resp == nullptr || resp->address == nullptr)
+    if (bootloader_rsdp == nullptr || bootloader_rsdp->address == nullptr)
         return nullptr;
 
-    struct RSDP *rsdp = resp->address;
+    struct RSDP *nonnull rsdp = bootloader_rsdp->address;
 
     if (rsdp->revision < 2)
         info("  XSDT not supported on this machine; using RSDT");

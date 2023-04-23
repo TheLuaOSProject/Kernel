@@ -17,7 +17,7 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <LuaJIT/src/lua.h>
+#include <lua.h>
 
 #include "common.h"
 #include "luck/arch/x86_64/cpu.h"
@@ -64,5 +64,7 @@ int wake_all_mutexes(Futex *mutexes);
 Thread *nullable spawn_thread(void *addr, size_t size, const char *vpi);
 void reschedule(CPUContext *ctx);
 void scheduler_init(void);
+
+int luaopen_scheduler(lua_State *L);
 
 NONNULL_END
