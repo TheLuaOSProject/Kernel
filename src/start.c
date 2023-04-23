@@ -43,12 +43,15 @@ NONNULL_BEGIN
 
 static const char *nullable extension(size_t buflen, const char buf[buflen])
 {
-    //Find the last dot
-    size_t i = buflen;
-    while (i > 0 && buf[i] != '.') i--;
-
-    if (i == 0) return nullptr;
-    return &buf[i + 1];
+    const char *dot = nullptr;
+    for (size_t i = 0; i < buflen; i++) {
+        if (buf[i] == '.') {
+            dot = buf + i;
+            break;
+        }
+    }
+    if (dot == nullptr) return nullptr;
+    return dot + 1;
 }
 
 static void stdout_write(const char *str, int siz)

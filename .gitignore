@@ -7,3 +7,7 @@ extern/ovmf-x64
 Kernel.sublime-workspace
 
 res/limine.cfg
+/luarocks
+/lua
+/lua_modules
+/.luarocks

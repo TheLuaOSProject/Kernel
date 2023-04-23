@@ -38,6 +38,10 @@ TERM_WALLPAPER=boot:///powered-by-lua.bmp
     MODULE_CMDLINE=init.lua
 ]]
 
+
+print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mBuilding \x1b[34mUserland/lua_modules/share/lua/5.1/\n\x1b[0m")
+os.execute "cd Userland && luarocks --lua-version=5.1 init && luarocks make && cd .."
+
 ---@param proc string
 ---@param ... string
 ---@return fun(): string
@@ -188,7 +192,6 @@ end
 
 file:close()
 
-os.execute("cd Userland && luarocks make && cd ..")
 
 -- Copy over the modules into the `build/iso/
 print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mCopying modules to \x1b[34mbuild/iso/boot/\x1b[0m")
