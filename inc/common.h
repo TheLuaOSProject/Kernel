@@ -68,8 +68,6 @@ typedef int64_t sqword;
 
 typedef const void *label;
 
-typedef _Atomic(bool) Lock;
-
 //[[noreturn]]
 static inline noreturn void halt() {
     while (true)

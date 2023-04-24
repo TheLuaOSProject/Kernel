@@ -18,6 +18,7 @@
  */
 
 #include "common.h"
+#include "lock.h"
 
 #include "luck/memory/manager.h"
 
@@ -33,6 +34,7 @@ struct Channel {
     struct Message *nullable read, *nullable write;
     size_t byte_count, byte_max;
     size_t message_count, message_max;
+    Lock    lock;
 };
 
 static inline struct Channel channel_create(size_t byte_max, size_t message_max)

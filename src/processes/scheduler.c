@@ -60,16 +60,6 @@ static void thread_entry(Thread *nonnull t)
     while (true) asm("HLT");
 }
 
-static void ttas_lock(Lock *nonnull b)
-{
-    bool scc = false;
-    do {
-        while (atomic_load_explicit(b, memory_order_relaxed)) { scc = true; asm("pause"); }
-    } while (atomic_exchange(b, true));
-}
-static void ttas_unlock(Lock *nonnull b)
-{ atomic_store(b, false); }
-
 static Lock sched_lock = false;
 static Thread *nullable ready = nullptr;
 static Thread *nullable ready_tail = nullptr;
@@ -104,15 +94,15 @@ Thread *spawn_thread(void *addr, size_t size, const char *name)
 
     t->stack_base = kalloc(Thread_STACKSIZE);
     if (!t->stack_base) panic("failed to allocate stack");
-    t->ctx.rsp = (uint64_t)(t->stack_base + Thread_STACKSIZE);
-    t->ctx.rip = (uint64_t)(thread_entry);
-    t->ctx.rdi = (uint64_t)(t);
-    t->ctx.rflags = 0x202; // all the flags that we need
-    t->ctx.cs = 0x28;
-    t->ctx.ss = 0x30;
+    t->cpu_context.rsp = (uint64_t)(t->stack_base + Thread_STACKSIZE);
+    t->cpu_context.rip = (uint64_t)(thread_entry);
+    t->cpu_context.rdi = (uint64_t)(t);
+    t->cpu_context.rflags = 0x202; // all the flags that we need
+    t->cpu_context.cs = 0x28;
+    t->cpu_context.ss = 0x30;
     t->ready = true;
 
-    ttas_lock(&sched_lock);
+    acquire_lock(&sched_lock);
     t->next_task = ready;
     if (ready) {
         ready->previous_task = t;
@@ -122,7 +112,7 @@ Thread *spawn_thread(void *addr, size_t size, const char *name)
         ready_tail = t;
     }
     ready = t;
-    ttas_unlock(&sched_lock);
+    release_lock(&sched_lock);
 
     return t;
 }
@@ -157,19 +147,19 @@ static __attribute__((aligned(16))) uint8_t threadsweeper_stack[16384];
 static void threadsweeper(Thread *nonnull t) {
     uint64_t lapic = *lapic_id >> 24;
 
-    ttas_lock(&t->lock);
+    acquire_lock(&t->lock);
     lua_close(t->lua);
-    t->ctx.rip = 0xdeadbeefdeadbeef;
+    t->cpu_context.rip = 0xdeadbeefdeadbeef;
     kfree(t->stack_base, 16384);
     kfree(t, sizeof(Thread));
-    ttas_unlock(&t->lock);
+    release_lock(&t->lock);
     asm("MOVQ $0, (%%RDI)\n1: INT3\njmp 1b" :: "D"(&threadsweeper_lock));
 }
 
 void reschedule(CPUContext *nonnull ctx)
 {
     if (atomic_load(&sched_lock)) return;
-    ttas_lock(&sched_lock);
+    acquire_lock(&sched_lock);
     uint64_t lapic = *lapic_id >> 24;
     if (ctx->interrupt_number == 3) {
         if (!was_threadsweeping[lapic]) {
@@ -179,8 +169,8 @@ void reschedule(CPUContext *nonnull ctx)
     if (threads[lapic]) {
         Thread *told = threads[lapic];
         if (atomic_load(&told->lock)) return;
-        ttas_lock(&told->lock);
-        told->ctx = *ctx;
+        acquire_lock(&told->lock);
+        told->cpu_context = *ctx;
         if (told->ready) {
             if (ready_tail) {
                 ready_tail->next_task = told;
@@ -193,7 +183,7 @@ void reschedule(CPUContext *nonnull ctx)
             told->next_task = idle;
             idle = told;
         }
-        ttas_unlock(&threads[lapic]->lock);
+        release_lock(&threads[lapic]->lock);
     } else {
         if (!was_threadsweeping[lapic]) idle_tasks[lapic] = *ctx;
     }
@@ -205,7 +195,7 @@ void reschedule(CPUContext *nonnull ctx)
         });
 
         if (atomic_load(&tnew->lock)) goto idle;
-        ttas_lock(&tnew->lock);
+        acquire_lock(&tnew->lock);
         if (tnew->next_task) {
             tnew->next_task->previous_task = nullptr;
             ready = tnew->next_task;
@@ -214,10 +204,10 @@ void reschedule(CPUContext *nonnull ctx)
             ready_tail = ready = nullptr;
         }
         threads[lapic] = tnew;
-        *ctx = tnew->ctx;
+        *ctx = tnew->cpu_context;
         if (!tnew->ready) panic("how is a non-ready task on the ready list?");
         if (tnew->kill) {
-            ttas_lock(&threadsweeper_lock);
+            acquire_lock(&threadsweeper_lock);
             ctx->rip = (uint64_t)(threadsweeper);
             ctx->rsp = (uint64_t)(threadsweeper_stack + 16384);
             ctx->rdi = (uint64_t)(tnew);
@@ -227,29 +217,69 @@ void reschedule(CPUContext *nonnull ctx)
         } else {
             ctx->rflags = 0x202;
         }
-        ttas_unlock(&tnew->lock);
+        release_lock(&tnew->lock);
     } else {
     idle:
         *ctx = idle_tasks[lapic];
         threads[lapic] = nullptr;
         ctx->rflags = 0x202;
     }
-    ttas_unlock(&sched_lock);
+    release_lock(&sched_lock);
 }
 
 void wait_for_thread(Thread *thread)
 {
+    acquire_lock(&thread->lock);
 
+    while (!thread->kill) {
+        release_lock(&thread->lock);
+        reschedule(&thread->cpu_context); // This will cause the current thread to yield
+        release_lock(&thread->lock);
+    }
+
+    release_lock(&thread->lock);
 }
 
 void wake_futex(Futex *mtx)
 {
+    acquire_lock(&mtx->lock);
 
+    if (mtx->head) {
+        Thread *to_wake = mtx->head;
+        mtx->head = assert_nonnull(to_wake->next_mutex)({
+            goto done;
+        });
+
+        acquire_lock(&to_wake->lock);
+        to_wake->waiting = false;
+        to_wake->next_mutex = nullptr;
+        to_wake->ready = true;
+        release_lock(&to_wake->lock);
+    }
+
+    done:
+    release_lock(&mtx->lock);
 }
 
-void wake_all_futexes(Futex *mutexes)
+void wake_all_futexes(Futex *mtx)
 {
+    acquire_lock(&mtx->lock);
 
+    while (mtx->head) {
+        Thread *to_wake = mtx->head;
+        mtx->head = assert_nonnull(to_wake->next_mutex)({
+            goto done;
+        });
+
+        acquire_lock(&to_wake->lock);
+        to_wake->waiting = false;
+        to_wake->next_mutex = NULL;
+        to_wake->ready = true;
+        release_lock(&to_wake->lock);
+    }
+
+    done:
+    acquire_lock(&mtx->lock);
 }
 
 // function scheduler.spawn(modulename: string, ...: string): Thread

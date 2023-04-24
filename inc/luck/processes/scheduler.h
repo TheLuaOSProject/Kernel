@@ -20,7 +20,9 @@
 #include <lua.h>
 
 #include "common.h"
+#include "lock.h"
 #include "luck/arch/x86_64/cpu.h"
+#include "luck/processes/ipc.h"
 
 NONNULL_BEGIN
 
@@ -35,11 +37,11 @@ typedef struct Futex {
 
 typedef struct Thread {
     char name[64];
-    CPUContext ctx;
+    CPUContext cpu_context;
     void *stack_base;
     struct Thread *nullable next_task, *nullable previous_task;
     lua_State *lua;
-    bool ready, kill;
+    bool ready, kill, waiting;
     Lock lock;
 
     struct Thread *nullable next_mutex;
