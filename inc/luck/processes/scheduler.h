@@ -28,18 +28,6 @@ enum {
     Thread_STACKSIZE = 0x4000,
 };
 
-struct Message {
-    struct Message *nullable next, *nullable previous;
-    size_t length;
-    byte data[];
-};
-
-struct Channel {
-    struct Message *read_head, *write_head;
-    size_t byte_count, byte_max;
-    size_t message_count, message_max;
-};
-
 typedef struct Futex {
     struct Thread *head;
     Lock lock;
