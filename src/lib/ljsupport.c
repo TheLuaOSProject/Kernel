@@ -37,8 +37,8 @@ void fread() {panic("todo:fread");}
 void fflush() {panic("todo:fflush");}
 void fgets() {panic("todo:fgets");}
 // void strncpy() {panic("todo:strncpy");}
-void memchr() {panic("todo:memchr");}
-void strstr() {panic("todo:strstr");}
+//;void memchr() {panic("todo:memchr");}
+//void strstr() {panic("todo:strstr");}
 void strerror() {panic("todo:strerror");}
 void strtoul() {panic("todo:strtoul");}
 
@@ -66,3 +66,24 @@ void *ljsup_alloc(void *ud, void *ptr, size_t osize, size_t nsize) {
 	if (ptr) kfree(ptr, osize);
 	return nptr;
 }
+
+void *memchr(const void *s, byte c, size_t n)
+{
+    const char *str = (char*)s;
+    for (size_t i = 0; i < n; i++) {
+        if (*(str + i) == c)
+            return (void*)(str + i);
+    }
+    return NULL;
+}
+
+void *memrchr(const void *s, byte c, size_t n)
+{
+    const char *str = (char*)s;
+    for (size_t i = n - 1; i < n; i--) {
+        if (*(str + i) == c)
+            return (void*)(str + i);
+    }
+    return NULL;
+}
+

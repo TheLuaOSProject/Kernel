@@ -48,3 +48,15 @@ char *strncpy(char *dst, const char *src, size_t n)
     string_copy(n, dst, n, src);
     return dst;
 }
+
+char *strstr(const char *haystack, char const *needle)
+{
+    if (!needle || !(*needle))
+        return (char*)haystack;
+    size_t len1 = strlen(haystack), len2 = strlen(needle);
+    for (size_t i = 0; i <= len1 - len2; i++) {
+        if (!memcmp(haystack + i, needle, len2))
+            return (char*)(haystack + i);
+    }
+    return NULL;
+}
