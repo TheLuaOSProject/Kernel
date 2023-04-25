@@ -49,18 +49,14 @@ char *strncpy(char *dst, const char *src, size_t n)
     return dst;
 }
 
-char *strstr(char *str, char const *to_find)
+char *strstr(const char *haystack, char const *needle)
 {
-    if (!(*to_find))
-        return str;
-    for (int i = 0; *(str + i); i++) {
-        int j;
-        for (j = 0; *(to_find + j); j++) {
-            if (*(str + i + j) != *(to_find + j))
-                break;
-        }
-        if (!(*(to_find + j)))
-            return str + i;
+    if (!needle || !(*needle))
+        return (char*)haystack;
+    size_t len1 = strlen(haystack), len2 = strlen(needle);
+    for (size_t i = 0; i <= len1 - len2; i++) {
+        if (!memcmp(haystack + i, needle, len2))
+            return (char*)(haystack + i);
     }
     return NULL;
 }
