@@ -48,3 +48,19 @@ char *strncpy(char *dst, const char *src, size_t n)
     string_copy(n, dst, n, src);
     return dst;
 }
+
+char *strstr(char *str, char const *to_find)
+{
+    if (!(*to_find))
+        return str;
+    for (int i = 0; *(str + i); i++) {
+        int j;
+        for (j = 0; *(to_find + j); j++) {
+            if (*(str + i + j) != *(to_find + j))
+                break;
+        }
+        if (!(*(to_find + j)))
+            return str + i;
+    }
+    return NULL;
+}
