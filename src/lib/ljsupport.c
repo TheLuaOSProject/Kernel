@@ -12,8 +12,8 @@ double atan(double x) { panic("todo: atan"); }
 double atan2(double y, double x) { panic("todo: atan2"); }
 double cos(double x) { panic("todo: cos"); }
 double cosh(double x) { panic("todo: cosh"); }
-double exp(double x) { panic("todo: exp"); }
-double log(double x) { panic("todo: log10"); }
+//double exp(double x) { panic("todo: exp"); }
+//double log(double x) { panic("todo: log10"); }
 double log10(double x) { panic("todo: log10"); }
 double log2(double x) { panic("todo: log2"); }
 double sin(double x) { panic("todo: sin"); }
@@ -22,7 +22,7 @@ double tan(double x) { panic("todo: tan"); }
 double tanh(double x) { panic("todo: tanh"); }
 double frexp(double value, int *exp) { panic("todo: frexp"); }
 
-double fmod(double x, double y) { panic("todo: fmod"); }
+//double fmod(double x, double y) { panic("todo: fmod"); }
 double ldexp(double x, int y) { panic("todo: ldexp"); }
 double modf(double x, double* y) { panic("todo: modf"); }
 double pow(double x, double y) { panic("todo: pow"); }
