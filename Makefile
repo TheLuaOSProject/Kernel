@@ -19,8 +19,7 @@
 
 CC = clang
 LD = ld.lld
-LUA= lua
-
+LUAJIT= luajit
 
 GDB := x86_64-elf-gdb
 
@@ -119,7 +118,7 @@ extern/LuaJIT/src/lua.h: extern/LuaJIT
 
 user-land: build-userland.lua
 	@/usr/bin/printf "[\033[1;35mUserland\033[0m] \033[32mBuilding userland\n\033[0m"
-	@$(LUA) build-userland.lua
+	@$(LUAJIT) build-userland.lua
 
 
 

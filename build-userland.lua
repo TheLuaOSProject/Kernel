@@ -40,9 +40,12 @@ TERM_WALLPAPER=boot:///powered-by-lua.bmp
 
 
 print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mBuilding \x1b[34mUserland/lua_modules/share/lua/5.1/\n\x1b[0m")
-local suc, _, ec = os.execute "cd Userland && luarocks --lua-version=5.1 init && luarocks make && cd .."
+local suc, _, _ = os.execute "cd Userland && luarocks --lua-version=5.1 init && luarocks make && cd .."
 if not suc then
-    os.exit(ec)
+    local suc2, _, ec = os.execute "cd Userland && luarocks-5.1 --lua-version=5.1 init && luarocks-5.1 make && cd .."
+    if not suc2 then
+        os.exit(ec)
+    end
 end
 
 ---@param proc string
