@@ -28,28 +28,34 @@
 #define DBL_MAX 179769313486231570814527423731704356798070567525844996598917476803157260780028538760589558632766878171540458953514382464234321326889464182768467546703537516986049910576551282076245490090389328944075868508455133942304583236903222948165808559332123348274797826204144723168738177180919299881250404026184124858368.000000
 #define INFINITY INF
 
-#include <float.h>
-
 typedef union {
     float f;
-    char b[4];
+    byte b[4];
+    dword d;
 } float_bytes;
 
 typedef union {
     double d;
-    char b[8];
+    byte b[8];
+    qword q;
 } double_bytes;
 
 int isnan(double x)
 {
-    if (x != x)
+    double_bytes bytes = {x};
+    bytes.b[7] &= 0x7F;
+    if ((bytes.q & 0x7FF0000000000000) == 0x7FF0000000000000 && !(bytes.q & 0x000FFFFFFFFFFFFF))
         return (1);
     return (0);
 }
 
 int isinf(double x)
 {
-    return (x > DBL_MAX || x < -DBL_MAX);
+    double_bytes bytes = {x};
+    bytes.b[7] &= 0x7F;
+    if (bytes.q == 0x7FF0000000000000)
+        return (1);
+    return (0);
 }
 
 double fabs(double x)
