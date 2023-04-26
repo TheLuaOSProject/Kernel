@@ -98,7 +98,8 @@ static void ps2_gets(char *buf)
     qword cr3;
     asm("MOVQ %%CR3, %0" : "=r"(cr3));
     for (qword i = 0; i < 256; i++)
-        *virt(cr3 + i * 8, qword) = 0;
+        virt(cr3, qword)[i] = 0;
+//        *virt(cr3 + i * 8, qword) = 0;
 
     asm("MOVQ %0, %%CR3" :: "r"(cr3) : "memory");
 
@@ -164,10 +165,12 @@ static void ps2_gets(char *buf)
     lapic_init();
     info("LAPIC base: {}", lapic_base);
     success("Done");
-    FILE *stdout = _get_pcb()->stdout = kalloc(sizeof(FILE));
-    stdout->write = stdout_write;
 
-    if (bootloader_module== nullptr) panic("no modules available!");
+    static FILE stdout;
+    _get_pcb()->stdout = &stdout;
+    stdout.write = stdout_write;
+
+    if (bootloader_module == nullptr) panic("no modules available!");
     if (bootloader_module->module_count == 0) panic("more than one module available!");
 
     info("Initialising scheduler");

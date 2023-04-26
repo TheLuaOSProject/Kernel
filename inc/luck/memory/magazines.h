@@ -19,28 +19,28 @@
 
 #pragma once
 
-#include <common.h>
-#include <stdatomic.h>
+#include "common.h"
+#include "lock.h"
 
 typedef union {
 	struct {
-		atomic_bool locked;
-		qword* current;
-		qword* previous;
+		Lock locked;
+		qword *current;
+		qword *previous;
 	};
 	char padding[64]; // force cache line size to avoid false sharing
 } MagazinePerCPU;
 
 typedef struct {
-	atomic_bool locked;
+	Lock locked;
 
 	qword num_ready_mags;
-	qword* ready_mags[16];
+	qword *ready_mags[16];
 
 	qword num_free_mags;
-	qword* free_mags[16];
+	qword *free_mags[16];
 
-	qword(*get)(void* ctx);
+	qword (*get)(void* ctx);
 	void (*put)(void* ctx, qword item);
 	void* ctx;
 	MagazinePerCPU* mag_percpu;

@@ -188,11 +188,7 @@ void reschedule(CPUContext *nonnull ctx)
         if (!was_threadsweeping[lapic]) idle_tasks[lapic] = *ctx;
     }
     if (ready) {
-        Thread *nonnull tnew = assert_nonnull(ready)({
-            ready = ready->next_task;
-            if (ready != nullptr) ready->previous_task = nullptr;
-            else ready_tail = nullptr;
-        });
+        auto tnew = (Thread *nonnull)ready;
 
         if (atomic_load(&tnew->lock)) goto idle;
         acquire_lock(&tnew->lock);
@@ -250,8 +246,7 @@ void wake_futex(Futex *mtx)
             goto done;
         });
 
-        acquire_lock(&to_wake->lock);
-        to_wake->waiting = false;
+        acquire_lock(&to_wake->lock);\
         to_wake->next_mutex = nullptr;
         to_wake->ready = true;
         release_lock(&to_wake->lock);
@@ -271,8 +266,7 @@ void wake_all_futexes(Futex *mtx)
             goto done;
         });
 
-        acquire_lock(&to_wake->lock);
-        to_wake->waiting = false;
+        acquire_lock(&to_wake->lock);\
         to_wake->next_mutex = NULL;
         to_wake->ready = true;
         release_lock(&to_wake->lock);

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AutoImportSettings">
-    <option name="autoReloadType" value="ALL" />
+    <option name="autoReloadType" value="SELECTIVE" />
   </component>
-  <component name="CMakePresetLoader">{
-  &quot;useNewFormat&quot;: true
-}</component>
   <component name="CMakeRunConfigurationManager">
     <generated>
       <config projectName="Kernel" targetName="bios" />
       <config projectName="Kernel" targetName="uefi" />
       <config projectName="Kernel" targetName="all" />
+      <config projectName="Kernel" targetName="Makefile" />
+      <config projectName="Kernel" targetName="user-land" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -19,22 +18,23 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a281778f-9bf2-4f25-b6b2-44fd55c5d450" name="Changes" comment="feat(IDE): Add .idea files">
+    <list default="true" id="811056a0-c5cf-46fe-aa19-d72ee2034a14" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Userland" beforeDir="false" afterPath="$PROJECT_DIR$/Userland" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Userland/luaos-dev-1.rockspec" beforeDir="false" afterPath="$PROJECT_DIR$/Userland/luaos-dev-1.rockspec" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Userland/src/animation.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Userland/src/animation.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Userland/src/animation2.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Userland/src/animation2.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Userland/src/repl.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Userland/src/repl.lua" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine" beforeDir="false" afterPath="$PROJECT_DIR$/extern/limine" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extern/limine/limine-deploy.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine/limine-enroll-config.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/common.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/common.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/cpu.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/cpu.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/msr.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/msr.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/io/log.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/io/log.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/memory.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/memory.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/stddef.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/stddef.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/string.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/string.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/cpu.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/cpu.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/interrupts/lapic.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/interrupts/lapic.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/log.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/log.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/string.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/string.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/lock.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/lock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/luck/memory/magazines.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/memory/magazines.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/luck/processes/scheduler.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/processes/scheduler.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memory/magazines.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/memory/magazines.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/processes/scheduler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/processes/scheduler.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/start.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/start.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -45,22 +45,6 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="EmbeddedSvdWindowState">
-    <option name="columnWidths">
-      <list>
-        <option value="212" />
-        <option value="92" />
-        <option value="1326" />
-      </list>
-    </option>
-    <option name="columnOrder">
-      <list>
-        <option value="Name" />
-        <option value="Value" />
-        <option value="Description" />
-      </list>
-    </option>
-  </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -68,9 +52,10 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="MacroExpansionManager">
-    <option name="directoryName" value="pqnr0tjv" />
+    <option name="directoryName" value="f88tap9e" />
   </component>
   <component name="MakefileLocalSettings">
     <option name="availableProjects">
@@ -102,25 +87,18 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="NamedScopeManager">
-    <scope name="Kernel" pattern="!ext:*&amp;&amp;!ext:*/&amp;&amp;!file[Kernel]:*/||file[Kernel]:src/*" />
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
-    <option name="majorVersion" value="2022" />
-    <option name="minorVersion" value="3.3" />
+    <option name="majorVersion" value="2023" />
+    <option name="minorVersion" value="1.1" />
   </component>
-  <component name="ProjectId" id="2NIJHNzUyoigleXiRmKdXEsYIuH" />
+  <component name="ProjectId" id="2OyYU3xEFK9j366IhT9T1FeT10C" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
@@ -132,18 +110,16 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.build.tools.auto.reload&quot;: &quot;ALL&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/lib" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Embedded GDB Server.Debug">
+  <component name="RunManager" selected="Embedded GDB Server.Unnamed">
+    <configuration name="Makefile" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="Makefile" CONFIG_NAME="Makefile" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
@@ -159,8 +135,18 @@
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Debug" type="com.jetbrains.cidr.embedded.customgdbserver.type" factoryName="com.jetbrains.cidr.embedded.customgdbserver.factory" PROGRAM_PARAMS="-smp 2 -m 2G -serial stdio -machine q35 -gdb -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d tcp::7777 -S" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="$PROJECT_DIR$/build/bin/luck.elf">
-      <custom-gdb-server version="1" gdb-connect="tcp::7777" executable="/usr/local/bin/qemu-system-x86_64" warmup-ms="0" download-type="UPDATED_ONLY" reset-cmd="monitor system_reset" reset-type="AFTER_DOWNLOAD">
+    <configuration name="user-land" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="user-land" CONFIG_NAME="user-land" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Unnamed" type="com.jetbrains.cidr.embedded.customgdbserver.type" factoryName="com.jetbrains.cidr.embedded.customgdbserver.factory" PROGRAM_PARAMS="-machine q35 -gdb tcp::20112 -smp 2 -m 2G -serial file:luaos.log -S -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="$PROJECT_DIR$/build/bin/luck.elf">
+      <custom-gdb-server version="1" gdb-connect="tcp::20112" executable="/usr/local/bin/qemu-system-x86_64" warmup-ms="0" download-type="UPDATED_ONLY" reset-cmd="monitor system_reset" reset-type="AFTER_DOWNLOAD">
         <debugger kind="GDB" isBundled="true" />
       </custom-gdb-server>
       <method v="2">
@@ -168,72 +154,34 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Embedded GDB Server.Debug" />
+      <item itemvalue="Embedded GDB Server.Unnamed" />
       <item itemvalue="Makefile Application.all" />
       <item itemvalue="Makefile Application.bios" />
       <item itemvalue="Makefile Application.uefi" />
+      <item itemvalue="Makefile Application.Makefile" />
+      <item itemvalue="Makefile Application.user-land" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a281778f-9bf2-4f25-b6b2-44fd55c5d450" name="Changes" comment="" />
-      <created>1679345573619</created>
+      <changelist id="811056a0-c5cf-46fe-aa19-d72ee2034a14" name="Changes" comment="" />
+      <created>1682534302095</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1679345573619</updated>
-      <workItem from="1679345575153" duration="86000" />
-      <workItem from="1679345673474" duration="456000" />
-      <workItem from="1679411973634" duration="6734000" />
-      <workItem from="1679422268712" duration="2872000" />
-      <workItem from="1679938179232" duration="5800000" />
-      <workItem from="1679964645540" duration="508000" />
-      <workItem from="1679965188684" duration="147000" />
-      <workItem from="1680555599642" duration="143000" />
-      <workItem from="1680555770922" duration="2817000" />
-      <workItem from="1680672027301" duration="882000" />
-      <workItem from="1680707724263" duration="38000" />
+      <updated>1682534302095</updated>
+      <workItem from="1682534305418" duration="1966000" />
+      <workItem from="1682538385837" duration="155000" />
+      <workItem from="1682538860440" duration="521000" />
+      <workItem from="1682539443144" duration="8000" />
     </task>
-    <task id="LOCAL-00001" summary="feat(cleanup): Cleanup and inital cpuid support">
-      <created>1679941478918</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1679941478918</updated>
-    </task>
-    <task id="LOCAL-00002" summary="feat(IDE): Add .idea files">
-      <created>1680557946799</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1680557946799</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="VCPKGProject">
-    <isAutomaticEditVcpkgJson value="false" />
-    <isAutomaticCheckingOnLaunch value="false" />
-    <isAutomaticFoundErrors value="true" />
-    <isAutomaticFoundErrors value="true" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat(cleanup): Cleanup and inital cpuid support" />
-    <MESSAGE value="feat(IDE): Add .idea files" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(IDE): Add .idea files" />
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

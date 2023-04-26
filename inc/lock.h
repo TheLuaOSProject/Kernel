@@ -28,9 +28,9 @@ typedef _Atomic(bool) Lock;
 
 static inline void acquire_lock(Lock *b)
 {
-    bool scc = false;
+    bool spin = false;
     do {
-        while (atomic_load_explicit(b, memory_order_relaxed)) { scc = true; asm("pause"); }
+        while (atomic_load_explicit(b, memory_order_relaxed)) { spin = true; asm("pause"); }
     } while (atomic_exchange(b, true));
 }
 static inline void release_lock(Lock *b)

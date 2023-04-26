@@ -84,8 +84,6 @@ USERLAND_FILES := $(shell find ./Userland -type f -name '*.lua')
 COBJS := $(addprefix build/obj/,$(CFILES:.c=.c.o))
 ASOBJS := $(addprefix build/obj/,$(ASFILES:.asm=.asm.o))
 
-QEMU_WIDTH := 1024
-QEMU_HEIGHT := 768
 QEMUFLAGS := -smp 2 -m 2G -monitor stdio -serial file:luaos.log -vga std
 
 QDF ?= -s

@@ -18,7 +18,7 @@
  */
 
 #include "common.h"
-#include "stdatomic.h"
+#include "lock.h"
 
 #define _EVAL(...) __VA_ARGS__
 #define EVAL(...) _EVAL(__VA_ARGS__)
@@ -85,22 +85,11 @@ static void free_mag(const qword *mag) {
 	(void)mag;
 	panic("TODO: free magazines (needs kmalloc)");
 }
-static void ttas_lock(atomic_bool *b) {
-	bool scc = false;
-	do {
-		while (atomic_load_explicit(b, memory_order_relaxed)) { scc = true; asm("pause"); }
-	} while (atomic_exchange(b, true));
-	if (scc) atomic_fetch_add(&contended, 1);
-	atomic_fetch_add(&total_attempts, 1);
-}
-static void ttas_unlock(atomic_bool *b) {
-	atomic_store(b, false);
-}
 
 #define SWAP(a, b) do { __auto_type _tmp = (a); (a) = (b); (b) = _tmp; } while (0)
 void mag_put(Magazine *mag, qword item) {
 	MagazinePerCPU *mag_cpu = &mag->mag_percpu[*lapic_id >> 24];
-	ttas_lock(&mag_cpu->locked);
+	acquire_lock(&mag_cpu->locked);
 free:
 	if (mag_cpu->current && mag_cpu->current[-1] < mag_size_max) {
 		// TODO: i really really really don't want this in the hot path for free
@@ -111,7 +100,7 @@ free:
 		goto free;
 	} else if (atomic_load((atomic_ullong*)&mag->num_ready_mags) < max_ready_mags) {
 		bool done = false;
-		ttas_lock(&mag->locked);
+		acquire_lock(&mag->locked);
 		if (mag->num_ready_mags < max_ready_mags) {
 			if (mag_cpu->current) mag->ready_mags[mag->num_ready_mags++] = mag_cpu->current;
 			if (mag->num_free_mags) {
@@ -120,9 +109,9 @@ free:
 				mag_cpu->current = alloc_mag();
 			}
 			done = true;
-			ttas_unlock(&mag->locked);
+			release_lock(&mag->locked);
 		} else {
-			ttas_unlock(&mag->locked);
+			release_lock(&mag->locked);
 			goto release;
 		}
 	} else {
@@ -135,12 +124,12 @@ release:;
 		}
 		mag_cpu->current[-1] = 0;
 	}
-	ttas_unlock(&mag_cpu->locked);
+	release_lock(&mag_cpu->locked);
 }
 bool mag_xget(Magazine *mag, qword *out, uint64_t flags) {
 	MagazinePerCPU *mag_cpu = &mag->mag_percpu[*lapic_id >> 24];
 	bool ok = false;
-	ttas_lock(&mag_cpu->locked);
+	acquire_lock(&mag_cpu->locked);
 cur_mag_populated:
 	if (mag_cpu->current && mag_cpu->current[-1]) {
 		*out = mag_cpu->current[--mag_cpu->current[-1]];
@@ -149,7 +138,7 @@ cur_mag_populated:
 		SWAP(mag_cpu->previous, mag_cpu->current);
 		goto cur_mag_populated;
 	} else if (atomic_load((atomic_ullong*)&mag->num_ready_mags)) {
-		ttas_lock(&mag->locked);
+		acquire_lock(&mag->locked);
 		if (mag->num_ready_mags) {
 			if (mag->num_free_mags < 16) {
 				mag->free_mags[mag->num_free_mags++] = mag_cpu->current;
@@ -160,24 +149,24 @@ cur_mag_populated:
 				}
 			}
 			mag_cpu->current = mag->ready_mags[--mag->num_ready_mags];
-			ttas_unlock(&mag->locked);
+			release_lock(&mag->locked);
 			// current magazine has been populated
 			goto cur_mag_populated;
 		} else {
-			ttas_unlock(&mag->locked);
+			release_lock(&mag->locked);
 			// we need to get more resources
 			goto allocate_new_obj;
 		}
 	} else {
 allocate_new_obj:;
 		if (flags & MAG_MUSTGET) {
-			ttas_lock(&mag->locked);
+			acquire_lock(&mag->locked);
 			*out = mag->get(mag->ctx);
-			ttas_unlock(&mag->locked);
+			release_lock(&mag->locked);
 			ok = true;
 		}
 	}
-	ttas_unlock(&mag_cpu->locked);
+	release_lock(&mag_cpu->locked);
 	return ok;
 }
 qword mag_get(Magazine *mag) {

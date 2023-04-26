@@ -41,7 +41,7 @@ typedef struct Thread {
     void *stack_base;
     struct Thread *nullable next_task, *nullable previous_task;
     lua_State *lua;
-    bool ready, kill, waiting;
+    bool ready, kill;
     Lock lock;
 
     struct Thread *nullable next_mutex;
