@@ -203,7 +203,10 @@ file:close()
 print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mCopying modules to \x1b[34mbuild/iso/boot/\x1b[0m")
 for name, file in pairs(config.targets["LuaOS"].modules) do
     --[[@cast name string]]
-    exec("mkdir", "-p", "build/iso/boot/"..name:match("(.*)/")):collect()
+    local dir = name:match("(.*)/")
+    if dir ~= nil then
+        exec("mkdir", "-p", "build/iso/boot/"..dir):collect()
+    end
     exec("cp", file, "build/iso/boot/"..name)
     print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mCopied \x1b[34m"..file.."\x1b[32m to \x1b[34mbuild/iso/boot/"..name.."\x1b[0m")
 end
