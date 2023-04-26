@@ -8,7 +8,7 @@ packages:
   - lld
   - xorriso
   - luajit
-  - luarocks
+  - luarocks5.1
 artifacts:
   - Kernel/build/bin/luaos.iso
   - Kernel/extern/LuaJIT/libluajit_luck.o
