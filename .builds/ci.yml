@@ -8,6 +8,7 @@ packages:
   - lld
   - xorriso
   - luajit
+  - luajit-dev
   - luarocks5.1
 artifacts:
   - Kernel/build/bin/luaos.iso
@@ -16,5 +17,6 @@ tasks:
   - download: |
       git clone https://github.com/TheLuaOSProject/Kernel --recursive
   - make: |
+      luarocks-5.1 config variables.LUA_INCDIR /usr/include/luajit-2.1/
       cd Kernel && make -j 3
 
