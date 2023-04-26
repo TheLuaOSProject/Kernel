@@ -67,20 +67,20 @@ void *ljsup_alloc(void *ud, void *ptr, size_t osize, size_t nsize) {
 
 void *memchr(const void *s, byte c, size_t n)
 {
-    const char *str = (char*)s;
+    const byte *bytes = (const byte*)s;
     for (size_t i = 0; i < n; i++) {
-        if (*(str + i) == c)
-            return (void*)(str + i);
+        if (*(bytes + i) == c)
+            return (void*)(bytes + i);
     }
     return NULL;
 }
 
 void *memrchr(const void *s, byte c, size_t n)
 {
-    const char *str = (char*)s;
+    const byte *bytes = (const byte*)s;
     for (size_t i = n - 1; i < n; i--) {
-        if (*(str + i) == c)
-            return (void*)(str + i);
+        if (*(bytes + i) == c)
+            return (void*)(bytes + i);
     }
     return NULL;
 }
