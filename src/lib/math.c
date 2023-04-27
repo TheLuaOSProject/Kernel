@@ -44,18 +44,14 @@ int isnan(double x)
 {
     double_bytes bytes = {x};
     bytes.b[7] &= 0x7F;
-    if ((bytes.q & 0x7FF0000000000000) == 0x7FF0000000000000 && !(bytes.q & 0x000FFFFFFFFFFFFF))
-        return (1);
-    return (0);
+    return ((bytes.q & 0x7FF0000000000000) == 0x7FF0000000000000 && !(bytes.q & 0x000FFFFFFFFFFFFF));
 }
 
 int isinf(double x)
 {
     double_bytes bytes = {x};
     bytes.b[7] &= 0x7F;
-    if (bytes.q == 0x7FF0000000000000)
-        return (1);
-    return (0);
+    return (bytes.q == 0x7FF0000000000000);
 }
 
 double fabs(double x)
