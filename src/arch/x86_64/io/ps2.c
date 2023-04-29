@@ -64,7 +64,7 @@ char ps2_getc(void) {
                 is_extended = false;
                 continue;
             }
-            if (byte == 0x36) {
+            if (byte == 0x2a) {
                 shift = pressed;
             }
             if (byte < sizeof(c1)) {
