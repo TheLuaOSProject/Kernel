@@ -43,27 +43,27 @@ typedef union {
 int isnan(double x)
 {
     double_bytes bytes = {x};
-    bytes.b[7] &= 0x7F;
+    bytes.b[IS_LITTLE_ENDIAN * 7] &= 0x7F;
     return ((bytes.q & 0x7FF0000000000000) == 0x7FF0000000000000 && !(bytes.q & 0x000FFFFFFFFFFFFF));
 }
 
 int isinf(double x)
 {
     double_bytes bytes = {x};
-    bytes.b[7] &= 0x7F;
+    bytes.b[IS_LITTLE_ENDIAN * 7] &= 0x7F;
     return (bytes.q == 0x7FF0000000000000);
 }
 
 double fabs(double x)
 {
     double_bytes bytes = {x};
-    bytes.b[7] &= 0x7F;
+    bytes.b[IS_LITTLE_ENDIAN * 7] &= 0x7F;
     return bytes.d;
 }
 
 float fabsf(float x)
 {
     float_bytes bytes = {x};
-    bytes.b[3] &= 0x7F;
+    bytes.b[IS_LITTLE_ENDIAN * 3] &= 0x7F;
     return bytes.f;
 }
