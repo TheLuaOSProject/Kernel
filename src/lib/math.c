@@ -30,40 +30,38 @@
 
 typedef union {
     float f;
-    byte b[4];
     dword d;
 } float_bytes;
 
 typedef union {
     double d;
-    byte b[8];
     qword q;
 } double_bytes;
 
 int isnan(double x)
 {
     double_bytes bytes = {x};
-    bytes.b[IS_LITTLE_ENDIAN * 7] &= 0x7F;
+    bytes.q &= 0x7FFFFFFFFFFFFFFF;
     return ((bytes.q & 0x7FF0000000000000) == 0x7FF0000000000000 && !(bytes.q & 0x000FFFFFFFFFFFFF));
 }
 
 int isinf(double x)
 {
     double_bytes bytes = {x};
-    bytes.b[IS_LITTLE_ENDIAN * 7] &= 0x7F;
+    bytes.q &= 0x7FFFFFFFFFFFFFFF;
     return (bytes.q == 0x7FF0000000000000);
 }
 
 double fabs(double x)
 {
     double_bytes bytes = {x};
-    bytes.b[IS_LITTLE_ENDIAN * 7] &= 0x7F;
+    bytes.q &= 0x7FFFFFFFFFFFFFFF;
     return bytes.d;
 }
 
 float fabsf(float x)
 {
     float_bytes bytes = {x};
-    bytes.b[IS_LITTLE_ENDIAN * 3] &= 0x7F;
+    bytes.d &= 0x7FFFFFFF;
     return bytes.f;
 }
