@@ -21,4 +21,7 @@
 
 #include <lua.h>
 
+/**
+ * Sets the `kernel` table for use in Userland programs.
+ */
 int luaopen_kernel(lua_State *L);

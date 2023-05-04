@@ -19,4 +19,12 @@
 
 #pragma once
 
+/**
+ * more info: 
+ *      https://wiki.osdev.org/%228042%22_PS/2_Controller
+ *
+ * retrieves and processes a character from the ps2 input ports
+ *
+ * return char - the character after being retrieved and processed
+ */
 char ps2_getc(void);

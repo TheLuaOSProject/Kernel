@@ -61,6 +61,8 @@ typedef int8_t sbyte;
 /**
  * @attention This is literally the only reason why I forced usage of *word,
  * because then we can have "sword" and thats really cool
+ *
+ * hehe sword :) o--]====>
  */
 typedef int16_t sword;
 typedef int32_t sdword;

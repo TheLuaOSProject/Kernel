@@ -26,6 +26,13 @@ NONNULL_BEGIN
 
 typedef _Atomic(bool) Lock;
 
+/**
+ * Lock a lock.
+ *
+ * b - the lock to be locked
+ *
+ * return - void
+ */
 static inline void acquire_lock(Lock *b)
 {
     bool spin = false;
@@ -33,6 +40,13 @@ static inline void acquire_lock(Lock *b)
         while (atomic_load_explicit(b, memory_order_relaxed)) { spin = true; asm("pause"); }
     } while (atomic_exchange(b, true));
 }
+/**
+ * Unlock a lock.
+ *
+ * b - the lock to be unlocked
+ *
+ * return void
+ */
 static inline void release_lock(Lock *b)
 { atomic_store(b, false); }
 

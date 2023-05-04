@@ -55,9 +55,37 @@ static inline void channel_destroy(struct Channel *nonnull channel)
     }
 }
 
+/**
+ * Creates a new message if `head` is a nullptr else creates the head of a new
+ * message list.
+ *
+ * head - current head or will be the new head
+ * length - length of the data
+ * data - contents of this message
+ *
+ * return - returns nullptr if memory could not be allocated for a new message
+ * else it returns a pointer to the new message
+ */
 struct Message *nullable message_create(struct Message *nonnull *nullable head, size_t length, const byte data[static nonnull length]);
 
+/**
+ * Adds a new message to the given channel.
+ *
+ * channel - channel to add the message to
+ * message - message to add to the channel
+ *
+ * return - 0 if the message was added, -1 if `channel` can't accomodate the
+ * size of `message`
+ */
 int channel_send(struct Channel *nonnull channel, struct Message *message);
+
+/**
+ * Recieves a message from the given channel.
+ *
+ * channel - the channel to read from
+ *
+ * return - the message that was read from `channel`
+ */
 struct Message *nullable channel_receive(struct Channel *nonnull channel);
 
 NONNULL_END

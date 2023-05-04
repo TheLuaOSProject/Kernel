@@ -27,10 +27,18 @@
 
 NONNULL_BEGIN
 
+/**
+ * Initialises a framebuffer.
+ * Uses olivec under the hood.
+ *
+ * return Olivec_canvas - refer to https://github.com/tsoding/olive.c
+ */
 Olivec_Canvas framebuffer_init();
 
-
-/// Gets the lua table for the framebuffer, for `luaopen_kernel` to add it to `kernel` table.
+/**
+ * Gets the lua table for the framebuffer
+ * Used by `luaopen_kernel` to the framebuffer to the `kernel` table.
+ */
 int luaopen_framebuffer(lua_State *L);
 
 NONNULL_END

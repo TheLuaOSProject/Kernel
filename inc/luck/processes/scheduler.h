@@ -47,12 +47,34 @@ typedef struct Thread {
     struct Thread *nullable next_mutex;
 } Thread;
 
+/**
+ * Waits for a thread to be set for execution
+ *
+ * thread - the thread to wait for
+ *
+ * return void
+ */
 void wait_for_thread(Thread *thread);
+
 void wake_futex(Futex *mtx);
 void wake_all_futexes(Futex *mutexes);
 
+/**
+ * Creates a new thread and adds it to the `sheduler` table.
+ *
+ * addr - address of the program for the thread to run
+ * size - size of the program being run
+ * vpi - name of the program, for debug purposes
+ * 
+ * return Thread - returns a pointer to the new thread
+ */
 Thread *nullable spawn_thread(void *addr, size_t size, const char *vpi);
+
 void reschedule(CPUContext *ctx);
+
+/**
+ * Initialises the scheduler.
+ */
 void scheduler_init(void);
 
 int luaopen_scheduler(lua_State *L);

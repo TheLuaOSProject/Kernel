@@ -32,6 +32,13 @@ closed_enum PageType {
     PageType_REGULAR
 };
 
+/**
+ * allocate a page of memory
+ *
+ * pty - the type of page
+ *
+ * return qword - address to the memory
+ */
 qword page_alloc(enum PageType pty);
 
 /// mapping pages ///

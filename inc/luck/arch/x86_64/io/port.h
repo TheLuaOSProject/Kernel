@@ -23,10 +23,42 @@
 
 NONNULL_BEGIN
 
+/** 
+ * read in byte from an I/O port
+ *
+ * port - address of port to read from
+ *
+ * return - data from port
+ */ 
 byte port_in_byte(word port);
+
+/** 
+ * output data to an I/O port
+ *
+ * port - address of port to output to
+ * data - data to be output
+ *
+ * return - void
+ */
 void port_out_byte(word port, byte data);
 
+/**
+ * read in word from an I/O port
+ *
+ * port - address of port to read from
+ *
+ * return - data from port
+ */
 word port_in_word(word port);
+
+/**
+ * output data to an I/O port
+ *
+ * port - address of port to output to 
+ * data - data to be output
+ *
+ * return - void
+ */
 void port_out_word(word port, word data);
 
 NONNULL_END

@@ -25,8 +25,29 @@
 
 NONNULL_BEGIN
 
+/**
+ * Initialise the terminal emulator.
+ * 
+ * return void
+ */
 void terminal_init();
+
+/**
+ * Writes to the terminal emulator.
+ *
+ * str - the string to write
+ *
+ * return void
+ */
 void console_write(const char *str);
+
+/**
+ * Writes a single char to terminal emulator.
+ *
+ * c - character to write
+ *
+ * return void
+ */
 void console_write_char(char c);
 
 NONNULL_END
