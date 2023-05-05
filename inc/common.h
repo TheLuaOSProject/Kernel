@@ -50,7 +50,7 @@
   (typeof(typeof(*_val) *nonnull))_val; \
   })
 
-
+#define IS_LITTLE_ENDIAN ((char*)&(int){1})[0]
 
 typedef uint8_t byte;
 typedef uint16_t word;
