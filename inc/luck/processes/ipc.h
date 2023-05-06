@@ -17,6 +17,10 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file ipc.h
+ */
+
 #include "common.h"
 #include "lock.h"
 
@@ -56,35 +60,34 @@ static inline void channel_destroy(struct Channel *nonnull channel)
 }
 
 /**
- * Creates a new message if `head` is a nullptr else creates the head of a new
- * message list.
+ * @brief Creates a new message
+ * 
+ * Creates a new message if @c head is a @c nullptr else creates the head of a new message list.
  *
- * head - current head or will be the new head
- * length - length of the data
- * data - contents of this message
+ * @param head Current head or will be the new head.
+ * @param length Length of the data.
+ * @param data Contents of this message.
  *
- * return - returns nullptr if memory could not be allocated for a new message
- * else it returns a pointer to the new message
+ * @return @c nullptr if memory could not be allocated for a new @c message else it returns a pointer to the new message
  */
 struct Message *nullable message_create(struct Message *nonnull *nullable head, size_t length, const byte data[static nonnull length]);
 
 /**
- * Adds a new message to the given channel.
+ * @brief Adds a new message to the given channel.
  *
- * channel - channel to add the message to
- * message - message to add to the channel
+ * @param channel Channel to add the message to.
+ * @param message Message to add to the channel.
  *
- * return - 0 if the message was added, -1 if `channel` can't accomodate the
- * size of `message`
+ * @return 0 if the message was added, -1 if @c channel can't accomodate the size of @c message
  */
 int channel_send(struct Channel *nonnull channel, struct Message *message);
 
 /**
- * Recieves a message from the given channel.
+ * @brief Recieves a message from the given channel.
  *
- * channel - the channel to read from
+ * @param channel The channel to read from.
  *
- * return - the message that was read from `channel`
+ * @return The message that was read from @c channel.
  */
 struct Message *nullable channel_receive(struct Channel *nonnull channel);
 

@@ -17,6 +17,10 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file lock.h
+ */
+
 #pragma once
 
 #include "stdatomic.h"
@@ -27,11 +31,9 @@ NONNULL_BEGIN
 typedef _Atomic(bool) Lock;
 
 /**
- * Lock a lock.
+ * @brief Lock a lock.
  *
- * b - the lock to be locked
- *
- * return - void
+ * @param b The lock to be locked.
  */
 static inline void acquire_lock(Lock *b)
 {
@@ -41,11 +43,9 @@ static inline void acquire_lock(Lock *b)
     } while (atomic_exchange(b, true));
 }
 /**
- * Unlock a lock.
+ * @brief Unlock a lock.
  *
- * b - the lock to be unlocked
- *
- * return void
+ * @param b The lock to be unlocked.
  */
 static inline void release_lock(Lock *b)
 { atomic_store(b, false); }

@@ -17,6 +17,11 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file memory.h
+ * @brief Required memory management functions.
+ */
+
 #pragma once
 
 #include <common.h>
@@ -63,50 +68,58 @@ static void *memory_move(void *dst, const void *src, size_t n)
 }
 
 /**
- * Copies the memory from one pointer to another.
+ * @brief Copies memory.
  *
- * dst - pointer to array where data will be copied to
- * src - pointer to array where data is copied from
- * n - number of bytes to be copied
+ * Copies memory from one pointer to another without checking for overlapping
+ * blocks of memory.
  *
- * return void* - pointer to destination 
+ * @param dst Pointer to array where data will be copied to.
+ * @param src Pointer to array where data is copied from.
+ * @param n Number of bytes to be copied.
+ *
+ * @retval void* Pointer to destination.
  */
 void *memcpy(void *dst, const void *src, size_t n);
 
 /**
- * Moves memory from source to destination.
- * Can move overlaping blocks of memory which means it is safer than memcpy.
+ * @brief Moves memory.
  *
- * dst - pointer to array where data will be copied to
- * src - pointer to array where data is copied from
- * n - number of bytes to be copied
+ * Moves memory from source to destination. Can move overlaping blocks of memory which means it is safer than memcpy.
  *
- * returns void* - pointer to destination
+ * @param dst Pointer to array where data will be copied to.
+ * @param src Pointer to array where data is copied from.
+ * @param n Number of bytes to be copied.
+ *
+ * @retval void* Pointer to destination.
  */
 void *memmove(void *dst, const void *src, size_t n);
 
 /**
- * Sets first `n` characters of `dst` to `c`.
+ * @brief Sets block of memory.
+ * 
+ * Sets first @c n characters of @c dst to @c c.
  *
- * dst - pointer to array of memory to be set
- * c - character that the memory will be set to
- * n - number of characters to be set
+ * @param dst Pointer to array of memory to be set.
+ * @param c Character that the memory will be set to.
+ * @param n Number of characters to be set.
  *
- * return void* - pointer to the set memory
+ * @retval void* Pointer to the set memory.
  */
 void *memset(void *dst, int c, size_t n);
 
 /**
- * Compares the first `n` bytes of of `b1` and `b2`.
+ * @brief Compares two blocks of memory.
  *
- * b1 - first block of memory to compare with
- * b2 - second block of memery to compare with
- * n - number of bytes of each block to compare
+ * Compares the first @c n bytes of of @c b1 and @c b2.
  *
- * return int - status of compared memory
- *              <0 - first non equal byte has a lower value in `b1`
- *              0  - both blocks of memory are equal
- *              >0 - first non equal byte has a lower value in `b2`
+ * @param b1 First block of memory to compare with.
+ * @param b2 Second block of memery to compare with.
+ * @param n Number of bytes of each block to compare.
+ *
+ * @retval void* Status of compared memory
+ *         - <0 first non equal byte has a lower value in @c b1
+ *         - 0 both blocks of memory are equal
+ *         - >0 first non equal byte has a lower value in @c b2
  */
 int memcmp(const void *b1, const void *b2, size_t n);
 

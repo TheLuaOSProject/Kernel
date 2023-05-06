@@ -17,11 +17,20 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file kernel.h
+ * @brief Handle kernel table for userspace use.
+ */
+
 #pragma once
 
 #include <lua.h>
 
 /**
- * Sets the `kernel` table for use in Userland programs.
+ * @brief Sets the @c kernel table for use in Userland programs.
+ *
+ * @param L Lua state to set the kernel table in.
+ *
+ * @retval int Always 1.
  */
 int luaopen_kernel(lua_State *L);

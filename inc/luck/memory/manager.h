@@ -17,6 +17,11 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file manager.h
+ * @brief Kernel space management for memory.
+ */
+
 #pragma once
 
 #include <common.h>
@@ -33,11 +38,11 @@ closed_enum PageType {
 };
 
 /**
- * allocate a page of memory
+ * @brief Allocate a page of memory.
  *
- * pty - the type of page
+ * @param pty Type of page to be allocated.
  *
- * return qword - address to the memory
+ * @retval qword Address to the memory allocated.
  */
 qword page_alloc(enum PageType pty);
 

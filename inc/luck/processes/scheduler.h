@@ -17,6 +17,11 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file scheduler.h
+ * @brief Process sheduling.
+ */
+
 #include <lua.h>
 
 #include "common.h"
@@ -48,11 +53,9 @@ typedef struct Thread {
 } Thread;
 
 /**
- * Waits for a thread to be set for execution
+ * @brief Waits for a thread.
  *
- * thread - the thread to wait for
- *
- * return void
+ * @param thread The thread to wait for
  */
 void wait_for_thread(Thread *thread);
 
@@ -60,20 +63,22 @@ void wake_futex(Futex *mtx);
 void wake_all_futexes(Futex *mutexes);
 
 /**
- * Creates a new thread and adds it to the `sheduler` table.
+ * @brief Creates a new thread.
  *
- * addr - address of the program for the thread to run
- * size - size of the program being run
- * vpi - name of the program, for debug purposes
+ * Creates a new thread and adds it to the @c sheduler lua table.
+ *
+ * @param addr Address of the program for the thread to run.
+ * @param size Size of the program being run.
+ * @param vpi Name of the program, for debug purposes.
  * 
- * return Thread - returns a pointer to the new thread
+ * @retval Thread *nullable Thread Pointer to the new thread.
  */
 Thread *nullable spawn_thread(void *addr, size_t size, const char *vpi);
 
 void reschedule(CPUContext *ctx);
 
 /**
- * Initialises the scheduler.
+ * @brief Initialises the scheduler.
  */
 void scheduler_init(void);
 

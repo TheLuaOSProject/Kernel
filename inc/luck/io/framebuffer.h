@@ -17,6 +17,17 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file framebuffer.h
+ * @brief Interaction with framebuffers.
+ *
+ * Supply's functions for creating and controlling framebuffers. It uses olivec
+ * to provide functions for representing and controlling the data of the
+ * framebuffers.
+ *
+ * @see https://github.com/tsoding/olive.c
+ */
+
 #include "olive.h"
 
 #include "common.h"
@@ -28,16 +39,22 @@
 NONNULL_BEGIN
 
 /**
- * Initialises a framebuffer.
- * Uses olivec under the hood.
+ * @brief Initialises a framebuffer.
  *
- * return Olivec_canvas - refer to https://github.com/tsoding/olive.c
+ * @retval Olivec_canvas @ref https://github.com/tsoding/olive.c
+ *
+ * @note Uses olivec.
  */
 Olivec_Canvas framebuffer_init();
 
 /**
- * Gets the lua table for the framebuffer
- * Used by `luaopen_kernel` to the framebuffer to the `kernel` table.
+ * @brief Gets the lua table for the framebuffer
+ *
+ * Used by @c luaopen_kernel to the framebuffer to the @c kernel table.
+ *
+ * @param L The lua state to add the framebuffer to.
+ *
+ * @retval int Always 1.
  */
 int luaopen_framebuffer(lua_State *L);
 

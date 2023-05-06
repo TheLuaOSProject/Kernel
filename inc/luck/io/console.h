@@ -17,6 +17,11 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file console.h
+ * @brief Allows I/O with the terminal emulator.
+ */
+
 #pragma once
 
 #include "common.h"
@@ -26,27 +31,27 @@
 NONNULL_BEGIN
 
 /**
- * Initialise the terminal emulator.
- * 
- * return void
+ * @brief Initialise the terminal emulator.
+ *
+ * @retval void
  */
 void terminal_init();
 
 /**
- * Writes to the terminal emulator.
+ * @brief Writes to the terminal emulator.
  *
- * str - the string to write
+ * @param str String that gets written out.
  *
- * return void
+ * @retval void
  */
 void console_write(const char *str);
 
 /**
- * Writes a single char to terminal emulator.
+ * @brief Writes a single char to terminal emulator.
  *
- * c - character to write
+ * @param c Character to written out.
  *
- * return void
+ * @retval void
  */
 void console_write_char(char c);
 

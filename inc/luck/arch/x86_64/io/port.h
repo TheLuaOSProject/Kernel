@@ -17,6 +17,11 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** 
+ * @file port.h
+ * @brief I/O with I/O system ports.
+ */
+
 #pragma once
 
 #include "common.h"
@@ -24,40 +29,48 @@
 NONNULL_BEGIN
 
 /** 
- * read in byte from an I/O port
+ * @brief Read in byte.
  *
- * port - address of port to read from
+ * Reads in a byte from the given I/O @c port.
  *
- * return - data from port
+ * @param port Address of port to read from.
+ *
+ * @retval byte Data from port.
  */ 
 byte port_in_byte(word port);
 
 /** 
- * output data to an I/O port
+ * @brief Output a byte.
  *
- * port - address of port to output to
- * data - data to be output
+ * Writes out @c data to the given I/O @c port.
  *
- * return - void
+ * @param port Address of port to output to.
+ * @param data Data to be output.
+ *
+ * @retval void
  */
 void port_out_byte(word port, byte data);
 
 /**
- * read in word from an I/O port
+ * @brief Read in word.
  *
- * port - address of port to read from
+ * Reads in a word from the given I/O @c port.
  *
- * return - data from port
+ * @param port Address of port to read from.
+ *
+ * @retval Data read from port.
  */
 word port_in_word(word port);
 
 /**
- * output data to an I/O port
+ * @brief Output a word.
  *
- * port - address of port to output to 
- * data - data to be output
+ * Outputs a word of data to the specified I/O port.
  *
- * return - void
+ * @param port Address of port to output to.
+ * @param data Data to be output.
+ *
+ * @retval void
  */
 void port_out_word(word port, word data);
 

@@ -17,14 +17,20 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file ps2.h
+ * @brief Interaction with ps2 I/O.
+ *
+ * Reads and processes input according to the ps2 specification.
+ *
+ * @see https://wiki.osdev.org/%228042%22_PS/2_Controller
+ */
+
 #pragma once
 
 /**
- * more info: 
- *      https://wiki.osdev.org/%228042%22_PS/2_Controller
+ * @brief Gets a character from a ps2 input port.
  *
- * retrieves and processes a character from the ps2 input ports
- *
- * return char - the character after being retrieved and processed
+ * @return char The retrieved character after being processed.
  */
 char ps2_getc(void);
