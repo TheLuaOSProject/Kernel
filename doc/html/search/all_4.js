@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['idtentry_0',['IDTEntry',['../struct_i_d_t_entry.html',1,'']]],
-  ['idtregister_1',['IDTRegister',['../struct_i_d_t_register.html',1,'']]],
-  ['ipc_2eh_2',['ipc.h',['../ipc_8h.html',1,'']]]
+  ['entries_0',['entries',['../structMADT.html#a19228f9167beaf324cbf193522fdba40',1,'MADT']]],
+  ['exitdatacp_1',['ExitDataCP',['../structExitDataCP.html',1,'']]],
+  ['exitstate_2',['ExitState',['../structExitState.html',1,'']]],
+  ['expdesc_3',['ExpDesc',['../structExpDesc.html',1,'']]],
+  ['expdesc_4',['expdesc',['../structexpdesc.html',1,'']]]
 ];

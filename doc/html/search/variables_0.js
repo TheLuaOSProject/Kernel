@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['entries_0',['entries',['../struct_m_a_d_t.html#a19228f9167beaf324cbf193522fdba40',1,'MADT']]]
+  ['cpuvendor_0',['CPUVendor',['../cpu_8h.html#ac4bb447789c79190f8e495e7abbf7c8c',1,'cpu.h']]]
 ];

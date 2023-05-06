@@ -17,18 +17,29 @@
  * along with LuaOS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file cpu.h
+ * @brief CPU related things.
+ */
+
 #pragma once
 
 #include "common.h"
 
 #include <string.h>
 
+/**
+ * @brief Internal CPU context.
+ */
 typedef struct [[gnu::packed]] {
     qword r15, r14, r13, r12, r11, r10, r9, r8, rdi, rsi, rdx, rcx, rbx, rax, rbp;
 
     qword interrupt_number, error, rip, cs, rflags, rsp, ss;
 } CPUContext;
 
+/**
+ * @brief CPU vendors.
+ */
 closed_enum CPUVendor {
     CPUVendor_INTEL,
     CPUVendor_AMD,
@@ -39,6 +50,10 @@ closed_enum CPUVendor {
     CPUVendor_UNKNOWN,
 };
 
+/**
+ * @static
+ * @brief CPU vendors in string form.
+ */
 static const char CPU_VENDORS[][12] = {
     [CPUVendor_INTEL]       = "Intel",
     [CPUVendor_AMD]         = "AMD",
@@ -49,6 +64,11 @@ static const char CPU_VENDORS[][12] = {
     [CPUVendor_UNKNOWN]     = "Unknown",
 };
 
+/**
+ * @brief Gets the cpu vendor.
+ *
+ * @retval CPUVendor The name of the
+ */
 enum CPUVendor cpu_get_vendor(void);
 
 static inline qword ticks_to_nanoseconds(qword x)

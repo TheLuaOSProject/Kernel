@@ -76,44 +76,46 @@ $(function() {
   <div class="headertitle"><div class="title">cpu.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;common.h&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string.h&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="struct_c_p_u_context.html">   26</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>[[gnu::packed]] {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    qword r15, r14, r13, r12, r11, r10, r9, r8, rdi, rsi, rdx, rcx, rbx, rax, rbp;</div>
+<a href="cpu_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;common.h&quot;</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    qword interrupt_number, error, rip, cs, rflags, rsp, ss;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>} <a class="code hl_struct" href="struct_c_p_u_context.html">CPUContext</a>;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>closed_enum CPUVendor {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    CPUVendor_INTEL,</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    CPUVendor_AMD,</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    CPUVendor_QEMU,</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    CPUVendor_KVM,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    CPUVendor_VMWARE,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    CPUVendor_VIRTUALBOX,</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    CPUVendor_UNKNOWN,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>};</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> CPU_VENDORS[][12] = {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    [CPUVendor_INTEL]       = <span class="stringliteral">&quot;Intel&quot;</span>,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    [CPUVendor_AMD]         = <span class="stringliteral">&quot;AMD&quot;</span>,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    [CPUVendor_QEMU]        = <span class="stringliteral">&quot;QEMU&quot;</span>,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    [CPUVendor_KVM]         = <span class="stringliteral">&quot;KVM&quot;</span>,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    [CPUVendor_VMWARE]      = <span class="stringliteral">&quot;VMWare&quot;</span>,</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    [CPUVendor_VIRTUALBOX]  = <span class="stringliteral">&quot;VirtualBox&quot;</span>,</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    [CPUVendor_UNKNOWN]     = <span class="stringliteral">&quot;Unknown&quot;</span>,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>};</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">enum</span> CPUVendor cpu_get_vendor(<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">static</span> <span class="keyword">inline</span> qword ticks_to_nanoseconds(qword x)</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>{ <span class="keywordflow">return</span> (x &gt;&gt; 1) + (x &gt;&gt; 2) + (x &gt;&gt; 4) + (x &gt;&gt; 6) + (x &gt;&gt; 7) + (x &gt;&gt; 9) + (x &gt;&gt; 13) + (x &gt;&gt; 14) + (x &gt;&gt; 16) + (x &gt;&gt; 17) + (x &gt;&gt; 18); }</div>
-<div class="ttc" id="astruct_c_p_u_context_html"><div class="ttname"><a href="struct_c_p_u_context.html">CPUContext</a></div><div class="ttdef"><b>Definition:</b> cpu.h:26</div></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;string.h&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="structCPUContext.html">   34</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>[[gnu::packed]] {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    qword r15, r14, r13, r12, r11, r10, r9, r8, rdi, rsi, rdx, rcx, rbx, rax, rbp;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    qword interrupt_number, error, rip, cs, rflags, rsp, ss;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>} <a class="code hl_struct" href="structCPUContext.html">CPUContext</a>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="cpu_8h.html#ac4bb447789c79190f8e495e7abbf7c8c">   43</a></span>closed_enum <a class="code hl_variable" href="cpu_8h.html#ac4bb447789c79190f8e495e7abbf7c8c">CPUVendor</a> {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    CPUVendor_INTEL,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    CPUVendor_AMD,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    CPUVendor_QEMU,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    CPUVendor_KVM,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    CPUVendor_VMWARE,</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    CPUVendor_VIRTUALBOX,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    CPUVendor_UNKNOWN,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>};</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> CPU_VENDORS[][12] = {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    [CPUVendor_INTEL]       = <span class="stringliteral">&quot;Intel&quot;</span>,</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    [CPUVendor_AMD]         = <span class="stringliteral">&quot;AMD&quot;</span>,</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    [CPUVendor_QEMU]        = <span class="stringliteral">&quot;QEMU&quot;</span>,</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    [CPUVendor_KVM]         = <span class="stringliteral">&quot;KVM&quot;</span>,</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    [CPUVendor_VMWARE]      = <span class="stringliteral">&quot;VMWare&quot;</span>,</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    [CPUVendor_VIRTUALBOX]  = <span class="stringliteral">&quot;VirtualBox&quot;</span>,</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    [CPUVendor_UNKNOWN]     = <span class="stringliteral">&quot;Unknown&quot;</span>,</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="keyword">enum</span> <a class="code hl_variable" href="cpu_8h.html#ac4bb447789c79190f8e495e7abbf7c8c">CPUVendor</a> <a class="code hl_function" href="cpu_8h.html#a8cdcecbb59b2c631e85b1cb319fa043c">cpu_get_vendor</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">static</span> <span class="keyword">inline</span> qword ticks_to_nanoseconds(qword x)</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>{ <span class="keywordflow">return</span> (x &gt;&gt; 1) + (x &gt;&gt; 2) + (x &gt;&gt; 4) + (x &gt;&gt; 6) + (x &gt;&gt; 7) + (x &gt;&gt; 9) + (x &gt;&gt; 13) + (x &gt;&gt; 14) + (x &gt;&gt; 16) + (x &gt;&gt; 17) + (x &gt;&gt; 18); }</div>
+<div class="ttc" id="acpu_8h_html_a8cdcecbb59b2c631e85b1cb319fa043c"><div class="ttname"><a href="cpu_8h.html#a8cdcecbb59b2c631e85b1cb319fa043c">cpu_get_vendor</a></div><div class="ttdeci">enum CPUVendor cpu_get_vendor(void)</div><div class="ttdoc">Gets the cpu vendor.</div><div class="ttdef"><b>Definition:</b> cpu.c:22</div></div>
+<div class="ttc" id="acpu_8h_html_ac4bb447789c79190f8e495e7abbf7c8c"><div class="ttname"><a href="cpu_8h.html#ac4bb447789c79190f8e495e7abbf7c8c">CPUVendor</a></div><div class="ttdeci">closed_enum CPUVendor</div><div class="ttdoc">CPU vendors.</div><div class="ttdef"><b>Definition:</b> cpu.h:43</div></div>
+<div class="ttc" id="astructCPUContext_html"><div class="ttname"><a href="structCPUContext.html">CPUContext</a></div><div class="ttdoc">Internal CPU context.</div><div class="ttdef"><b>Definition:</b> cpu.h:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

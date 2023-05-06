@@ -68,7 +68,7 @@ static inline void channel_destroy(struct Channel *nonnull channel)
  * @param length Length of the data.
  * @param data Contents of this message.
  *
- * @return @c nullptr if memory could not be allocated for a new @c message else it returns a pointer to the new message
+ * @retval nullptr If memory could not be allocated for a new @c message else it returns a pointer to the new message.
  */
 struct Message *nullable message_create(struct Message *nonnull *nullable head, size_t length, const byte data[static nonnull length]);
 
@@ -78,7 +78,9 @@ struct Message *nullable message_create(struct Message *nonnull *nullable head, 
  * @param channel Channel to add the message to.
  * @param message Message to add to the channel.
  *
- * @return 0 if the message was added, -1 if @c channel can't accomodate the size of @c message
+ * @retval int 
+ *              - 0 If the message was added.
+ *              - -1 If @c channel can't accomodate the size of @c message.
  */
 int channel_send(struct Channel *nonnull channel, struct Message *message);
 
@@ -87,7 +89,7 @@ int channel_send(struct Channel *nonnull channel, struct Message *message);
  *
  * @param channel The channel to read from.
  *
- * @return The message that was read from @c channel.
+ * @retval Message The message that was read from @c channel.
  */
 struct Message *nullable channel_receive(struct Channel *nonnull channel);
 

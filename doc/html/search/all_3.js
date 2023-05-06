@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['gdtregister_0',['GDTRegister',['../struct_g_d_t_register.html',1,'']]],
-  ['globaldescriptortable_1',['GlobalDescriptorTable',['../struct_global_descriptor_table.html',1,'']]]
+  ['dasm_5fsection_0',['dasm_Section',['../structdasm__Section.html',1,'']]],
+  ['dasm_5fstate_1',['dasm_State',['../structdasm__State.html',1,'']]]
 ];

@@ -31,6 +31,6 @@
 /**
  * @brief Gets a character from a ps2 input port.
  *
- * @return char The retrieved character after being processed.
+ * @retval char The retrieved character after being processed.
  */
 char ps2_getc(void);

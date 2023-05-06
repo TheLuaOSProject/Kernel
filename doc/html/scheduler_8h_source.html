@@ -81,7 +81,7 @@ $(function() {
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;common.h&quot;</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="lock_8h.html">lock.h</a>&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;luck/arch/x86_64/cpu.h&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="cpu_8h.html">luck/arch/x86_64/cpu.h</a>&quot;</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="ipc_8h.html">luck/processes/ipc.h</a>&quot;</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>NONNULL_BEGIN</div>
@@ -90,45 +90,47 @@ $(function() {
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    Thread_STACKSIZE = 0x4000,</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>};</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="struct_futex.html">   38</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct_futex.html">Futex</a> {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">struct </span><a class="code hl_struct" href="struct_thread.html">Thread</a> *head;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="structFutex.html">   38</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structFutex.html">Futex</a> {</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">struct </span><a class="code hl_struct" href="structThread.html">Thread</a> *head;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    Lock lock;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>} <a class="code hl_struct" href="struct_futex.html">Futex</a>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>} <a class="code hl_struct" href="structFutex.html">Futex</a>;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="struct_thread.html">   43</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct_thread.html">Thread</a> {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="structThread.html">   43</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structThread.html">Thread</a> {</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">char</span> name[64];</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <a class="code hl_struct" href="struct_c_p_u_context.html">CPUContext</a> cpu_context;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <a class="code hl_struct" href="structCPUContext.html">CPUContext</a> cpu_context;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">void</span> *stack_base;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">struct </span><a class="code hl_struct" href="struct_thread.html">Thread</a> *nullable next_task, *nullable previous_task;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    lua_State *lua;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">struct </span><a class="code hl_struct" href="structThread.html">Thread</a> *nullable next_task, *nullable previous_task;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <a class="code hl_struct" href="structlua__State.html">lua_State</a> *lua;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">bool</span> ready, kill;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    Lock lock;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">struct </span><a class="code hl_struct" href="struct_thread.html">Thread</a> *nullable next_mutex;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>} <a class="code hl_struct" href="struct_thread.html">Thread</a>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">struct </span><a class="code hl_struct" href="structThread.html">Thread</a> *nullable next_mutex;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>} <a class="code hl_struct" href="structThread.html">Thread</a>;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keywordtype">void</span> <a class="code hl_function" href="scheduler_8h.html#a0ce71158a224fa121806245dddf7da6b">wait_for_thread</a>(<a class="code hl_struct" href="struct_thread.html">Thread</a> *thread);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keywordtype">void</span> <a class="code hl_function" href="scheduler_8h.html#a0ce71158a224fa121806245dddf7da6b">wait_for_thread</a>(<a class="code hl_struct" href="structThread.html">Thread</a> *thread);</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keywordtype">void</span> wake_futex(<a class="code hl_struct" href="struct_futex.html">Futex</a> *mtx);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keywordtype">void</span> wake_all_futexes(<a class="code hl_struct" href="struct_futex.html">Futex</a> *mutexes);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keywordtype">void</span> wake_futex(<a class="code hl_struct" href="structFutex.html">Futex</a> *mtx);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keywordtype">void</span> wake_all_futexes(<a class="code hl_struct" href="structFutex.html">Futex</a> *mutexes);</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><a class="code hl_struct" href="struct_thread.html">Thread</a> *nullable <a class="code hl_function" href="scheduler_8h.html#adbadda6e27441008c2ba555e72faf49a">spawn_thread</a>(<span class="keywordtype">void</span> *addr, <span class="keywordtype">size_t</span> size, <span class="keyword">const</span> <span class="keywordtype">char</span> *vpi);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><a class="code hl_struct" href="structThread.html">Thread</a> *nullable <a class="code hl_function" href="scheduler_8h.html#adbadda6e27441008c2ba555e72faf49a">spawn_thread</a>(<span class="keywordtype">void</span> *addr, <span class="keywordtype">size_t</span> size, <span class="keyword">const</span> <span class="keywordtype">char</span> *vpi);</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keywordtype">void</span> reschedule(<a class="code hl_struct" href="struct_c_p_u_context.html">CPUContext</a> *ctx);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keywordtype">void</span> reschedule(<a class="code hl_struct" href="structCPUContext.html">CPUContext</a> *ctx);</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keywordtype">void</span> <a class="code hl_function" href="scheduler_8h.html#ab258cc2856e5f6bb125907cc23358fbd">scheduler_init</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keywordtype">int</span> luaopen_scheduler(lua_State *L);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keywordtype">int</span> luaopen_scheduler(<a class="code hl_struct" href="structlua__State.html">lua_State</a> *L);</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>NONNULL_END</div>
+<div class="ttc" id="acpu_8h_html"><div class="ttname"><a href="cpu_8h.html">cpu.h</a></div><div class="ttdoc">CPU related things.</div></div>
 <div class="ttc" id="aipc_8h_html"><div class="ttname"><a href="ipc_8h.html">ipc.h</a></div></div>
 <div class="ttc" id="alock_8h_html"><div class="ttname"><a href="lock_8h.html">lock.h</a></div></div>
 <div class="ttc" id="ascheduler_8h_html_a0ce71158a224fa121806245dddf7da6b"><div class="ttname"><a href="scheduler_8h.html#a0ce71158a224fa121806245dddf7da6b">wait_for_thread</a></div><div class="ttdeci">void wait_for_thread(Thread *thread)</div><div class="ttdoc">Waits for a thread.</div><div class="ttdef"><b>Definition:</b> scheduler.c:226</div></div>
 <div class="ttc" id="ascheduler_8h_html_ab258cc2856e5f6bb125907cc23358fbd"><div class="ttname"><a href="scheduler_8h.html#ab258cc2856e5f6bb125907cc23358fbd">scheduler_init</a></div><div class="ttdeci">void scheduler_init(void)</div><div class="ttdoc">Initialises the scheduler.</div><div class="ttdef"><b>Definition:</b> scheduler.c:134</div></div>
 <div class="ttc" id="ascheduler_8h_html_adbadda6e27441008c2ba555e72faf49a"><div class="ttname"><a href="scheduler_8h.html#adbadda6e27441008c2ba555e72faf49a">spawn_thread</a></div><div class="ttdeci">Thread *nullable spawn_thread(void *addr, size_t size, const char *vpi)</div><div class="ttdoc">Creates a new thread.</div><div class="ttdef"><b>Definition:</b> scheduler.c:68</div></div>
-<div class="ttc" id="astruct_c_p_u_context_html"><div class="ttname"><a href="struct_c_p_u_context.html">CPUContext</a></div><div class="ttdef"><b>Definition:</b> cpu.h:26</div></div>
-<div class="ttc" id="astruct_futex_html"><div class="ttname"><a href="struct_futex.html">Futex</a></div><div class="ttdef"><b>Definition:</b> scheduler.h:38</div></div>
-<div class="ttc" id="astruct_thread_html"><div class="ttname"><a href="struct_thread.html">Thread</a></div><div class="ttdef"><b>Definition:</b> scheduler.h:43</div></div>
+<div class="ttc" id="astructCPUContext_html"><div class="ttname"><a href="structCPUContext.html">CPUContext</a></div><div class="ttdoc">Internal CPU context.</div><div class="ttdef"><b>Definition:</b> cpu.h:34</div></div>
+<div class="ttc" id="astructFutex_html"><div class="ttname"><a href="structFutex.html">Futex</a></div><div class="ttdef"><b>Definition:</b> scheduler.h:38</div></div>
+<div class="ttc" id="astructThread_html"><div class="ttname"><a href="structThread.html">Thread</a></div><div class="ttdef"><b>Definition:</b> scheduler.h:43</div></div>
+<div class="ttc" id="astructlua__State_html"><div class="ttname"><a href="structlua__State.html">lua_State</a></div><div class="ttdef"><b>Definition:</b> minilua.c:461</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
