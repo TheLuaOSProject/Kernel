@@ -39,7 +39,7 @@ TERM_WALLPAPER=boot:///powered-by-lua.bmp
 ]]
 
 
-print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mBuilding \x1b[34mUserland/lua_modules/share/lua/5.1/\n\x1b[0m")
+print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mBuilding \x1b[33mUserland/lua_modules/share/lua/5.1/\n\x1b[0m")
 local suc, _, _ = os.execute "cd Userland && luarocks --lua-version=5.1 init && luarocks make && cd .."
 if not suc then
     local suc2, _, ec = os.execute "cd Userland && luarocks-5.1 --lua-version=5.1 init && luarocks-5.1 make && cd .."
@@ -158,7 +158,7 @@ local config = {
     }
 }
 
-print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mBuilding \x1b[34mres/limine.cfg\n\x1b[0m")
+print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mBuilding \x1b[33mres/limine.cfg\n\x1b[0m")
 
 -- Dump the config to res/limine.cfg
 local file = assert(io.open("res/limine.cfg", "w"))
@@ -200,7 +200,7 @@ file:close()
 
 
 -- Copy over the modules into the `build/iso/
-print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mCopying modules to \x1b[34mbuild/iso/boot/\x1b[0m")
+print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mCopying modules to \x1b[33mbuild/iso/boot/\x1b[0m")
 for name, file in pairs(config.targets["LuaOS"].modules) do
     --[[@cast name string]]
     local dir = name:match("(.*)/")
@@ -208,5 +208,5 @@ for name, file in pairs(config.targets["LuaOS"].modules) do
         exec("mkdir", "-p", "build/iso/boot/"..dir):collect()
     end
     exec("cp", file, "build/iso/boot/"..name)
-    print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mCopied \x1b[34m"..file.."\x1b[32m to \x1b[34mbuild/iso/boot/"..name.."\x1b[0m")
+    print("[\x1b[1;35mUserland\x1b[0m] \x1b[32mCopied \x1b[33m"..file.."\x1b[32m to \x1b[33mbuild/iso/boot/"..name.."\x1b[0m")
 end

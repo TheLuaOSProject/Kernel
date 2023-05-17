@@ -11,3 +11,5 @@ res/limine.cfg
 /lua
 /lua_modules
 /.luarocks
+
+/lsp

@@ -18,23 +18,14 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="811056a0-c5cf-46fe-aa19-d72ee2034a14" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="811056a0-c5cf-46fe-aa19-d72ee2034a14" name="Changes" comment="feat(Cleanup): Some misc cleanup and testing">
+      <change afterPath="$PROJECT_DIR$/CONTRIBUTING.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Userland" beforeDir="false" afterPath="$PROJECT_DIR$/Userland" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Userland/luaos-dev-1.rockspec" beforeDir="false" afterPath="$PROJECT_DIR$/Userland/luaos-dev-1.rockspec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Userland/src/animation.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Userland/src/animation.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Userland/src/animation2.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Userland/src/animation2.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Userland/src/repl.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Userland/src/repl.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build-userland.lua" beforeDir="false" afterPath="$PROJECT_DIR$/build-userland.lua" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine" beforeDir="false" afterPath="$PROJECT_DIR$/extern/limine" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine/limine-deploy.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine/limine-enroll-config.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/lock.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/lock.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/memory/magazines.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/memory/magazines.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/processes/scheduler.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/processes/scheduler.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/memory/magazines.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/memory/magazines.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processes/scheduler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/processes/scheduler.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/start.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/start.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -110,7 +101,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.C/C++&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -138,11 +129,6 @@
     <configuration name="user-land" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="user-land" CONFIG_NAME="user-land" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="Unnamed" type="com.jetbrains.cidr.embedded.customgdbserver.type" factoryName="com.jetbrains.cidr.embedded.customgdbserver.factory" PROGRAM_PARAMS="-machine q35 -gdb tcp::20112 -smp 2 -m 2G -serial file:luaos.log -S -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="$PROJECT_DIR$/build/bin/luck.elf">
@@ -173,12 +159,27 @@
       <workItem from="1682534305418" duration="1966000" />
       <workItem from="1682538385837" duration="155000" />
       <workItem from="1682538860440" duration="521000" />
-      <workItem from="1682539443144" duration="8000" />
+      <workItem from="1682539443144" duration="1479000" />
+      <workItem from="1682546865830" duration="1411000" />
+      <workItem from="1683922211581" duration="757000" />
+      <workItem from="1684351700405" duration="269000" />
     </task>
+    <task id="LOCAL-00001" summary="feat(Cleanup): Some misc cleanup and testing">
+      <created>1682539547892</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1682539547892</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat(Cleanup): Some misc cleanup and testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(Cleanup): Some misc cleanup and testing" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
