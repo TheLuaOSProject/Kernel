@@ -29,7 +29,7 @@ typedef struct [[gnu::packed]] {
     qword interrupt_number, error, rip, cs, rflags, rsp, ss;
 } CPUContext;
 
-closed_enum CPUVendor {
+$closed_enum CPUVendor {
     CPUVendor_INTEL,
     CPUVendor_AMD,
     CPUVendor_QEMU,

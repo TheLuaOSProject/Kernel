@@ -30,12 +30,12 @@
 #include "string.h"
 
 
-#define lua_write_log(source, line, func, level, fmt, ...) ({ \
+#define $lua_write_log(source, line, func, level, fmt, ...) ({ \
         char buf[32] = {0};\
         _log_level_##level(); \
         _log_begin(source, integer_to_string(32, buf, line), func); \
         const char* _fmt = (fmt); \
-        foreach(_log__one, _ __VA_OPT__(,) __VA_ARGS__) \
+        $foreach(_log__one, _ __VA_OPT__(,) __VA_ARGS__) \
         _log_level_##level##_end(&_fmt); \
     })
 
@@ -75,7 +75,7 @@ static int kernel_log_debug(lua_State *L)
     struct lua_Debug dbg = {0};
     lua_getstack(L, 1, &dbg);
     lua_getinfo(L, "nSl", &dbg);
-    lua_write_log(dbg.source, dbg.currentline, dbg.name, debug, msg);
+    $lua_write_log(dbg.source, dbg.currentline, dbg.name, debug, msg);
     return LUA_OK;
 }
 
@@ -85,7 +85,7 @@ static int kernel_log_info(lua_State *L)
     struct lua_Debug dbg = {0};
     lua_getstack(L, 1, &dbg);
     lua_getinfo(L, "nSl", &dbg);
-    lua_write_log(dbg.source, dbg.currentline, dbg.name, info, msg);
+    $lua_write_log(dbg.source, dbg.currentline, dbg.name, info, msg);
     return LUA_OK;
 }
 
@@ -95,7 +95,7 @@ static int kernel_log_warning(lua_State *L)
     struct lua_Debug dbg = {0};
     lua_getstack(L, 1, &dbg);
     lua_getinfo(L, "nSl", &dbg);
-    lua_write_log(dbg.source, dbg.currentline, dbg.name, warning, msg);
+    $lua_write_log(dbg.source, dbg.currentline, dbg.name, warning, msg);
     return LUA_OK;
 }
 
@@ -105,7 +105,7 @@ static int kernel_log_error(lua_State *L)
     struct lua_Debug dbg = {0};
     lua_getstack(L, 1, &dbg);
     lua_getinfo(L, "nSl", &dbg);
-    lua_write_log(dbg.source, dbg.currentline, dbg.name, error, msg);
+    $lua_write_log(dbg.source, dbg.currentline, dbg.name, error, msg);
     return LUA_OK;
 }
 
@@ -115,16 +115,16 @@ static int kernel_log_panic(lua_State *L)
     struct lua_Debug dbg = {0};
     lua_getstack(L, 1, &dbg);
     lua_getinfo(L, "nSl", &dbg);
-    lua_write_log(dbg.source, dbg.currentline, dbg.name, panic, msg);
+    $lua_write_log(dbg.source, dbg.currentline, dbg.name, panic, msg);
     return LUA_OK;
 }
 
 static const luaL_Reg libkernel_log[] = {
     { "debug", kernel_log_debug },
     { "info", kernel_log_info },
-    { "warning", kernel_log_warning },
+    { "$warning", kernel_log_warning },
     { "error", kernel_log_error },
-    { "panic", kernel_log_panic },
+    { "$panic", kernel_log_panic },
     { nullptr, nullptr }
 };
 

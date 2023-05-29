@@ -22,7 +22,7 @@
 #include "stdatomic.h"
 #include "common.h"
 
-NONNULL_BEGIN
+$nonnull_begin
 
 typedef _Atomic(bool) Lock;
 
@@ -30,10 +30,10 @@ static inline void acquire_lock(Lock *b)
 {
     bool spin = false;
     do {
-        while (atomic_load_explicit(b, memory_order_relaxed)) { spin = true; asm("pause"); }
+        while (atomic_load_explicit(b, memory_order_relaxed)) { spin = true; $asm("pause"); }
     } while (atomic_exchange(b, true));
 }
 static inline void release_lock(Lock *b)
 { atomic_store(b, false); }
 
-NONNULL_END
+$nonnull_end

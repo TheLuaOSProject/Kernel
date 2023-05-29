@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-NONNULL_BEGIN
+$nonnull_begin
 
 struct IDTEntry {
     word offset_low, selector;
@@ -39,4 +39,4 @@ struct [[gnu::packed]] IDTRegister {
 void idt_init(void);
 void idt_register_int(byte int_no, [[gnu::interrupt]] void(*routine)(void*));
 
-NONNULL_END
+$nonnull_end

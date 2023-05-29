@@ -20,12 +20,12 @@
 #pragma once
 
 #define _stringify(...) #__VA_ARGS__
-#define stringify(...) _stringify(__VA_ARGS__)
+#define $stringify(...) _stringify(__VA_ARGS__)
 
 #define _concat(x, y) x##y
-#define concat(x, y) _concat(x, y)
+#define $concat(x, y) _concat(x, y)
 
-#define foreach(F, a, ...) __VA_OPT__(_foreach_ladder0(F, a, __VA_ARGS__))
+#define $foreach(F, a, ...) __VA_OPT__(_foreach_ladder0(F, a, __VA_ARGS__))
 #define _foreach_ladder0(F, a, n, ...) F(a, n) __VA_OPT__(_foreach_ladder1(F, a, __VA_ARGS__))
 #define _foreach_ladder1(F, a, n, ...) F(a, n) __VA_OPT__(_foreach_ladder2(F, a, __VA_ARGS__))
 #define _foreach_ladder2(F, a, n, ...) F(a, n) __VA_OPT__(_foreach_ladder3(F, a, __VA_ARGS__))

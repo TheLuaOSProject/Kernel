@@ -31,7 +31,7 @@ static atomic_bool serial = true;
 
 static void output_char_serial(char c) {
     if (atomic_load(&serial)) {
-        while ((port_in_byte(0x3fd) & 0x20) == 0) asm("pause");
+        while ((port_in_byte(0x3fd) & 0x20) == 0) $asm("pause");
         port_out_byte(0x3f8, c);
     }
 }

@@ -38,6 +38,6 @@ void gdt_init(void)
 
     gdt.task_state_segment.tss[0x66] = 0x13;
 
-    asm("LGDT %0" :: "m"(gdtr));
-    success("Done");
+    $asm("LGDT %0" :: "m"(gdtr));
+    $success("Done");
 }

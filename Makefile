@@ -64,7 +64,7 @@ CFLAGS +=       						\
 	-fno-omit-frame-pointer 			\
 	-Wno-deprecated-attributes			\
 	-fms-extensions\
-	-fblocks
+	-fblocks -Dasm=peepeepoopoo
 
 LDFLAGS +=         			\
     -nostdlib               \

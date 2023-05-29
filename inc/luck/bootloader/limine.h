@@ -21,27 +21,27 @@
 
 #include "common.h"
 
-NONNULL_BEGIN
+$nonnull_begin
 
-#define BOOTLOADER_MODULE(name) \
+#define $bootloader_module(name) \
     extern const volatile struct limine_##name##_response *nullable bootloader_##name
 
-BOOTLOADER_MODULE(hhdm);
-BOOTLOADER_MODULE(kernel_address);
-BOOTLOADER_MODULE(module);
-BOOTLOADER_MODULE(framebuffer);
-BOOTLOADER_MODULE(rsdp);
-BOOTLOADER_MODULE(memmap);
+$bootloader_module(hhdm);
+$bootloader_module(kernel_address);
+$bootloader_module(module);
+$bootloader_module(framebuffer);
+$bootloader_module(rsdp);
+$bootloader_module(memmap);
 
-#undef BOOTLOADER_MODULE
+#undef $bootloader_module
 
 void bootloader_init(void);
 
 qword limine_virt_to_phys(qword virt);
 qword limine_phys_to_virt(qword phys);
 
-#define phys(value) limine_virt_to_phys((qword)(value))
-#define virt(value, ...)                                                       \
+#define $phys(value) limine_virt_to_phys((qword)(value))
+#define $virt(value, ...)                                                       \
   (__VA_OPT__((__VA_ARGS__ *))(qword) limine_phys_to_virt(value))
 
-NONNULL_END
+$nonnull_end

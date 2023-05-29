@@ -49,12 +49,12 @@ uint64_t limine_virt_to_phys(uint64_t virt) {
 	if (VIRTUAL_MEMORY_HIGH == 0) VIRTUAL_MEMORY_HIGH = hhdm_request.response->offset;
 	if (virt >= kernel_address_request.response->virtual_base) return virt - kernel_address_request.response->virtual_base + kernel_address_request.response->physical_base;
 	if (virt >= 0xffff800000000000) return virt - hhdm_request.response->offset;
-	panic("invalid call to virt_to_phys({:#x}) [invalid va]", virt);
+	$panic("invalid call to virt_to_phys({:#x}) [invalid va]", virt);
 }
 
 uint64_t limine_phys_to_virt(uint64_t phys) {
 	if (VIRTUAL_MEMORY_HIGH == 0) VIRTUAL_MEMORY_HIGH = hhdm_request.response->offset;
-	if (phys >= 0xffff800000000000)  panic("invalid call to phys_to_virt()");
+	if (phys >= 0xffff800000000000)  $panic("invalid call to phys_to_virt()");
 	return phys + hhdm_request.response->offset;
 }
 

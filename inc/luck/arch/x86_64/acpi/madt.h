@@ -22,7 +22,7 @@
 #include "acpi.h"
 
 
-NONNULL_BEGIN
+$nonnull_begin
 
 struct [[gnu::packed]] MADTEntryHeader {
     byte id, length;
@@ -39,7 +39,7 @@ struct [[gnu::packed]] MADT {
 };
 
 //#define MADT_ENTRY_ID_LAPIC (0)
-closed_enum MADTEntryID {
+$closed_enum MADTEntryID {
     MADTEntryID_LAPIC = 0,
 };
 
@@ -61,4 +61,4 @@ struct MADTEntry_IOAPIC {
 struct MADT *nullable madt_init(const struct RSDP *rsdp);
 
 
-NONNULL_END
+$nonnull_end

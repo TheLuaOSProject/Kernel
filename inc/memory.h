@@ -21,7 +21,7 @@
 
 #include <common.h>
 
-NONNULL_BEGIN
+$nonnull_begin
 
 static void *memory_copy(void *dst, const void *src, size_t n)
 {
@@ -69,4 +69,4 @@ void *memset(void *dst, int c, size_t n);
 
 int memcmp(const void *b1, const void *b2, size_t n);
 
-NONNULL_END
+$nonnull_end

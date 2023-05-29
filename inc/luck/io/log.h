@@ -25,7 +25,7 @@
 
 #include "luck/arch/x86_64/cpu.h"
 
-NONNULL_BEGIN
+$nonnull_begin
 
 void _log_level_success(void);
 void _log_level_info(void);
@@ -74,19 +74,19 @@ _log__formatters(_log__defines)
                  default: _log_voidptr)(&_fmt, _argument);\
     }
 
-#define write_log(level, fmt, ...) ({ \
+#define $write_log(level, fmt, ...) ({ \
         _log_level_##level(); \
-        _log_begin(__FILE_NAME__, stringify(__LINE__), __FUNCTION__); \
+        _log_begin(__FILE_NAME__, $stringify(__LINE__), __FUNCTION__); \
         const char* _fmt = (fmt); \
-        foreach(_log__one, _ __VA_OPT__(,) __VA_ARGS__) \
+        $foreach(_log__one, _ __VA_OPT__(,) __VA_ARGS__) \
         _log_level_##level##_end(&_fmt); \
     })
 
-#define success(fmt, ...)   write_log(success, fmt __VA_OPT__(,) __VA_ARGS__)
-#define info(fmt, ...)      write_log(info, fmt __VA_OPT__(,) __VA_ARGS__)
-#define debug(fmt, ...)     write_log(debug, fmt __VA_OPT__(,) __VA_ARGS__)
-#define warning(fmt, ...)   write_log(warning, fmt __VA_OPT__(,) __VA_ARGS__)
-#define error(fmt, ...)     write_log(error, fmt __VA_OPT__(,) __VA_ARGS__)
-#define panic(fmt, ...)     write_log(panic, fmt __VA_OPT__(,) __VA_ARGS__)
+#define $success(fmt, ...)  $write_log(success, fmt __VA_OPT__(,) __VA_ARGS__)
+#define $info(fmt, ...)     $write_log(info, fmt __VA_OPT__(,) __VA_ARGS__)
+#define $debug(fmt, ...)    $write_log(debug, fmt __VA_OPT__(,) __VA_ARGS__)
+#define $warning(fmt, ...)  $write_log(warning, fmt __VA_OPT__(,) __VA_ARGS__)
+#define $error(fmt, ...)    $write_log(error, fmt __VA_OPT__(,) __VA_ARGS__)
+#define $panic(fmt, ...)    $write_log(panic, fmt __VA_OPT__(,) __VA_ARGS__)
 
-NONNULL_END
+$nonnull_end

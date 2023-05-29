@@ -40,7 +40,7 @@
 #undef stdout
 #undef stderr
 
-NONNULL_BEGIN
+$nonnull_begin
 
 static const char *nullable extension(size_t buflen, const char buf[buflen])
 {
@@ -83,7 +83,7 @@ static void ps2_gets(char *buf)
 
 [[gnu::used]] noreturn void kernel_start()
 {
-    asm (
+    $asm (
         ".intel_syntax noprefix\n"
         "mov rax, cr0\n"
         "and ax, 0xFFFB\n"
@@ -96,50 +96,50 @@ static void ps2_gets(char *buf)
     );
 
     qword cr3;
-    asm("MOVQ %%CR3, %0" : "=r"(cr3));
+    $asm("MOVQ %%CR3, %0" : "=r"(cr3));
     for (qword i = 0; i < 256; i++)
-        virt(cr3, qword)[i] = 0;
-//        *virt(cr3 + i * 8, qword) = 0;
+        $virt(cr3, qword)[i] = 0;
+//        *$virt(cr3 + i * 8, qword) = 0;
 
-    asm("MOVQ %0, %%CR3" :: "r"(cr3) : "memory");
+    $asm("MOVQ %0, %%CR3" :: "r"(cr3) : "memory");
 
 
-    success("Started LuaOS");
+    $success("Started LuaOS");
 
-    info("Initialising bootloader");
+    $info("Initialising bootloader");
     bootloader_init();
-    success("Done");
+    $success("Done");
 
-    info("Initialising GDT");
+    $info("Initialising GDT");
     gdt_init();
-    success("Done");
+    $success("Done");
 
-    info("Initialising IDT");
+    $info("Initialising IDT");
     idt_init();
-    success("Done");
-    asm("STI");
+    $success("Done");
+    $asm("STI");
 
-    info("Initialising memory");
+    $info("Initialising memory");
     {
-        info("  Magazines...");
+        $info("  Magazines...");
         magazine_init();
-        success("  Done");
+        $success("  Done");
 
-        info("  Kernel memory allocator...");
+        $info("  Kernel memory allocator...");
         kalloc_init();
-        success("  Done");
+        $success("  Done");
     }
-    success("Done");
+    $success("Done");
 
     terminal_init();
     framebuffer_init();
 
     if (bootloader_framebuffer == nullptr || bootloader_framebuffer->framebuffer_count == 0)
-        panic("No framebuffer found!");
+        $panic("No framebuffer found!");
 
-    info("Initialising APIC");
-    auto rsdp = assert_nonnull(rsdp_init())({ panic("No RSDP found"); });
-    auto madt = assert_nonnull(madt_init(rsdp))({ panic("No MADT found"); });
+    $info("Initialising APIC");
+    auto rsdp = $assert_nonnull(rsdp_init())({ $panic("No RSDP found"); });
+    auto madt = $assert_nonnull(madt_init(rsdp))({ $panic("No MADT found"); });
 
     size_t core_c = 0;
 
@@ -147,51 +147,51 @@ static void ps2_gets(char *buf)
          (uintptr_t)entry < (uintptr_t)(((uintptr_t)madt->entries) + madt->descriptor.length - sizeof(struct MADT));
          entry = (struct MADTEntryHeader *)((byte *)entry + (entry)->length)) {
 
-        debug("  Found entry with ID {}", entry->id);
+        $debug("  Found entry with ID {}", entry->id);
         switch (entry->id) {
             case MADTEntryID_LAPIC: {
                 struct MADTEntry_LAPIC *lapic = (struct MADTEntry_LAPIC *) entry;
-                success("  Found LAPIC at core {} (address: {})", core_c++, lapic);
-                debug("    Processor ID: {}", lapic->processor_id);
-                debug("    APIC ID: {}", lapic->apic_id);
-                debug("    Flags: {}", lapic->flags);
+                $success("  Found LAPIC at core {} (address: {})", core_c++, lapic);
+                $debug("    Processor ID: {}", lapic->processor_id);
+                $debug("    APIC ID: {}", lapic->apic_id);
+                $debug("    Flags: {}", lapic->flags);
                 break;
             }
         }
     }
-    success("Done");
+    $success("Done");
 
-    info("Initalising LAPIC");
+    $info("Initalising LAPIC");
     lapic_init();
-    info("LAPIC base: {}", lapic_base);
-    success("Done");
+    $info("LAPIC base: {}", lapic_base);
+    $success("Done");
 
     static FILE stdout;
     _get_pcb()->stdout = &stdout;
     stdout.write = stdout_write;
 
-    if (bootloader_module == nullptr) panic("no modules available!");
-    if (bootloader_module->module_count == 0) panic("more than one module available!");
+    if (bootloader_module == nullptr) $panic("no modules available!");
+    if (bootloader_module->module_count == 0) $panic("more than one module available!");
 
-    info("Initialising scheduler");
+    $info("Initialising scheduler");
     scheduler_init();
-    success("Done");
+    $success("Done");
 
-    info("Loading {} programs", bootloader_module->module_count);
+    $info("Loading {} programs", bootloader_module->module_count);
     Thread *nonnull active_threads[bootloader_module->module_count];
     for (size_t i = 0; i < bootloader_module->module_count; i++) {
         struct limine_file *m = bootloader_module->modules[i];
-        auto ext = assert_nonnull(extension(string_length(m->cmdline), m->cmdline))({ continue; });
+        auto ext = $assert_nonnull(extension(string_length(m->cmdline), m->cmdline))({ continue; });
         if (string_compare(string_length(ext), ext, 3, "lua") != 0) continue;
 
-        info("  Loading {}...", m->cmdline);
-        active_threads[i] = assert_nonnull(spawn_thread(m->address, m->size, m->cmdline)) ({
-            panic("Failed to load lua module {}!", m->cmdline);
+        $info("  Loading {}...", m->cmdline);
+        active_threads[i] = $assert_nonnull(spawn_thread(m->address, m->size, m->cmdline)) ({
+            $panic("Failed to load lua module {}!", m->cmdline);
         });
     }
 
-    success("Initalisation complete");
+    $success("Initalisation complete");
     halt();
 }
 
-NONNULL_END
+$nonnull_end

@@ -54,18 +54,18 @@ void idt_init()
         };
     }
 
-    asm("LIDT %0" :: "m"(idtr));
+    $asm("LIDT %0" :: "m"(idtr));
 }
 
 [[gnu::always_inline]]
 static inline void print_cpu_info(CPUContext ctx)
 {
-    info("CPU Info");
-    info("RAX: {} | RBX: {} | RCX: {} | RDX: {}", (void *)ctx.rax, (void *)ctx.rbx, (void *)ctx.rcx, (void *)ctx.rdx);
-    info("RSI: {} | RDI: {} | RSP: {} | RBP: {}", (void *)ctx.rsi, (void *)ctx.rdi, (void *)ctx.rsp, (void *)ctx.rbp);
-    info("R8:  {} | R9:  {} | R10: {} | R11: {}", (void *)ctx.r8, (void *)ctx.r9, (void *)ctx.r10, (void *)ctx.r11);
-    info("R12: {} | R13: {} | R14: {} | R15: {}", (void *)ctx.r12, (void *)ctx.r13, (void *)ctx.r14, (void *)ctx.r15);
-    info("RIP: {} | RFL: {} | ERR: {} | ISR: {}", (void *)ctx.rip, (void *)ctx.rflags, (void*)ctx.error, (void*)ctx.interrupt_number);
+    $info("CPU Info");
+    $info("RAX: {} | RBX: {} | RCX: {} | RDX: {}", (void *)ctx.rax, (void *)ctx.rbx, (void *)ctx.rcx, (void *)ctx.rdx);
+    $info("RSI: {} | RDI: {} | RSP: {} | RBP: {}", (void *)ctx.rsi, (void *)ctx.rdi, (void *)ctx.rsp, (void *)ctx.rbp);
+    $info("R8:  {} | R9:  {} | R10: {} | R11: {}", (void *)ctx.r8, (void *)ctx.r9, (void *)ctx.r10, (void *)ctx.r11);
+    $info("R12: {} | R13: {} | R14: {} | R15: {}", (void *)ctx.r12, (void *)ctx.r13, (void *)ctx.r14, (void *)ctx.r15);
+    $info("RIP: {} | RFL: {} | ERR: {} | ISR: {}", (void *)ctx.rip, (void *)ctx.rflags, (void*)ctx.error, (void*)ctx.interrupt_number);
 }
 
 void handle_lapic_irq(CPUContext *ctx);
@@ -77,5 +77,5 @@ void handle_interrupt(CPUContext *cpu)
         return;
     }
     print_cpu_info(*cpu);
-    panic("unexpected interrupt!");
+    $panic("unexpected interrupt!");
 }

@@ -39,10 +39,6 @@ void terminal_init()
 }
 
 void console_write(const char *str)
-{
-    if (term_ctx) term_write(term_ctx, str, string_length(str));
-}
+{ if (term_ctx) term_write(term_ctx, str, string_length(str)); }
 void console_write_char(char c)
-{
-    if (term_ctx) term_write(term_ctx, &c, 1);
-}
+{ if (term_ctx) term_write(term_ctx, &c, 1); }

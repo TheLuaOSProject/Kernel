@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-NONNULL_BEGIN
+$nonnull_begin
 
 byte port_in_byte(word port);
 void port_out_byte(word port, byte data);
@@ -29,4 +29,7 @@ void port_out_byte(word port, byte data);
 word port_in_word(word port);
 void port_out_word(word port, word data);
 
-NONNULL_END
+#define $port_in(T) (_Generic(typeof(T), word: port_in_word, default: port_in_byte))
+#define $port_out(T) (_Generic(typeof(T), word: port_out_word, default: port_out_byte))
+
+$nonnull_end

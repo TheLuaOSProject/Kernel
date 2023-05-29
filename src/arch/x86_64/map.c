@@ -25,13 +25,13 @@ static qword* get_pte(qword addr)
 {
     addr <<= (64 - 48);
     qword cr3;
-    asm("MOVQ %%CR3, %0" : "=r"(cr3));
+    $asm("MOVQ %%CR3, %0" : "=r"(cr3));
     qword* mod;
 #define STEP(isfinal) \
     { \
         qword off = (addr >> (64 - 9)) & 0x1ff; \
         addr <<= 9; \
-        qword* ptep = &virt(cr3, qword)[off]; \
+        qword* ptep = &$virt(cr3, qword)[off]; \
         if (!isfinal && !(*ptep & 1)) { \
             *ptep = 7 | page_alloc(PageType_PAGETABLE); \
         } \

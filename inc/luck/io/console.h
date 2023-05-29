@@ -23,10 +23,10 @@
 
 #include <limine/limine.h>
 
-NONNULL_BEGIN
+$nonnull_begin
 
 void terminal_init();
 void console_write(const char *str);
 void console_write_char(char c);
 
-NONNULL_END
+$nonnull_end

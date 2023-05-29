@@ -25,7 +25,7 @@
 
 #include <lua.h>
 
-NONNULL_BEGIN
+$nonnull_begin
 
 Olivec_Canvas framebuffer_init();
 
@@ -33,4 +33,4 @@ Olivec_Canvas framebuffer_init();
 /// Gets the lua table for the framebuffer, for `luaopen_kernel` to add it to `kernel` table.
 int luaopen_framebuffer(lua_State *L);
 
-NONNULL_END
+$nonnull_end

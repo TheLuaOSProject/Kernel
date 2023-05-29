@@ -45,16 +45,16 @@ static volatile dword *lapic_id;
 
 [[gnu::naked]]
 static qword get_lapic_addr_dyn(void) {
-	asm ("movl $0x1b, %ecx");
-	asm ("rdmsr");
-	asm ("shrq $32, %rdx");
-	asm ("orq %rax, %rdx");
-	asm ("retq");
+	$asm ("movl $0x1b, %ecx");
+	$asm ("rdmsr");
+	$asm ("shrq $32, %rdx");
+	$asm ("orq %rax, %rdx");
+	$asm ("retq");
 }
 
 void magazine_init(void)
 {
-	lapic_id = virt(get_lapic_addr_dyn() & ~0xfff, dword);
+	lapic_id = $virt(get_lapic_addr_dyn() & ~0xfff, dword);
 }
 
 #define max_lapic_id 2 // TODO: change this to the actual value once we do smp
@@ -67,7 +67,7 @@ Magazine *mag_new(qword(*get)(void *ctx), void (*put)(void *ctx, qword item), vo
 		memset(mag, 0, sizeof(Magazine));
 		mag->mag_percpu = &mag_percpu[mag_id * 256];
 		memset(mag->mag_percpu, 0, sizeof(MagazinePerCPU) * 256);
-		if (*lapic_id >= 256) panic("arch_get_max_cpu_id() >= 256; luaOS supports a maximum of 256 cores!");
+		if (*lapic_id >= 256) $panic("arch_get_max_cpu_id() >= 256; luaOS supports a maximum of 256 cores!");
 	} else {
 		mag = kalloc(sizeof(Magazine));
 		mag->mag_percpu = kalloc(sizeof(MagazinePerCPU) * max_lapic_id);
@@ -78,12 +78,12 @@ Magazine *mag_new(qword(*get)(void *ctx), void (*put)(void *ctx, qword item), vo
 	return mag;
 }
 static qword *alloc_mag(void) {
-	if (static_mag_alloc_idx >= 32) panic("out of static magazine allocation space!");
+	if (static_mag_alloc_idx >= 32) $panic("out of static magazine allocation space!");
 	return &static_mag_alloc[static_mag_alloc_idx++ * mag_each_size + 1];
 }
 static void free_mag(const qword *mag) {
 	(void)mag;
-	panic("TODO: free magazines (needs kmalloc)");
+	$panic("TODO: free magazines (needs kmalloc)");
 }
 
 #define SWAP(a, b) do { __auto_type _tmp = (a); (a) = (b); (b) = _tmp; } while (0)
@@ -116,7 +116,7 @@ free:
 		}
 	} else {
 release:;
-		if (!mag_cpu->current) panic("this is prooobably dead code");
+		if (!mag_cpu->current) $panic("this is prooobably dead code");
 		uint64_t mag_cur_size = mag_cpu->current[-1];
 		for (uint64_t i = 0;i < mag_cur_size;i++) {
 			mag->put(mag->ctx, mag_cpu->current[i]);

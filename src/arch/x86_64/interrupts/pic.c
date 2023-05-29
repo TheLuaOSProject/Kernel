@@ -23,31 +23,31 @@
 
 void pic_init(int master_offset, int slave_offset)
 {
-    byte master_mask = port_in_byte(MASTER_PIC), slave_mask = port_in_byte(SLAVE_PIC);
+    byte master_mask = port_in_byte(PIC_MASTER), slave_mask = port_in_byte(PIC_SLAVE);
 
     // Init init sequence
-    port_out_byte(MASTER_PIC, ICW1_INIT | ICW1_ICW4);
-    port_out_byte(SLAVE_PIC, ICW1_INIT | ICW1_ICW4);
+    port_out_byte(PIC_MASTER, ICW1_INIT | ICW1_ICW4);
+    port_out_byte(PIC_SLAVE, ICW1_INIT | ICW1_ICW4);
 
     // Set offsets
-    port_out_byte(MASTER_PIC_DATA, master_offset);
-    port_out_byte(SLAVE_PIC_DATA, slave_offset);
+    port_out_byte(PIC_MASTER_DATA, master_offset);
+    port_out_byte(PIC_SLAVE_DATA, slave_offset);
 
     // Tell master about slave
-    port_out_byte(MASTER_PIC_DATA, 0b00000100/* IRQ2 */);
-    port_out_byte(SLAVE_PIC_DATA, 0b00000010/* Cascade identity */);
+    port_out_byte(PIC_MASTER_DATA, 0b00000100/* IRQ2 */);
+    port_out_byte(PIC_SLAVE_DATA, 0b00000010/* Cascade identity */);
 
     // Set mode
-    port_out_byte(MASTER_PIC_DATA, ICW4_8086);
-    port_out_byte(SLAVE_PIC_DATA, ICW4_8086);
+    port_out_byte(PIC_MASTER_DATA, ICW4_8086);
+    port_out_byte(PIC_SLAVE_DATA, ICW4_8086);
 
     // Restore masks
-    port_out_byte(MASTER_PIC_DATA, master_mask);
-    port_out_byte(SLAVE_PIC_DATA, slave_mask);
+    port_out_byte(PIC_MASTER_DATA, master_mask);
+    port_out_byte(PIC_SLAVE_DATA, slave_mask);
 }
 
-void pic_send_eoi(byte irq)
+void pic_send_end_of_interrupt(byte irq)
 {
-    if (irq >= 8) port_out_byte(SLAVE_PIC_CMD, PIC_END_OF_INT);
-    port_out_byte(MASTER_PIC_CMD, PIC_END_OF_INT);
+    if (irq >= 8) port_out_byte(PIC_SLAVE_CMD, PIC_END_OF_INT);
+    port_out_byte(PIC_MASTER_CMD, PIC_END_OF_INT);
 }

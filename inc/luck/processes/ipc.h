@@ -22,7 +22,7 @@
 
 #include "luck/memory/manager.h"
 
-NONNULL_BEGIN
+$nonnull_begin
 
 struct Message {
     struct Message *nullable next, *nullable previous;
@@ -36,14 +36,6 @@ struct Channel {
     size_t message_count, message_max;
     Lock    lock;
 };
-
-static inline struct Channel channel_create(size_t byte_max, size_t message_max)
-{
-    return (struct Channel) {
-        .byte_max = byte_max,
-        .message_max = message_max,
-    };
-}
 
 static inline void channel_destroy(struct Channel *nonnull channel)
 {
@@ -60,4 +52,4 @@ struct Message *nullable message_create(struct Message *nonnull *nullable head, 
 int channel_send(struct Channel *nonnull channel, struct Message *message);
 struct Message *nullable channel_receive(struct Channel *nonnull channel);
 
-NONNULL_END
+$nonnull_end

@@ -23,14 +23,14 @@
 #include "common.h"
 
 //#define APIC_BASE_MSR 0x1B
-closed_enum ModelSpecificRegister: dword {
+$closed_enum ModelSpecificRegister: dword {
     ModelSpecificRegister_APIC_BASE = 0x1B
 };
 
 static inline qword read_msr(register enum ModelSpecificRegister msr)
 {
     register dword low, high;
-    asm("RDMSR" : "=a"(low), "=d"(high) : "c"(msr));
+    $asm("RDMSR" : "=a"(low), "=d"(high) : "c"(msr));
     return ((qword)high << 32) | low;
 }
 
@@ -38,5 +38,5 @@ static inline void write_msr(register enum ModelSpecificRegister msr, qword valu
 {
     register dword low = value & 0xFFFFFFFF;
     register dword high = value >> 32;
-    asm("WRMSR" : : "a"(low), "d"(high), "c"(msr));
+    $asm("WRMSR" : : "a"(low), "d"(high), "c"(msr));
 }

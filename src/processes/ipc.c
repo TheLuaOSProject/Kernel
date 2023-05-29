@@ -21,14 +21,12 @@
 #include "common.h"
 #include "memory.h"
 
-NONNULL_BEGIN
+$nonnull_begin
 
 struct Message *nullable message_create(struct Message *nonnull *nullable head, size_t length, const byte data[static nonnull length])
 {
     struct Message *message = kalloc(sizeof(struct Message) + length);
-    if (message == nullptr) {
-        return nullptr;
-    }
+    if (message == nullptr) return nullptr;
     message->length = length;
     memory_copy(message->data, data, length);
     message->next = nullptr;
@@ -80,4 +78,4 @@ struct Message *nullable channel_receive(struct Channel *nonnull channel)
     return message;
 }
 
-NONNULL_END
+$nonnull_end

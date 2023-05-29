@@ -26,22 +26,22 @@
 #include <stdnoreturn.h>
 
 #if __STDC_VERSION__ > 201710L
-#define C2X true
+#define $C2X true
 #else
-#define C2X false
+#define $C2X false
 #endif
 
-#define closed_enum enum [[clang::enum_extensibility(closed)]]
+#define $closed_enum enum [[clang::enum_extensibility(closed)]]
 
-#define pragma(...) _Pragma(#__VA_ARGS__)
-#define asm __asm__ __volatile__
+#define $pragma(...) _Pragma(#__VA_ARGS__)
+#define $asm __asm__ __volatile__
 
-#define NONNULL_BEGIN pragma(clang assume_nonnull begin)
-#define NONNULL_END pragma(clang assume_nonnull end)
+#define $nonnull_begin $pragma(clang assume_nonnull begin)
+#define $nonnull_end $pragma(clang assume_nonnull end)
 
 #define auto __auto_type
 
-#define assert_nonnull(...) ({          \
+#define $assert_nonnull(...) ({          \
     auto _val = (__VA_ARGS__);          \
     if (_val == 0) _ASSERT_NONNULL
 
@@ -71,7 +71,7 @@ typedef const void *label;
 //[[noreturn]]
 static inline noreturn void halt() {
     while (true)
-        asm("STI\n"
+        $asm("STI\n"
             "HLT\n");
     __builtin_unreachable();
 }

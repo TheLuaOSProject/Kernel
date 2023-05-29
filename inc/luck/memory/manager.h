@@ -21,13 +21,13 @@
 
 #include <common.h>
 
-NONNULL_BEGIN
+$nonnull_begin
 
 extern qword VIRTUAL_MEMORY_HIGH;
 #define VIRTUAL_MEMORY_HIGH ((const qword)VIRTUAL_MEMORY_HIGH)
 
 /// page allocation ///
-closed_enum PageType {
+$closed_enum PageType {
     PageType_PAGETABLE,
     PageType_REGULAR
 };
@@ -43,4 +43,4 @@ void kalloc_init(void);
 void *kalloc(qword size);
 void kfree(void *ptr, qword size);
 
-NONNULL_END
+$nonnull_end

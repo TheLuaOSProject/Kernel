@@ -60,7 +60,7 @@ char ps2_getc(void) {
                 // if (byte == 0x4d) keycode = 0x38;
                 // if (byte == 0x50) keycode = 0x39;
                 // if (keycode) kbd_state[keycode - 1] = pressed;
-                // warning("todo ps2 ext {} {:#x}", *mode, byte);
+                // $warning("todo ps2 ext {} {:#x}", *mode, byte);
                 is_extended = false;
                 continue;
             }
@@ -72,7 +72,7 @@ char ps2_getc(void) {
                 if (c && c != '\e' && pressed) return c;
                 continue;
             } else {
-                warning("todo ps2 norm {} {:#x}", *mode, byte);
+                $warning("todo ps2 norm {} {:#x}", *mode, byte);
             }
         }
     }

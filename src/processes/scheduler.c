@@ -44,6 +44,7 @@ void *ljsup_alloc(void *ud, void *ptr, size_t osize, size_t nsize);
 
 int luaopen_kernel(lua_State *L);
 
+[[noreturn]]
 static void thread_entry(Thread *nonnull t)
 {
     lua_State *L = t->lua;
@@ -51,13 +52,13 @@ static void thread_entry(Thread *nonnull t)
     if (lua_pcall(L, 0, 0, 0) == LUA_OK) {
         lua_pop(L, lua_gettop(L));
     } else {
-        error("lua error: {}", lua_tostring(L, lua_gettop(L)));
+        $error("lua error: {}", lua_tostring(L, lua_gettop(L)));
         lua_pop(L, lua_gettop(L));
     }
 
-    debug("Killing thread {}", t->name);
+    $debug("Killing thread {}", t->name);
     t->kill = true;
-    while (true) asm("HLT");
+    while (true) $asm("HLT");
 }
 
 static Lock sched_lock = false;
@@ -90,10 +91,10 @@ Thread *spawn_thread(void *addr, size_t size, const char *name)
     }
     int v = luaL_loadbuffer(L, addr, size, t->name);
     if (v != 0)
-        panic("Could not spawn thread! Reason: {}", lua_tostring(L, -1));
+        $panic("Could not spawn thread! Reason: {}", lua_tostring(L, -1));
 
     t->stack_base = kalloc(Thread_STACKSIZE);
-    if (!t->stack_base) panic("failed to allocate stack");
+    if (!t->stack_base) $panic("failed to allocate stack");
     t->cpu_context.rsp = (uint64_t)(t->stack_base + Thread_STACKSIZE);
     t->cpu_context.rip = (uint64_t)(thread_entry);
     t->cpu_context.rdi = (uint64_t)(t);
@@ -108,7 +109,7 @@ Thread *spawn_thread(void *addr, size_t size, const char *name)
         ready->previous_task = t;
     } else {
         // TODO: in debug (or some kind of "safe") mode only
-        if (ready_tail) panic("i'm an expert at linked lists");
+        if (ready_tail) $panic("i'm an expert at linked lists");
         ready_tail = t;
     }
     ready = t;
@@ -121,11 +122,11 @@ static volatile dword *lapic_id;
 
 [[gnu::naked]]
 static qword get_lapic_addr_dyn(void) {
-    asm ("movl $0x1b, %ecx");
-    asm ("rdmsr");
-    asm ("shrq $32, %rdx");
-    asm ("orq %rax, %rdx");
-    asm ("retq");
+    $asm ("movl $0x1b, %ecx");
+    $asm ("rdmsr");
+    $asm ("shrq $32, %rdx");
+    $asm ("orq %rax, %rdx");
+    $asm ("retq");
 }
 
 static Thread *nullable threads[256];
@@ -133,13 +134,13 @@ static CPUContext idle_tasks[256];
 static bool was_threadsweeping[256];
 void scheduler_init(void)
 {
-    lapic_id = virt(get_lapic_addr_dyn() & ~0xfff, dword);
+    lapic_id = $virt(get_lapic_addr_dyn() & ~0xfff, dword);
 }
 
 static void idle_task(void)
 {
-    info("welcome to the luaOS idle task for whatever core i'm on. I'm just chillin' here...");
-    while (true) asm("hlt");
+    $info("welcome to the luaOS idle task for whatever core i'm on. I'm just chillin' here...");
+    while (true) $asm("hlt");
 }
 static atomic_bool threadsweeper_lock;
 static __attribute__((aligned(16))) uint8_t threadsweeper_stack[16384];
@@ -153,7 +154,7 @@ static void threadsweeper(Thread *nonnull t) {
     kfree(t->stack_base, 16384);
     kfree(t, sizeof(Thread));
     release_lock(&t->lock);
-    asm("MOVQ $0, (%%RDI)\n1: INT3\njmp 1b" :: "D"(&threadsweeper_lock));
+    $asm("MOVQ $0, (%%RDI)\n1: INT3\njmp 1b" :: "D"(&threadsweeper_lock));
 }
 
 void reschedule(CPUContext *nonnull ctx)
@@ -163,7 +164,7 @@ void reschedule(CPUContext *nonnull ctx)
     uint64_t lapic = *lapic_id >> 24;
     if (ctx->interrupt_number == 3) {
         if (!was_threadsweeping[lapic]) {
-            panic("invalid int3!");
+            $panic("invalid int3!");
         }
     }
     if (threads[lapic]) {
@@ -201,7 +202,7 @@ void reschedule(CPUContext *nonnull ctx)
         }
         threads[lapic] = tnew;
         *ctx = tnew->cpu_context;
-        if (!tnew->ready) panic("how is a non-ready task on the ready list?");
+        if (!tnew->ready) $panic("how is a non-ready task on the ready list?");
         if (tnew->kill) {
             acquire_lock(&threadsweeper_lock);
             ctx->rip = (uint64_t)(threadsweeper);
@@ -242,7 +243,7 @@ void wake_futex(Futex *mtx)
 
     if (mtx->head) {
         Thread *to_wake = mtx->head;
-        mtx->head = assert_nonnull(to_wake->next_mutex)({
+        mtx->head = $assert_nonnull(to_wake->next_mutex)({
             goto done;
         });
 
@@ -262,7 +263,7 @@ void wake_all_futexes(Futex *mtx)
 
     while (mtx->head) {
         Thread *to_wake = mtx->head;
-        mtx->head = assert_nonnull(to_wake->next_mutex)({
+        mtx->head = $assert_nonnull(to_wake->next_mutex)({
             goto done;
         });
 

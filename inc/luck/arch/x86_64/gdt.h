@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-NONNULL_BEGIN
+$nonnull_begin
 
 struct [[gnu::aligned(4096)]] TSSDescriptor {
     byte tss[0x6B];
@@ -40,4 +40,4 @@ struct [[gnu::packed]] GDTRegister {
 
 void gdt_init(void);
 
-NONNULL_END
+$nonnull_end

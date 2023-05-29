@@ -33,7 +33,7 @@ struct RSDP *rsdp_init(void)
     struct RSDP *nonnull rsdp = bootloader_rsdp->address;
 
     if (rsdp->revision < 2)
-        info("  XSDT not supported on this machine; using RSDT");
+        $info("  XSDT not supported on this machine; using RSDT");
 
     return rsdp;
 }

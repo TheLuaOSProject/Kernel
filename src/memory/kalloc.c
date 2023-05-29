@@ -45,7 +45,7 @@ static qword kalloc_size_arr[16] = {kalloc_sizes};
         name##_slab_list_head = pg; \
     }
 
-#define convert_pg(X) virt(X, qword)
+#define convert_pg(X) $virt(X, qword)
 #define convert_kalloc(X) ((qword*)(void*)(X))
 
 static qword current_region = 0;
@@ -62,7 +62,7 @@ raw_slabs(page, convert_pg, {
         }
         current_region++;
     }
-    panic("we ran out of fresh pages to allocate!");
+    $panic("we ran out of fresh pages to allocate!");
 });
 
 static Magazine* page_mag = nullptr;
@@ -79,7 +79,7 @@ static qword kalloc_inner(void* ctx) {
 
         qword ssiz = kalloc_size_arr[i];
         if (ssiz > 4096) {
-            panic("todo: kalloc with size > 4096 (siz={})", ssiz);
+            $panic("todo: kalloc with size > 4096 (siz={})", ssiz);
         }
         qword cnt = 4096/ssiz;
         if (cnt == 1) {
@@ -107,7 +107,7 @@ void kalloc_init(void) {
     for (int i = 0;i < 32;i++) {
         if (kalloc_size_arr[i] == 368) idx_special = i;
     }
-    if (idx_special == 0xffff) panic("update 368 with whatever new kalloc size is big enough to hold a Magazine (>312 bytes)");
+    if (idx_special == 0xffff) $panic("update 368 with whatever new kalloc size is big enough to hold a Magazine (>312 bytes)");
     kalloc_mags[idx_special] = mag_new(kalloc_inner, kfree_inner, (void*)idx_special);
     for (qword i = 0;i < 32;i++) {
         if (i != idx_special) kalloc_mags[i] = mag_new(kalloc_inner, kfree_inner, (void*)i);
@@ -118,16 +118,16 @@ qword page_alloc(enum PageType pty) {
 	(void)pty; // for now :P
 
     qword addr = mag_get(page_mag);
-    memset(virt(addr, void), 0, 4096);
+    memset($virt(addr, void), 0, 4096);
     return addr;
 }
 
 static qword find_kalloc_mag(qword size) {
-    if (size > kalloc_size_arr[15]) panic("cannot kalloc() or kfree() more than {} bytes! (attempted to kalloc/kfree {})", kalloc_size_arr[15], size);
+    if (size > kalloc_size_arr[15]) $panic("cannot kalloc() or kfree() more than {} bytes! (attempted to kalloc/kfree {})", kalloc_size_arr[15], size);
     for (qword i = 0;i < 16;i++) {
         if (kalloc_size_arr[i] >= size) return i;
     }
-    panic("wtf");
+    $panic("wtf");
 }
 void *kalloc(qword size) {
     if (size > kalloc_size_arr[15]) {
@@ -143,7 +143,7 @@ earlykalloc:
             mag = find_kalloc_mag(336);
             goto earlykalloc;
         }
-        panic("cannot (yet) kalloc {} [earlykalloc mode], sclass {}", size, kalloc_size_arr[mag]);
+        $panic("cannot (yet) kalloc {} [earlykalloc mode], sclass {}", size, kalloc_size_arr[mag]);
     }
     void* b = (void*)mag_get(kalloc_mags[mag]);
     memset(b, 0xcc, kalloc_size_arr[mag]);
@@ -153,7 +153,7 @@ earlykalloc:
 void kfree(void* ptr, qword size) {
     if (size > kalloc_size_arr[15]) {
         size = (size + 0xfff) & ~0xfff;
-        warning("leaking {} bytes at {}", size, ptr);
+        $warning("leaking {} bytes at {}", size, ptr);
         return;
     }
     memset(ptr, 0xa5, size);

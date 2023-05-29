@@ -22,7 +22,7 @@
 #include "common.h"
 #include "memory.h" //Must keep this header!
 
-NONNULL_BEGIN
+$nonnull_begin
 
 
 static size_t string_length(const char *str)
@@ -88,4 +88,4 @@ int strcmp(const char *str1, const char *str2);
 char *strcpy(char *dest, const char *src),
      *strncpy(char *dest, const char *src, size_t n);
 
-NONNULL_END
+$nonnull_end

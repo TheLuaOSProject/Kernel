@@ -15,8 +15,4 @@
     </option>
   </component>
   <component name="MakefileWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
-  <component name="XMakeProjectSettings">
-    <option name="currentArchitecture" value="x86_64" />
-    <option name="workingDirectory" value="$PROJECT_DIR$" />
-  </component>
 </project>

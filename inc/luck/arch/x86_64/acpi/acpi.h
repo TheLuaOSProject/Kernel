@@ -20,7 +20,7 @@
 
 #include "common.h"
 
-NONNULL_BEGIN
+$nonnull_begin
 
 struct SDTHeader {
     char signature[4];
@@ -57,4 +57,4 @@ struct [[gnu::packed]] RSDP {
 struct RSDP *nullable rsdp_init(void);
 struct SDTHeader *nullable sdt_find(const struct RSDP *table, const char id[static 4], int idx);
 
-NONNULL_END
+$nonnull_end

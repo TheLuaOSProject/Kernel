@@ -24,7 +24,7 @@
 #include "luck/arch/x86_64/cpu.h"
 #include "luck/processes/ipc.h"
 
-NONNULL_BEGIN
+$nonnull_begin
 
 enum {
     Thread_STACKSIZE = 0x4000,
@@ -57,4 +57,4 @@ void scheduler_init(void);
 
 int luaopen_scheduler(lua_State *L);
 
-NONNULL_END
+$nonnull_end
