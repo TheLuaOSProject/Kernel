@@ -76,8 +76,13 @@ LDFLAGS +=         			\
 
 ASFLAGS = -f elf64
 
-CFILES := $(shell find ./src -type f -name '*.c') extern/terminal/term.c extern/terminal/backends/framebuffer.c
-ASFILES := $(shell find ./src -type f -name '*.asm')
+#CFILES := $(shell find ./src -type f -name '*.c') extern/terminal/term.c extern/terminal/backends/framebuffer.c
+#ASFILES := $(shell find ./src -type f -name '*.asm')
+CFILES := 	$(wildcard src/*/*.c) $(wildcard src/*.c) $(wildcard src/**/*.c)\
+			extern/terminal/term.c extern/terminal/backends/framebuffer.c\
+			$(wildcard src/arch/*/*.c) $(wildcard src/arch/*/*/*.c)
+ASFILES := 	$(wildcard src/*/*.asm) $(wildcard src/*.asm) $(wildcard src/**/*.asm)\
+			$(wildcard src/arch/*/*.asm) $(wildcard src/arch/*/*/*.asm)
 
 USERLAND_FILES := $(shell find ./Userland -type f -name '*.lua')
 
@@ -126,7 +131,6 @@ build/bin/luaos.iso: extern/limine extern/limine/limine-deploy build/bin/luck.el
 	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mBuilding ISO\n\033[0m"
 	@mkdir -p $(dir $@)/iso
 
-# All files in Userland/lua_modules/share/lua/5.1/ will be copied to the root of the ISO
 	cp -r Userland/lua_modules/share/lua/5.1/* $(dir $@)/iso
 
 	cp \
@@ -159,7 +163,7 @@ build/obj/extern/%.c.o: extern/limine extern/terminal extern/LuaJIT
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $(shell echo "$@" | sed 's/build\/obj\///g' | sed 's/\.o//g') -o $@
 
-build/obj/./src/%.c.o: src/%.c extern/limine extern/terminal extern/LuaJIT
+build/obj/src/%.c.o: src/%.c extern/limine extern/terminal extern/LuaJIT
 	@/usr/bin/printf "[\033[1;35mKernel\033[0m] \033[32mCompiling \033[33m$<\n\033[0m"
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
