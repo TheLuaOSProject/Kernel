@@ -138,8 +138,8 @@ static void ps2_gets(char *buf)
         $panic("No framebuffer found!");
 
     $info("Initialising APIC");
-    auto rsdp = $assert_nonnull(rsdp_init())({ $panic("No RSDP found"); });
-    auto madt = $assert_nonnull(madt_init(rsdp))({ $panic("No MADT found"); });
+    auto rsdp = $assert_nonnull(rsdp_init(), "No RSDP found");
+    auto madt = $assert_nonnull(madt_init(rsdp), "No MADT found");
 
     size_t core_c = 0;
 
@@ -181,13 +181,14 @@ static void ps2_gets(char *buf)
     Thread *nonnull active_threads[bootloader_module->module_count];
     for (size_t i = 0; i < bootloader_module->module_count; i++) {
         struct limine_file *m = bootloader_module->modules[i];
-        auto ext = $assert_nonnull(extension(string_length(m->cmdline), m->cmdline))({ continue; });
+        auto ext_ptr = extension(string_length(m->cmdline), m->cmdline);
+        if (ext_ptr == nullptr) continue;
+        auto ext = (const char *nonnull)ext_ptr;
         if (string_compare(string_length(ext), ext, 3, "lua") != 0) continue;
 
         $info("  Loading {}...", m->cmdline);
-        active_threads[i] = $assert_nonnull(spawn_thread(m->address, m->size, m->cmdline)) ({
-            $panic("Failed to load lua module {}!", m->cmdline);
-        });
+        active_threads[i] = $assert_nonnull(spawn_thread(m->address, m->size, m->cmdline), "Failed to load lua module {}!", m->cmdline);
+        $success("  Done");
     }
 
     $success("Initalisation complete");

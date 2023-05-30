@@ -243,9 +243,12 @@ void wake_futex(Futex *mtx)
 
     if (mtx->head) {
         Thread *to_wake = mtx->head;
-        mtx->head = $assert_nonnull(to_wake->next_mutex)({
-            goto done;
-        });
+//        mtx->head = $assert_nonnull(to_wake->next_mutex)({
+//            goto done;
+//        });
+        auto raw = to_wake->next_mutex;
+        if (raw == nullptr) goto done;
+        mtx->head = (Thread *nonnull)raw;
 
         acquire_lock(&to_wake->lock);\
         to_wake->next_mutex = nullptr;
@@ -263,9 +266,10 @@ void wake_all_futexes(Futex *mtx)
 
     while (mtx->head) {
         Thread *to_wake = mtx->head;
-        mtx->head = $assert_nonnull(to_wake->next_mutex)({
-            goto done;
-        });
+
+        auto raw = to_wake->next_mutex;
+        if (raw == nullptr) goto done;
+        mtx->head = (Thread *nonnull)raw;
 
         acquire_lock(&to_wake->lock);\
         to_wake->next_mutex = NULL;

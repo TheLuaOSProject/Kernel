@@ -18,81 +18,14 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eae61eb0-6e07-4126-b83c-75db8361f6bd" name="Changes" comment="feat(make): make the makefile use wildcard for better IDE performance">
-      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="eae61eb0-6e07-4126-b83c-75db8361f6bd" name="Changes" comment="feat(kernel):">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Userland" beforeDir="false" afterPath="$PROJECT_DIR$/Userland" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Userland/src/repl.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Userland/src/repl.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-userland.lua" beforeDir="false" afterPath="$PROJECT_DIR$/build-userland.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/doc/ext_c_api.html" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/doc/ext_c_api.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/doc/ext_ffi_api.html" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/doc/ext_ffi_api.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/doc/ext_ffi_semantics.html" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/doc/ext_ffi_semantics.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dasm_arm.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dasm_arm.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dasm_arm64.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dasm_arm64.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dasm_mips.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dasm_mips.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dasm_ppc.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dasm_ppc.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dasm_x86.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dasm_x86.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dynasm.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/dynasm/dynasm.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/host/genlibbc.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/host/genlibbc.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/host/genminilua.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/host/genminilua.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/jit/dis_arm.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/jit/dis_arm.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/jit/dis_arm64.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/jit/dis_arm64.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/jit/dis_mips.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/jit/dis_mips.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/jit/dis_ppc.lua" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/jit/dis_ppc.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/lib_aux.c" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/lib_aux.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/lj_ccallback.c" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/lj_ccallback.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/lj_cparse.c" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/lj_cparse.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/lj_cparse.h" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/lj_cparse.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/lj_err.c" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/lj_err.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/lj_errmsg.h" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/lj_errmsg.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/lj_jit.h" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/lj_jit.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/lj_mcode.c" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/lj_mcode.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/lj_meta.c" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/lj_meta.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extern/LuaJIT/src/lj_vmmath.c" beforeDir="false" afterPath="$PROJECT_DIR$/extern/LuaJIT/src/lj_vmmath.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine" beforeDir="false" afterPath="$PROJECT_DIR$/extern/limine" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine/limine-deploy.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine/limine-enroll-config.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/inc/common.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/common.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/lock.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/lock.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/acpi/acpi.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/acpi/acpi.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/acpi/madt.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/acpi/madt.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/cpu.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/cpu.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/gdt.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/gdt.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/interrupts/idt.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/interrupts/idt.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/interrupts/lapic.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/interrupts/lapic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/interrupts/pic.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/interrupts/pic.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/io/port.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/io/port.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/arch/x86_64/msr.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/arch/x86_64/msr.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/bootloader/limine.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/bootloader/limine.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/io/console.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/io/console.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/io/framebuffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/io/framebuffer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/io/log.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/io/log.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/memory/manager.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/memory/manager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/processes/ipc.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/processes/ipc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/luck/processes/scheduler.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/processes/scheduler.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/macro_util.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/macro_util.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/memory.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/memory.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/string.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/string.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/acpi/rsdp.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/acpi/rsdp.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/acpi/sdt.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/acpi/sdt.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/cpu.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/cpu.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/gdt.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/gdt.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/interrupts/idt.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/interrupts/idt.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/interrupts/pic.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/interrupts/pic.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/io/port.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/io/port.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/io/ps2.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/io/ps2.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arch/x86_64/map.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/arch/x86_64/map.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bootloader/limine.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/bootloader/limine.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/console.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/console.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/log.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/io/log.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/ljsupport.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/ljsupport.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lua/kernel.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/lua/kernel.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/memory/kalloc.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/memory/kalloc.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/memory/magazines.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/memory/magazines.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/processes/ipc.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/processes/ipc.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/processes/scheduler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/processes/scheduler.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/start.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/start.c" afterDir="false" />
     </list>
@@ -187,11 +120,6 @@
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <list>
       <item itemvalue="Makefile Application.all" />
       <item itemvalue="Makefile Application.bios" />
@@ -209,7 +137,12 @@
       <option name="presentableId" value="Default" />
       <updated>1685387606987</updated>
       <workItem from="1685387608902" duration="2034000" />
-      <workItem from="1685392660152" duration="538000" />
+      <workItem from="1685392660152" duration="3009000" />
+      <workItem from="1685398352439" duration="783000" />
+      <workItem from="1685462524097" duration="261000" />
+      <workItem from="1685463339368" duration="197000" />
+      <workItem from="1685463643474" duration="799000" />
+      <workItem from="1685464502083" duration="1190000" />
     </task>
     <task id="LOCAL-00001" summary="feat(make): make the makefile use wildcard for better IDE performance">
       <created>1685387634814</created>
@@ -218,11 +151,19 @@
       <option name="project" value="LOCAL" />
       <updated>1685387634814</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat(kernel): User $ for macro identifiers">
+      <created>1685393362717</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1685393362717</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat(make): make the makefile use wildcard for better IDE performance" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(make): make the makefile use wildcard for better IDE performance" />
+    <MESSAGE value="feat(kernel): User $ for macro identifiers" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(kernel): User $ for macro identifiers" />
   </component>
 </project>

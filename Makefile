@@ -23,10 +23,14 @@ LUAJIT= luajit
 
 GDB := x86_64-elf-gdb
 
-CFLAGS = -g -Og -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-microsoft
 NASMFLAGS = -F dwarf -g -f elf64
 
-CFLAGS +=       						\
+CFLAGS =\
+	-g\
+	-Og\
+	-pipe\
+	-Wall -Wextra -Werror -Wno-unused\
+	-fms-extensions -Wno-microsoft\
     -std=gnu2x           				\
     -ffreestanding       				\
     -fno-stack-protector 				\
@@ -62,9 +66,7 @@ CFLAGS +=       						\
 	-Wnullable-to-nonnull-conversion	\
 	-Wno-missing-field-initializers		\
 	-fno-omit-frame-pointer 			\
-	-Wno-deprecated-attributes			\
-	-fms-extensions\
-	-fblocks -Dasm=peepeepoopoo
+	-Wno-deprecated-attributes
 
 LDFLAGS +=         			\
     -nostdlib               \

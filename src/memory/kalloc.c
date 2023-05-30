@@ -25,12 +25,11 @@
 #include "luck/memory/magazines.h"
 #include "luck/io/log.h"
 
-#define kalloc_sizes \
+static qword kalloc_size_arr[16] = {
     16, 32, 48, 64, 96, 128, 176, 224, 288, 368, 480, 624, 800, 1024, 1360, 2048
+};
 
-static qword kalloc_size_arr[16] = {kalloc_sizes};
-
-#define raw_slabs(name, convert, oom) \
+#define $raw_slabs(name, convert, oom) \
     static qword name##_slab_list_head = 0; \
     static qword name##_slab_list_alloc(void* ctx) { \
         (void)ctx; \
@@ -45,12 +44,12 @@ static qword kalloc_size_arr[16] = {kalloc_sizes};
         name##_slab_list_head = pg; \
     }
 
-#define convert_pg(X) $virt(X, qword)
-#define convert_kalloc(X) ((qword*)(void*)(X))
+#define $convert_pg(X) $virt(X, qword)
+#define $convert_kalloc(X) ((qword*)(void*)(X))
 
 static qword current_region = 0;
 
-raw_slabs(page, convert_pg, {
+$raw_slabs(page, $convert_pg, {
     while (current_region < bootloader_memmap->entry_count) {
         struct limine_memmap_entry *region = bootloader_memmap->entries[current_region];
         if (region->type == LIMINE_MEMMAP_USABLE) {
@@ -104,7 +103,7 @@ static void kfree_inner(void* ctx, qword pg) {
 void kalloc_init(void) {
     page_mag = mag_new(page_slab_list_alloc, page_slab_list_free, nullptr);
     qword idx_special = 0xffff;
-    for (int i = 0;i < 32;i++) {
+    for (int i = 0; i < 16 ;i++) {
         if (kalloc_size_arr[i] == 368) idx_special = i;
     }
     if (idx_special == 0xffff) $panic("update 368 with whatever new kalloc size is big enough to hold a Magazine (>312 bytes)");
@@ -150,6 +149,7 @@ earlykalloc:
     memset(b, 0x00, size);
     return b;
 }
+
 void kfree(void* ptr, qword size) {
     if (size > kalloc_size_arr[15]) {
         size = (size + 0xfff) & ~0xfff;

@@ -41,16 +41,15 @@
 
 #define auto __auto_type
 
-#define $assert_nonnull(...) ({          \
-    auto _val = (__VA_ARGS__);          \
-    if (_val == 0) _ASSERT_NONNULL
+//Panic if x is null
+#define $assert_nonnull(x, msg, ...) ({ \
+        auto _val = (x);              \
+        if (_val == 0)               \
+            $panic(msg, ##__VA_ARGS__); \
+        (typeof(typeof(*_val) *nonnull))_val; \
+    })
 
-#define _ASSERT_NONNULL(...)            \
-    __VA_ARGS__;                     \
-  (typeof(typeof(*_val) *nonnull))_val; \
-  })
-
-#define IS_LITTLE_ENDIAN ((char*)&(int){1})[0]
+#define $is_little_endian ((char*)&(int){1})[0]
 
 typedef uint8_t byte;
 typedef uint16_t word;
