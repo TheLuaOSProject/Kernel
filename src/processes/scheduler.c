@@ -147,7 +147,6 @@ static __attribute__((aligned(16))) uint8_t threadsweeper_stack[16384];
 
 static void threadsweeper(Thread *nonnull t) {
     uint64_t lapic = *lapic_id >> 24;
-
     acquire_lock(&t->lock);
     lua_close(t->lua);
     t->cpu_context.rip = 0xdeadbeefdeadbeef;
@@ -243,9 +242,6 @@ void wake_futex(Futex *mtx)
 
     if (mtx->head) {
         Thread *to_wake = mtx->head;
-//        mtx->head = $assert_nonnull(to_wake->next_mutex)({
-//            goto done;
-//        });
         auto raw = to_wake->next_mutex;
         if (raw == nullptr) goto done;
         mtx->head = (Thread *nonnull)raw;
@@ -272,7 +268,7 @@ void wake_all_futexes(Futex *mtx)
         mtx->head = (Thread *nonnull)raw;
 
         acquire_lock(&to_wake->lock);\
-        to_wake->next_mutex = NULL;
+        to_wake->next_mutex = nullptr;
         to_wake->ready = true;
         release_lock(&to_wake->lock);
     }
@@ -296,6 +292,6 @@ static const luaL_Reg libscheduler[] = {
 
 int luaopen_scheduler(lua_State *nonnull L)
 {
-
+    luaL_newlib(L, libscheduler);
     return 1;
 }

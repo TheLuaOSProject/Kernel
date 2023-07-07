@@ -18,14 +18,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eae61eb0-6e07-4126-b83c-75db8361f6bd" name="Changes" comment="feat(kernel):">
+    <list default="true" id="eae61eb0-6e07-4126-b83c-75db8361f6bd" name="Changes" comment="feat(allocator): Whoops forgor to include the files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine" beforeDir="false" afterPath="$PROJECT_DIR$/extern/limine" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine/limine-deploy.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/extern/limine/limine-enroll-config.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/common.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/common.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/memory/kalloc.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/memory/kalloc.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/luck/memory/allocator.h" beforeDir="false" afterPath="$PROJECT_DIR$/inc/luck/memory/allocator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/memory/allocator.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/memory/allocator.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/processes/scheduler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/processes/scheduler.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/start.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/start.c" afterDir="false" />
     </list>
@@ -94,7 +93,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
-  <component name="RunManager" selected="Makefile Application.all">
+  <component name="RunManager" selected="Embedded GDB Server.Debug">
     <configuration name="Makefile" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="Makefile" CONFIG_NAME="Makefile" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
@@ -120,7 +119,16 @@
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Debug" type="com.jetbrains.cidr.embedded.customgdbserver.type" factoryName="com.jetbrains.cidr.embedded.customgdbserver.factory" PROGRAM_PARAMS="-smp 2 -m 2G -monitor stdio -serial file:luaos.log -vga std -machine q35 -gdb tcp::22977 -S -bios extern/ovmf-x64/OVMF.fd -cdrom build/bin/luaos.iso -boot d" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Kernel" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="$PROJECT_DIR$/build/bin/luck.elf">
+      <custom-gdb-server version="1" gdb-connect="tcp::22977" executable="/usr/local/bin/qemu-system-x86_64" warmup-ms="0" download-type="UPDATED_ONLY" reset-cmd="monitor system_reset" reset-type="AFTER_DOWNLOAD">
+        <debugger kind="GDB" isBundled="true" />
+      </custom-gdb-server>
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <list>
+      <item itemvalue="Embedded GDB Server.Debug" />
       <item itemvalue="Makefile Application.all" />
       <item itemvalue="Makefile Application.bios" />
       <item itemvalue="Makefile Application.uefi" />
@@ -142,7 +150,10 @@
       <workItem from="1685462524097" duration="261000" />
       <workItem from="1685463339368" duration="197000" />
       <workItem from="1685463643474" duration="799000" />
-      <workItem from="1685464502083" duration="1190000" />
+      <workItem from="1685464502083" duration="6810000" />
+      <workItem from="1686083358937" duration="994000" />
+      <workItem from="1686253896599" duration="6000" />
+      <workItem from="1688346286921" duration="140000" />
     </task>
     <task id="LOCAL-00001" summary="feat(make): make the makefile use wildcard for better IDE performance">
       <created>1685387634814</created>
@@ -158,12 +169,28 @@
       <option name="project" value="LOCAL" />
       <updated>1685393362717</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat(allocator): Begin work on experimental Zig-like allocation interface">
+      <created>1685466031106</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1685466031106</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat(allocator): Whoops forgor to include the files">
+      <created>1685466053585</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1685466053585</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat(make): make the makefile use wildcard for better IDE performance" />
     <MESSAGE value="feat(kernel): User $ for macro identifiers" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(kernel): User $ for macro identifiers" />
+    <MESSAGE value="feat(allocator): Begin work on experimental Zig-like allocation interface" />
+    <MESSAGE value="feat(allocator): Whoops forgor to include the files" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(allocator): Whoops forgor to include the files" />
   </component>
 </project>

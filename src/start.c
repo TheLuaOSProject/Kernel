@@ -99,12 +99,13 @@ static void ps2_gets(char *buf)
     $asm("MOVQ %%CR3, %0" : "=r"(cr3));
     for (qword i = 0; i < 256; i++)
         $virt(cr3, qword)[i] = 0;
-//        *$virt(cr3 + i * 8, qword) = 0;
 
     $asm("MOVQ %0, %%CR3" :: "r"(cr3) : "memory");
 
 
     $success("Started LuaOS");
+
+    $info("CPU Vendor: {}", cpu_get_vendor());
 
     $info("Initialising bootloader");
     bootloader_init();
@@ -166,12 +167,13 @@ static void ps2_gets(char *buf)
     $info("LAPIC base: {}", lapic_base);
     $success("Done");
 
-    static FILE stdout;
+    static FILE stdout = {
+        .write = stdout_write,
+    };
     _get_pcb()->stdout = &stdout;
-    stdout.write = stdout_write;
 
     if (bootloader_module == nullptr) $panic("no modules available!");
-    if (bootloader_module->module_count == 0) $panic("more than one module available!");
+//    if (bootloader_module->module_count == 0) $panic("more than one module available!");
 
     $info("Initialising scheduler");
     scheduler_init();
