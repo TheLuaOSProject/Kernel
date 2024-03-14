@@ -40,6 +40,8 @@ void bootloader_init(void);
 qword limine_virt_to_phys(qword virt);
 qword limine_phys_to_virt(qword phys);
 
+struct limine_file *nullable find_module(const char *nonnull name);
+
 #define $phys(value) limine_virt_to_phys((qword)(value))
 #define $virt(value, ...)                                                       \
   (__VA_OPT__((__VA_ARGS__ *))(qword) limine_phys_to_virt(value))

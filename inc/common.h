@@ -49,8 +49,6 @@
         (typeof(typeof(*_val) *nonnull))_val; \
     })
 
-#define $is_little_endian ((char*)&(int){1})[0]
-
 typedef uint8_t byte;
 typedef uint16_t word;
 typedef uint32_t dword;
@@ -73,4 +71,15 @@ static inline noreturn void halt() {
         $asm("STI\n"
             "HLT\n");
     __builtin_unreachable();
+}
+
+static const char *nullable get_file_name(const char *nonnull cmdline)
+{
+    const char *nullable current = nullptr;
+    char c;
+    while ((c = *cmdline++) != '\0') {
+        if (c == '/')
+            current = cmdline;
+    }
+    return current;
 }

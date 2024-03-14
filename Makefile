@@ -23,7 +23,7 @@ LUAJIT= luajit
 
 GDB := x86_64-elf-gdb
 
-CFLAGS = -g -Og -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-microsoft
+CFLAGS = -g -O0 -pipe -Wall -Wextra -Werror -Wno-unused -fms-extensions -Wno-microsoft
 NASMFLAGS = -F dwarf -g -f elf64
 
 CFLAGS +=       						\
